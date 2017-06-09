@@ -6,9 +6,9 @@
 // at the top of the project. You don't want a lot of paths names
 // to write.
 const {NETWORK_EVENTS} = require("../../utilities/CONSTANTS");
-const {CONFIG) = require("../../utilities/CONSTANTS");
+const {CONFIG} = require("../../utilities/CONSTANTS");
 
-const {mongoose} = require("mongoose");
+const mongoose = require("mongoose");
 mongoose.Promise = global.Promise;
 
 // db = mongoose.createConnection(
@@ -17,9 +17,14 @@ mongoose.Promise = global.Promise;
 // );
 
 db = mongoose.createConnection(
-    "mongodb://emartin31:gent00@104.236.67.49:27017/uah_library",
-    CONFIG.CONN_OPTS
+    "mongodb://localhost:27017/TodoApp"
+    , CONFIG.CONN_OPTS
 );
+
+// db = mongoose.createConnection(
+//     "mongodb://emartin31:gent00@104.236.67.49:27017/uah_library",
+//     CONFIG.CONN_OPTS
+// );
 
 db.on(NETWORK_EVENTS.OPEN, () =>
       console.log("Connection Is Open"));

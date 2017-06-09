@@ -1,0 +1,19 @@
+{
+  "name": "uah_library",
+  "version": "1.0.0",
+  "description": "A software tracking tool for the UAH Drama Department.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EricMartin827/UAH_Library.git"
+  },
+  "author": "Eric William Martin",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/EricMartin827/UAH_Library/issues"
+  },
+  "homepage": "https://github.com/EricMartin827/UAH_Library#readme"
+}
