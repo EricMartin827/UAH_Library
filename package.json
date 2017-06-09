@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/EricMartin827/UAH_Library/issues"
   },
-  "homepage": "https://github.com/EricMartin827/UAH_Library#readme"
+  "homepage": "https://github.com/EricMartin827/UAH_Library#readme",
+  "dependencies": {
+    "mongoose": "^4.10.5"
+  }
 }
