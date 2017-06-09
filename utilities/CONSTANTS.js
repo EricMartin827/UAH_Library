@@ -1,12 +1,9 @@
 /**
- * The CONSTANTS.js file stores all the commonly
- * used strings used in NodeJS to indetify events
- * and the objects used to set low level
- * configuration options such a setting the properties
- * of a connection. This files primary purpose is to
- * prevent run-time errors due to misspelled strings.
- * It is also a convenint location for maintianing
- * configuration options which could vary from server
+ * The CONSTANTS.js file stores all the commonly used strings used in NodeJS to
+ * indetify events and the objects used to set low level configuration options
+ * such a setting the properties of a connection. This files primary purpose is
+ * to prevent run-time errors due to misspelled strings. It is also a convenint
+ * location for maintianing configuration options which could vary from server
  * to server.
  *
  * @author Eric William Martin
@@ -45,7 +42,7 @@ NETWORK_EVENTS = {
  * @type {Object}
  */
 CONFIG = {
-
+pp
     /**
      * Configuration object used to configure the
      * network properties betweeen the server and the
