@@ -11,10 +11,8 @@
 * @author Eric William Martin
 */
 
-const Network = require("./MongoNetwork");
-const Schema = Network.Schema;
-var db = Network.Connection;
-
+const {mongoose} = require("./../MongoDatabase.js");
+const Schema = mongoose.Schema;
 
 const playSchema = new Schema({
 
