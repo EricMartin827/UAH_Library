@@ -44,97 +44,62 @@ const playSchema = new Schema({
     /* Non-Key Attributes */
     genre:         {type: String, default: "Drama"},
     timePeriod:    {type: String, default: "Not Specified"},
-    isSpectacle:   {type: Boolean, default: false},
+    hasSpectacle:   {type: Boolean, default: false},
     actorCount:    {type: Number, min: 1, max: 50, default: 10},
     costumeCount:  {type: Number, min: 1, max: 50, default: 10},
     copies:        {type: Number, default: 1}
 });
 
 /*
-* Instance Method for Play Objects.
-*/
+ * Static methods for Play Model.
+ */
 
-playSchema.methods = {
+modelMethods = {
 
-    getTitle: function() {
-	return this.title;
-    },
+    listAllPlays: function(upperLim) {
+
+	Play.find({}).sort({authorLast: -1}).limit(upperLim)
+	    .then((plays) => {
+		console.log("All plays: ", plays);
+		return plays;
+	    }).catch((err) = {
+		console.error("Failed to locate plays: ", err );
+	    });
+    }
+};
+
+/*
+ * Instance methods for invidual Play objects.
+ */
+
+instanceMethods = {
+
+    /*-----------------------------------*/
+    /*--------Client Side Helpers--------*/
+    /*-----------------------------------*/
     
-    setTitle: function(newTitle) {
-
-	if (!newTitle) {
-	    console.warn("No Argument Passed to setTitle()");
-	}
-	this.title = newTitle || this.title;
-	return this;
-    },
-
-    getAuthorLast: function() {
-	return this.authorLast;
-    },
-
-    getAuthorFirst: function() {
-	return this.authorFirst;
-    },
-
     getAuthorFormal: function() {
 	return `${this.authorLast}, ${this.authorFirst}`;
-    },
-
-    setAuthor: function(newLast, newFirst) {
-
-	if (!newLast) {
-	    console.warn("setAuthor(): No Update to Author Lastname");
-	} else if (!newFirst) {
-	    console.warn("setAuthor(): No Update to Author Firstname");
-	}
-	this.authorLast = newLast || this.authorLast;
-	this.authorFirst = newFirst || this.authorFirst;
-    },
-
-    getGenre: function() {
-	return this.genre;
-    },
-
-    setGenre: function(newGenre) {
-
-	if (!newGenre) {
-	    console.warn("No Argument Passed to setGenre()");
-	}
-	this.genre = newGenre || this.genre;
-    },
-
-    getTimePeriod: function() {
-	return this.timePeriod;
-    },
-
-    setTimePeriod: function(newTimePeriod) {
-
-	if (!newTimePeriod) {
-	    console.warn("No Argument Passed to setTimePeriod()");
-	}
-	this.timePeriod = newTimePeriod || this.timePeriod;
-    },
-
-    hasSpectacle: function() {
-	return this.isSpectacle;
-    },
-
-    getActorCount: function() {
-	return this.actorCount;
-    },
-
-    getCostumeCount: function() {
-	return this.costumeCount;
-    },
-
-    getCopies: function() {
-	return this.copies;
     },
     
     isAvailable: function() {
 	return this.copies === 0;
     },
+
+    /*-----------------------------------*/
+    /*----------Databse Access-----------*/
+    /*-----------------------------------*/
+
+    saveToDatabase: function() {
+	this.save()
+	    .then((play) => {
+		console.log("Save Play: ". play.title);
+	    })
+	    .catch((err) => {
+		console.error("Failed To Update Play: ", this.title);
+	    });
+    }
+
 
     findSynopsis: function() {
 	return null;
@@ -163,29 +128,10 @@ playSchema.methods = {
     flushComments: function() {
 	return null
     }
-}
-
-var Play = db.model("Play", playSchema);
-
-var test = new Play({
-    title: "Romeo And Juliet",
-    author:"William Shakespeare"
-});
-
-test.save().then(function(test) {
-    console.log("Success");
-}).catch(function(err) {
-    console.error("Error: ", err);
-});
-
-console.log("My App Is Still Running!!!");
+};
 
 
 
 
 
-
-
-
-
-
+    
