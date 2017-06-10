@@ -12,9 +12,8 @@
 
 
 /**
- * Constants used to indentify the various events which
- * occur during a newtwork connection to a remote
- * database.
+ * Constants used to indentify the various events which occur during a newtwork
+ * connection to a remote database.
  *
  * @property NETWORK_EVENTS
  * @final
@@ -31,18 +30,31 @@ NETWORK_EVENTS = {
     ERROR: "error"
 };
 
+/**
+ * Constants used to indetify and access different databases used both
+ * develop and deploy the UAH_Library.
+ *
+ * @property HOSTS
+ * @final
+ * type {Object}
+ */
+HOSTS = {
+    LOCAL: "mongodb://localhost:27017/UAH_LIBRARY",
+    NEW_YORK: "mongodb://emartin31:gent00@104.236.67.49:27017/uah_library"
+}
+
+
 
 /**
- * A collection of configuration objects used to
- * simplify the task of setting the properties
- * of low level tasks.
+ * A collection of configuration objects used to simplify the task of setting
+ * the properties of low level tasks.
  *
  * @property CONFIG
  * @final
  * @type {Object}
  */
 CONFIG = {
-pp
+
     /**
      * Configuration object used to configure the
      * network properties betweeen the server and the
@@ -60,6 +72,8 @@ pp
 
 /* Export CONSTANTS to other modules. */
 module.exports = {
-    NETWORK_EVENTS,
-    CONFIG
+    CONSTANTS = {
+	NETWORK_EVENTS,
+	CONFIG
+    }
 };
