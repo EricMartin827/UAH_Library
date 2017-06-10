@@ -5,26 +5,15 @@
 // Need to change all modules to be accessed at some index diretory
 // at the top of the project. You don't want a lot of paths names
 // to write.
-const {NETWORK_EVENTS} = require("../../utilities/CONSTANTS");
-const {CONFIG} = require("../../utilities/CONSTANTS");
-
+const {CONSTANTS} = require("../../utilities/CONSTANTS");
+const {NETWORK_EVENTS} = CONSTANTS;
+const {CONFIG} = CONSTANTS;
+const {HOSTS} = CONSTANTS;
 const mongoose = require("mongoose");
 mongoose.Promise = global.Promise;
 
-// db = mongoose.createConnection(
-//     "mongodb://emartin31:C_Pr0gramm3r0@ds161001.mlab.com:61001/testing"
-//     , CONFIG.CONN_OPTS
-// );
 
-db = mongoose.createConnection(
-    "mongodb://localhost:27017/TodoApp"
-    , CONFIG.CONN_OPTS
-);
-
-// db = mongoose.createConnection(
-//     "mongodb://emartin31:gent00@104.236.67.49:27017/uah_library",
-//     CONFIG.CONN_OPTS
-// );
+db = mongoose.createConnection(HOSTS.LOCAL, CONFIG.CONN_OPTS);
 
 db.on(NETWORK_EVENTS.OPEN, () =>
       console.log("Connection Is Open"));
@@ -58,16 +47,6 @@ process.on("SIGINT", () => {
 });
 
 module.exports = {
-    DATABASE: db
+    DATABASE: db,
+    mongoose: mongoose
 };
-
-
-
-
-
-
-
-
-
-
-

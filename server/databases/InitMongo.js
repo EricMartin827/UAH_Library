@@ -9,15 +9,11 @@
  * @author Eric William Martin
  */
 
+var db = connect("127.0.0.1:27017/UAH_LIBRARY");
 
+db.createCollection("plays");
 
-
-
-
-
-
-
-
-
-
-
+db.plays.createIndex(
+    {title: 1, authorLast: 1, authorFirst: 1},
+    {unique: true}
+);
