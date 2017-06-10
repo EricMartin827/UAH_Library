@@ -50,10 +50,9 @@ const playSchema = new Schema({
     copies:        {type: Number, default: 1}
 });
 
-/*
+/**
  * Static methods for Play Model.
  */
-
 modelMethods = {
 
     listAllPlays: function(upperLim) {
@@ -68,10 +67,15 @@ modelMethods = {
     }
 };
 
-/*
+/* Add the functions to playSchema for easy access in client */
+for (var prop in modelMethods) {
+    playSchema.statics.methods[prop] = modelMethos[prop]
+}
+
+
+/**
  * Instance methods for invidual Play objects.
  */
-
 instanceMethods = {
 
     /*-----------------------------------*/
@@ -126,12 +130,20 @@ instanceMethods = {
     },
 
     flushComments: function() {
-	return null
+	return null;
     }
 };
 
+/* Add the functions to playSchema for easy access in client */
+for (var prop in instanceMethods) {
+    playSchema.methods[prop] = instanceMethods[prop];
+}
 
 
 
-
-    
+/* Compile the schema into a usable model and export the constructor.
+ * Note that the instance models will have access to the generic static
+ * methods added onto playSchema.statics.
+ */
+var Play = mongoose.model("Play", playSchema);
+module.exports = { Play };
