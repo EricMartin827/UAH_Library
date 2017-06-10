@@ -1,7 +1,7 @@
 var express = require("express");
 var bodyParser = require("body-parser");
 
-var {Play} = require("./../models/Play.js");
+var {Play} = require("./../MongoModels/Play.js");
 
 var app = express();
 app.use(bodyParser.json());

@@ -11,8 +11,8 @@
 * @author Eric William Martin
 */
 
-const {MongoDB} = require("./../databases/MongoDatabase.js");
-const {Schema} = require("./../databases/MongoDatabase.js");
+const {MongoDB} = require("./../MongoDatabase.js");
+const {Schema} = require("./../MongoDatabase.js");
 
 const playSchema = new Schema({
 

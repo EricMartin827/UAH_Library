@@ -1,9 +1,8 @@
 const expect = require("expect");
 const request = require("supertest");
 
-const {Play} = require("./../models/Play.js");
-var {app} = require("./../databases/MongoServer.js");
-
+const {Play} = require("./../MongoModels/Play.js");
+var {app} = require("./LocalTestMongoServer.js");
 
 beforeEach((done) => {
     Play.remove({}).then(() => {
