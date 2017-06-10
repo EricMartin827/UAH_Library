@@ -11,9 +11,8 @@
 * @author Eric William Martin
 */
 
-const {mongoose} = require("./../databases/MongoDatabase.js");
-const {DATABASE} = require("./../databases/MongoDatabase.js");
-const Schema = mongoose.Schema;
+const {MongoDB} = require("./../databases/MongoDatabase.js");
+const {Schema} = require("./../databases/MongoDatabase.js");
 
 const playSchema = new Schema({
 
@@ -83,11 +82,11 @@ instanceMethods = {
     /*-----------------------------------*/
     /*--------Client Side Helpers--------*/
     /*-----------------------------------*/
-    
+
     getAuthorFormal: function() {
 	return `${this.authorLast}, ${this.authorFirst}`;
     },
-    
+
     isAvailable: function() {
 	return this.copies === 0;
     },
@@ -147,5 +146,5 @@ for (var prop in instanceMethods) {
  * Note that the instance models will have access to the generic static
  * methods added onto playSchema.statics.
  */
-var Play = DATABASE.model("Play", playSchema);
-module.exports = { Play };
+var Play = MongoDB.model("Play", playSchema);
+module.exports = {Play};

@@ -13,7 +13,7 @@ beforeEach((done) => {
 
 describe("POST /play", () => {
     it("Should Create a New Play", (done) => {
-	
+
 	var cruc = {
 	    title: "The Crucible",
 	    authorLast: "Miller",
@@ -38,6 +38,6 @@ describe("POST /play", () => {
 		}).catch((err) => {
 		    done(err)
 		});
-	    });	
+	    });
     });
 });

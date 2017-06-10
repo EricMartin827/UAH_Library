@@ -7,7 +7,7 @@
  * to server.
  *
  * @author Eric William Martin
- * @module CONSTANTS 
+ * @module CONSTANTS
  */
 
 

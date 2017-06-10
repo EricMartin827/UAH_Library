@@ -48,6 +48,6 @@ process.on("SIGINT", () => {
 
 
 module.exports = {
-    DATABASE: db,
-    mongoose: mongoose
+    MongoDB: db,
+    Schema: mongoose.Schema
 };
