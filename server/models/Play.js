@@ -1,23 +1,53 @@
+/**
+* Play.js defines the prototype for Play object which are stored as documents
+* in a MongoDB database.
+*
+* For playSchema the combination of title and author is unique. This is set
+* up in the database, NOT HERE!. The unique tag in mongoose is NOT a validator!
+* It is included in the schema merely for documentation purposes. Mongoose does
+* not ensure primary key integrity. This is accomplished via the InitMongo.js
+* file which is executed locally on the server before application deployment.
+*
+* @author Eric William Martin
+*/
+
 const Network = require("./MongoNetwork");
 const Schema = Network.Schema;
 var db = Network.Connection;
 
+
 const playSchema = new Schema({
+
+    /* Primary Keys */
     title: {
 	type : String,
-	unique: true,
+	unique: true, /* DOES NOT VALIDATE */
 	minLength : 1,
 	maxLencth : 100,
 	trim : true
     },
-    author: {
-	
-    genre:         String,
-    timePeriod:    String,
-    isSpectacle:   Boolean,
-    actorCount:    {type: Number, min: 1, max: 50},
-    costumeCount:  {type: Number, min: 1, max: 50},
-    lastUpdated:   {type: Date, default: Date.now}
+    authorLast: {
+	type : String,
+	unique: true, /* DOES NOT VALIDATE */
+	minLength: 1,
+	maxLength: 50,
+	trim: true
+    },
+    authorFirst: {
+	type : String,
+	unique: true, /* DOES NOT VALIDATE */
+	minLength: 1,
+	maxLength: 50,
+	trim: true
+    },
+
+    /* Non-Key Attributes */
+    genre:         {type: String, default: "Drama"},
+    timePeriod:    {type: String, default: "Not Specified"},
+    isSpectacle:   {type: Boolean, default: false},
+    actorCount:    {type: Number, min: 1, max: 50, default: 10},
+    costumeCount:  {type: Number, min: 1, max: 50, default: 10},
+    copies:        {type: Number, default: 1}
 });
 
 /*
@@ -39,16 +69,27 @@ playSchema.methods = {
 	return this;
     },
 
-    getAuthor: function() {
-	return this.author;
+    getAuthorLast: function() {
+	return this.authorLast;
     },
 
-    setAuthor: function(newAuthor) {
+    getAuthorFirst: function() {
+	return this.authorFirst;
+    },
 
-	if (!newAuthor) {
-	    console.warn("No Argument Passed to setAuthor()");
+    getAuthorFormal: function() {
+	return `${this.authorLast}, ${this.authorFirst}`;
+    },
+
+    setAuthor: function(newLast, newFirst) {
+
+	if (!newLast) {
+	    console.warn("setAuthor(): No Update to Author Lastname");
+	} else if (!newFirst) {
+	    console.warn("setAuthor(): No Update to Author Firstname");
 	}
-	this.author = newAuthor || this.author;
+	this.authorLast = newLast || this.authorLast;
+	this.authorFirst = newFirst || this.authorFirst;
     },
 
     getGenre: function() {
@@ -85,6 +126,14 @@ playSchema.methods = {
 
     getCostumeCount: function() {
 	return this.costumeCount;
+    },
+
+    getCopies: function() {
+	return this.copies;
+    },
+    
+    isAvailable: function() {
+	return this.copies === 0;
     },
 
     findSynopsis: function() {
