@@ -5,7 +5,7 @@
 // Need to change all modules to be accessed at some index diretory
 // at the top of the project. You don't want a lot of paths names
 // to write.
-const {CONSTANTS} = require("../../utilities/CONSTANTS");
+const {CONSTANTS} = require("./../../utilities/CONSTANTS");
 const {NETWORK_EVENTS} = CONSTANTS;
 const {CONFIG} = CONSTANTS;
 const {HOSTS} = CONSTANTS;
@@ -45,6 +45,7 @@ process.on("SIGINT", () => {
 	process.exit(0);
     });
 });
+
 
 module.exports = {
     DATABASE: db,

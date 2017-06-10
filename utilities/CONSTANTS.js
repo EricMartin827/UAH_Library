@@ -72,7 +72,9 @@ CONFIG = {
 
 /* Export CONSTANTS to other modules. */
 module.exports = {
-    CONSTANTS = {
+    CONSTANTS :
+    {
+	HOSTS,
 	NETWORK_EVENTS,
 	CONFIG
     }

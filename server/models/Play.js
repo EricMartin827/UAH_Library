@@ -11,7 +11,8 @@
 * @author Eric William Martin
 */
 
-const {mongoose} = require("./../MongoDatabase.js");
+const {mongoose} = require("./../databases/MongoDatabase.js");
+const {DATABASE} = require("./../databases/MongoDatabase.js");
 const Schema = mongoose.Schema;
 
 const playSchema = new Schema({
@@ -19,6 +20,7 @@ const playSchema = new Schema({
     /* Primary Keys */
     title: {
 	type : String,
+	required: true,
 	unique: true, /* DOES NOT VALIDATE */
 	minLength : 1,
 	maxLencth : 100,
@@ -26,6 +28,7 @@ const playSchema = new Schema({
     },
     authorLast: {
 	type : String,
+	required: true,
 	unique: true, /* DOES NOT VALIDATE */
 	minLength: 1,
 	maxLength: 50,
@@ -33,6 +36,7 @@ const playSchema = new Schema({
     },
     authorFirst: {
 	type : String,
+	required: true,
 	unique: true, /* DOES NOT VALIDATE */
 	minLength: 1,
 	maxLength: 50,
@@ -42,7 +46,7 @@ const playSchema = new Schema({
     /* Non-Key Attributes */
     genre:         {type: String, default: "Drama"},
     timePeriod:    {type: String, default: "Not Specified"},
-    hasSpectacle:   {type: Boolean, default: false},
+    hasSpectacle:  {type: Boolean, default: false},
     actorCount:    {type: Number, min: 1, max: 50, default: 10},
     costumeCount:  {type: Number, min: 1, max: 50, default: 10},
     copies:        {type: Number, default: 1}
@@ -59,7 +63,7 @@ modelMethods = {
 	    .then((plays) => {
 		console.log("All plays: ", plays);
 		return plays;
-	    }).catch((err) = {
+	    }).catch((err) => {
 		console.error("Failed to locate plays: ", err );
 	    });
     }
@@ -67,7 +71,7 @@ modelMethods = {
 
 /* Add the functions to playSchema for easy access in client */
 for (var prop in modelMethods) {
-    playSchema.statics.methods[prop] = modelMethos[prop]
+    playSchema.statics[prop] = modelMethods[prop]
 }
 
 
@@ -100,7 +104,7 @@ instanceMethods = {
 	    .catch((err) => {
 		console.error("Failed To Update Play: ", this.title);
 	    });
-    }
+    },
 
 
     findSynopsis: function() {
@@ -143,5 +147,5 @@ for (var prop in instanceMethods) {
  * Note that the instance models will have access to the generic static
  * methods added onto playSchema.statics.
  */
-var Play = mongoose.model("Play", playSchema);
+var Play = DATABASE.model("Play", playSchema);
 module.exports = { Play };
