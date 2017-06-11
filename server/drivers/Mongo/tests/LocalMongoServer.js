@@ -3,11 +3,13 @@ var bodyParser = require("body-parser");
 
 var {Play} = require("./../MongoModels/Play.js");
 
-var app = express();
-app.use(bodyParser.json());
+var {app} = require("./../../../../AppUtils.js");
+var {foo} = require("./../../../../AppUtils.js");
 
-app.post("/plays", (req, res) => {
 
+app.post("/addOnePlay", (req, res) => {
+
+    foo(req, Play);
     var cruc = new Play(
 	{
 	    title: req.body.title,
