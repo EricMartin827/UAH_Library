@@ -2,7 +2,7 @@ const expect = require("expect");
 const request = require("supertest");
 
 const {Play} = require("./../MongoModels/Play.js");
-var {app} = require("./LocalTestMongoServer.js");
+var {app} = require("./LocalMongoServer.js");
 
 beforeEach((done) => {
     Play.remove({}).then(() => {
@@ -10,7 +10,7 @@ beforeEach((done) => {
     });
 });
 
-describe("POST /play", () => {
+describe("POST /addOnePlay", () => {
     it("Should Create a New Play", (done) => {
 
 	var cruc = {
@@ -20,7 +20,7 @@ describe("POST /play", () => {
 	}
 
 	request(app)
-	    .post("/plays")
+	    .post("/addOnePlay")
 	    .send(cruc)
 	    .expect(200)
 	    .expect((res) => {

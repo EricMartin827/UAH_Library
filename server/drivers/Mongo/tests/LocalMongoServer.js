@@ -3,20 +3,13 @@ var bodyParser = require("body-parser");
 
 var {Play} = require("./../MongoModels/Play.js");
 
-var {app} = require("./../../../../AppUtils.js");
-var {foo} = require("./../../../../AppUtils.js");
+var {app} = require("./../../../../utilities/AppUtils.js");
+var {httpJSON2Instance} = require("./../../../../utilities/AppUtils.js");
 
 
 app.post("/addOnePlay", (req, res) => {
 
-    foo(req, Play);
-    var cruc = new Play(
-	{
-	    title: req.body.title,
-	    authorLast: req.body.authorLast,
-	    authorFirst: req.body.authorFirst
-	}
-    );
+    var cruc = httpJSON2Instance(req, Play);
 
     cruc.save().then(
 	(doc) => {
