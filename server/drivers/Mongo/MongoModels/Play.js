@@ -147,7 +147,4 @@ for (var prop in instanceMethods) {
  * methods added onto playSchema.statics.
  */
 var Play = MongoDB.model("Play", playSchema);
-
-//Play.clientProperties = {
-//}
 module.exports = {Play};

@@ -5,7 +5,7 @@
 // Need to change all modules to be accessed at some index diretory
 // at the top of the project. You don't want a lot of paths names
 // to write.
-const {CONSTANTS} = require("./CONSTANTS");
+const {CONSTANTS} = require("./TOOLS");
 const {NETWORK_EVENTS} = CONSTANTS;
 const {CONFIG} = CONSTANTS;
 const {HOSTS} = CONSTANTS;

@@ -1,10 +1,11 @@
 var express = require("express");
 var bodyParser = require("body-parser");
 
-var {Play} = require("./../MongoModels/Play.js");
+var {Play} = require("./../MongoModels");
 
-var {app} = require("./../../../../utilities/AppUtils.js");
-var {httpJSON2Instance} = require("./../../../../utilities/AppUtils.js");
+var {UTILS} = require("./../TOOLS");
+var {app} = UTILS;
+var {httpJSON2Instance} = UTILS;
 
 
 app.post("/addOnePlay", (req, res) => {
