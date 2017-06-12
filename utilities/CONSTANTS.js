@@ -31,8 +31,8 @@ NETWORK_EVENTS = {
 };
 
 /**
- * Constants used to indetify and access different databases used both
- * develop and deploy the UAH_Library.
+ * Constants used to indetify and access different databases used for
+ * the development and production of the UAH_Library.
  *
  * @property HOSTS
  * @final
@@ -43,6 +43,16 @@ HOSTS = {
     NEW_YORK: "mongodb://emartin31:gent00@104.236.67.49:27017/uah_library"
 }
 
+/**
+ * Constants used for defining the API.
+ *
+ * @property API
+ * @final
+ * @type {Object}
+ */
+API = {
+
+}
 
 
 /**
@@ -76,6 +86,7 @@ module.exports = {
     {
 	HOSTS,
 	NETWORK_EVENTS,
+	API,
 	CONFIG
     }
 };

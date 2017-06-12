@@ -1,0 +1,11 @@
+{
+    "onePlay" :
+    "[{
+	title: The Crucible,
+	authorLast: Miller,
+	authorFirst: Arthur
+	}]",
+    "fiveUniquePlay" :
+    "[{title: Romeo and Juliet,authorLast: Shakespeare,
+	authorFirst: William },]"
+}
