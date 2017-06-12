@@ -1,5 +1,6 @@
 const expect = require("expect");
 const request = require("supertest");
+const assert = require("assert");
 
 const {TEST_UTILS} = require("./../TOOLS");
 const {UTILS} = require("./../TOOLS");
@@ -31,37 +32,46 @@ describe("POST /testOnePlay", () => {
        "\tTests That The Attributes Can Be Updated\n" +
        "\tTests That The Changing Key Names Cannot Create Duplicate",
        (done) => {
-
 	   request(app)
 	       .post("/testOnePlay")
 	       .send(clientData)
 	       .expect(200)
-	       .expect((res) => {
+	       .expect((res, err) => {
+		   
 		   expect(verifyClientServer(clientData, res.body))
 		       .toBe("VERIFIED");
 	       })
-	       // .expect((res) => {
-	       // 	   request(app)
-	       // 	       .post
-	       // })
-	       .end((err, res) => {
-		   
+	       .expect((res) => {
+	       	   request(app)
+	       	       .post("/testOnePlay")
+		       .send(clientData)
+		       .expect(400)
+		       .end((err, res) => {
+			   if (err) {
+			       return done(err);
+			   }
+			   assert.ok(res.clientError);
+			   assert.ok(!res.serverError);
+			   assert.ok(res.body.code === 11000);
+			   console.log(res.body.code);
+			   console.log(res.body.errmsg);
+			   done();
+		       });
+	       })
+	       .end((err, res) => { /* This is the end of the chain !!!*/
+
 		   if (err) {
 		       return done(err);
 		   }
-
 		   Play.find().then((plays) => {
 		       expect(plays.length).toBe(1);
 		       expect(verifyClientServer(play, plays[0]))
 			   .toBe("VERIFIED");
-		       done();
 		   }).catch((err) => {
 		       done(err)
 		   });
 
 	       });
-
-	   /* Cannot Reinsert */
 	   	   
        });
 });

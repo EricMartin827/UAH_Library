@@ -15,11 +15,11 @@ app.post("/testOnePlay", (req, res) => {
     var cruc = httpJSON_2_ObjArr(req, Play);
     cruc.pop().save().then(
 	(doc) => {
-	    console.log("Attempting To Save A Play");
+	    console.log("Play Was Saved");
 	    res.send(doc);
 	},
 	(err) => {
-	    console.error("Failed To Save Play: ", err);
+	    console.error("Play Not Saved");
 	    res.status(400).send(err);
 	}
     ).catch((err) => {
@@ -37,7 +37,8 @@ app.post("/addFiveUniquePlays", (req, res) => {
 	    res.send(doc);
 	},
 	(err) => {
-	    console.error("Failed To Save Play: ", err);
+	    console.log("Fuck!!!!!!!!!!!!!!!!!!")
+	    console.error("Failed to Save Play: ", err.message);
 	    res.status(400).send(err);
 	}
     ).catch((err) => {
