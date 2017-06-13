@@ -39,18 +39,28 @@ function verifyClientServer(clientData, serverDoc) {
 		      "and a constructor");
     }
 
-    if (!isObject(clientData)) {
-	return console.error("clientData is not an object");
+    if (Array.isArray(clientData) || !isObject(clientData)) {
+	return console.error("Client Data Cannot Be An Array : Must Be an Object");
     }
 
-    if (!isObject(serverDoc) && !serverDoc._id) {
-	return console.error("serverData is not a document");
+    if (!isObject(serverDoc) || !serverDoc._id) {
+	return console.error("Server Response Lacks Mongo Document ID");
     }
-    
+
+    var count = Object.keys(clientData).length;
+    if (count < 1) {
+	return console.error("Client Data Must Have Properties");
+    }
+ 
     for (var prop in serverDoc) {
 	if (clientData.hasOwnProperty(prop)) {
+	    count--;
 	    expect(clientData[prop]).toBe(serverDoc[prop]);
 	}
+    }
+
+    if (count) {
+	return console.error("Not All Client Properties Verified");
     }
     return "VERIFIED";
 }

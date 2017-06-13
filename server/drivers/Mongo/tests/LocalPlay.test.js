@@ -2,6 +2,8 @@ const expect = require("expect");
 const request = require("supertest");
 const assert = require("assert");
 
+const {DuplicateKey} = require("mongo-errors");
+
 const {TEST_UTILS} = require("./../TOOLS");
 const {UTILS} = require("./../TOOLS");
 const {CONSTANTS} = require("./../TOOLS");
@@ -15,63 +17,92 @@ const {printObj} = UTILS;
 var {DATA} = require("./PlayData.js");
 
 
-/* Clear the data base before each test */
-beforeEach((done) => {
-    Play.remove({}).then(() => {
-	done();
-    });
-});
-
-
 describe("POST /testOnePlay", () => {
-    
-    var clientData = play = DATA.onePlay;
-    
-    it("\n\tTests The Creation of a Single Play\n" +
-       "\tTests That The Same Play Cannot Be Reinserted\n" +
-       "\tTests That The Attributes Can Be Updated\n" +
-       "\tTests That The Changing Key Names Cannot Create Duplicate",
-       (done) => {
+
+    var clientDataArray = DATA.onePlay;
+    var play = clientDataArray[0];
+
+    before((done) => {
+	Play.remove({}).then(() => {
+	    done();
+	});
+    });
+
+    after((done) => {
+	Play.remove({}).then(() => {
+	    done();
+	});
+    })
+
+    it("Test The Creation of a Single Play", (done) => {
+
 	   request(app)
 	       .post("/testOnePlay")
-	       .send(clientData)
+	       .send(clientDataArray)
 	       .expect(200)
 	       .expect((res, err) => {
-		   
-		   expect(verifyClientServer(clientData, res.body))
-		       .toBe("VERIFIED");
-	       })
-	       .expect((res) => {
-	       	   request(app)
-	       	       .post("/testOnePlay")
-		       .send(clientData)
-		       .expect(400)
-		       .end((err, res) => {
-			   if (err) {
-			       return done(err);
-			   }
-			   assert.ok(res.clientError);
-			   assert.ok(!res.serverError);
-			   assert.ok(res.body.code === 11000);
-			   console.log(res.body.code);
-			   console.log(res.body.errmsg);
-			   done();
-		       });
-	       })
-	       .end((err, res) => { /* This is the end of the chain !!!*/
 
+		   var doc = res.body;
+		   assert.ok(!res.clientError);
+		   assert.ok(!res.serverError);
+		   expect(verifyClientServer(play, doc))
+		       .toBe("VERIFIED");
+
+	       })
+	       .end((err, res) => {
 		   if (err) {
 		       return done(err);
 		   }
-		   Play.find().then((plays) => {
-		       expect(plays.length).toBe(1);
-		       expect(verifyClientServer(play, plays[0]))
+		   Play.find().then((playArray) => {
+		       
+		       expect(playArray.length).toBe(1);
+		       expect(verifyClientServer(play, playArray[0]))
 			   .toBe("VERIFIED");
+		       console.log("Checked Instance Data");
+		       done();
 		   }).catch((err) => {
 		       done(err)
 		   });
-
 	       });
-	   	   
        });
+
+    it("Test That The Same Play Cannot Be Reinserted", (done) => {
+	
+	request(app)
+	    .post("/testOnePlay")
+	    .send(clientDataArray)
+	    .expect(400)
+	    .end((err, res) => {
+		if (err) {
+		    return done(err);
+		}
+
+		assert.ok(res.clientError);
+		assert.ok(!res.serverError);
+		assert.ok(res.body.code === DuplicateKey);
+		console.log("Checked Error Response");
+		done();
+	    });
+    });
+
+    // it("Test That The Play Can Be Updated", (done) => {
+
+    // 	Play.find().then((playArray) => {
+
+    // 		var serverPlay = playArray[0];
+
+    // 		/* Sanity Check */
+    // 		assert.ok(playArray.length === 1);
+    // 		verifyClientServer(clientData, playArray[0])
+    // 		    .toBe("VERIFIED");
+
+    // 		serverPlay.timePeriod = "18th Century";
+    // 		serverPlay.copies = "10";
+
+		
+    // 	}).catch((err) => {
+    // 		done(err);
+    // 	});
+    //});
 });
+
