@@ -16,23 +16,26 @@ const {printObj} = UTILS;
 
 var {DATA} = require("./PlayData.js");
 
+"use strict";
 
 describe("POST /testOnePlay", () => {
 
     var clientDataArray = DATA.onePlay;
     var play = clientDataArray[0];
 
+    /* Remove all data before tests in decribe block run */
     before((done) => {
 	Play.remove({}).then(() => {
 	    done();
 	});
     });
 
+    /* Clean up the databese after all tests run */
     after((done) => {
-	Play.remove({}).then(() => {
-	    done();
-	});
-    })
+    	Play.remove({}).then(() => {
+    	    done();
+    	});
+    });
 
     it("Test The Creation of a Single Play", (done) => {
 
@@ -53,10 +56,12 @@ describe("POST /testOnePlay", () => {
 		   if (err) {
 		       return done(err);
 		   }
-		   Play.find().then((playArray) => {
+		   Play.find().then((serverDocArray) => {
+
+		       expect(serverDocArray.length).toBe(1);
+		       var serverPlay = serverDocArray[0];
 		       
-		       expect(playArray.length).toBe(1);
-		       expect(verifyClientServer(play, playArray[0]))
+		       expect(verifyClientServer(play, serverPlay))
 			   .toBe("VERIFIED");
 		       console.log("Checked Instance Data");
 		       done();
@@ -85,24 +90,43 @@ describe("POST /testOnePlay", () => {
 	    });
     });
 
-    // it("Test That The Play Can Be Updated", (done) => {
+    it("Test That The Play Can Be Updated", (done) => {
 
-    // 	Play.find().then((playArray) => {
+    	Play.find(play).then((serverDocArray) => {
 
-    // 		var serverPlay = playArray[0];
+	    var serverPlay = serverDocArray[0];
+	    
+    	    assert.ok(serverDocArray.length === 1);
+    	    expect(verifyClientServer(play, serverPlay)).toBe("VERIFIED");
 
-    // 		/* Sanity Check */
-    // 		assert.ok(playArray.length === 1);
-    // 		verifyClientServer(clientData, playArray[0])
-    // 		    .toBe("VERIFIED");
 
-    // 		serverPlay.timePeriod = "18th Century";
-    // 		serverPlay.copies = "10";
+    	    play.timePeriod = "18th Century";
+    	    play.copies = "9000";
+	    Play.update(play).then((res) => {
 
-		
-    // 	}).catch((err) => {
-    // 		done(err);
-    // 	});
-    //});
+		assert(res.n === 1);
+		assert(res.nModified === 1)
+		assert(res.ok === 1);
+
+	    });
+    	}).catch((err) => {
+    		done(err);
+    	});
+
+	Play.find(play).then((serverDocArray) => {
+
+	    var serverPlay = serverDocArray[0];
+	    
+	    expect(serverDocArray.length).toBe(1);
+	    expect(verifyClientServer(play, serverDocArray[0]))
+		.toBe("VERIFIED");
+	    
+	    console.log("Checked Instance Data");
+	    done();
+	}).catch((err) => {
+	    done(err);
+	});
+	
+    });
 });
 
