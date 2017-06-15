@@ -13,6 +13,7 @@
 
 const {MongoDB} = require("./../MongoDatabase.js");
 const {Schema} = require("./../MongoDatabase.js");
+const {ERRNO} = require("./../TOOLS");
 
 const playSchema = new Schema({
 
@@ -56,6 +57,8 @@ const playSchema = new Schema({
  */
 modelMethods = {
 
+//    storePlays
+
     listAllPlays: function(upperLim) {
 
 	Play.find({}).sort({authorLast: -1}).limit(upperLim)
@@ -63,7 +66,7 @@ modelMethods = {
 		console.log("All plays: ", plays);
 		return plays;
 	    }).catch((err) => {
-		console.error("Failed to locate plays: ", err );
+		console.error("Failed to locate plays: ", err);
 	    });
     }
 };
@@ -95,14 +98,29 @@ instanceMethods = {
     /*----------Databse Access-----------*/
     /*-----------------------------------*/
 
-    saveToDatabase: function() {
+    addToDatabase: function() {
 	this.save()
 	    .then((play) => {
-		console.log("Save Play: ". play.title);
+		console.log("Saved Play: ". play.title);
+		return play;
 	    })
 	    .catch((err) => {
-		console.error("Failed To Update Play: ", this.title);
+		console.error("Failed To Update Play: " + this.title +
+			      "ERROR: " + ERRNO[err.code]);
+		return err;
 	    });
+    },
+
+    saveInDatabase: function() {
+	Play.update(this)
+	    .then((dbRes) => {
+		console.log("Updated Play: ", dbRes.body.title);
+	    })
+	    .catch((err) => {
+		console.error("Failed to Update Play: " + this.title + " " +
+			     ", ERROR: <Not Specified Yet :) >");
+	    });
+	
     },
 
 

@@ -15,15 +15,13 @@ app.post("/testOnePlay", (req, res) => {
     var cruc = httpJSON_2_ObjArr(req, Play);
     cruc.pop().save().then(
 	(doc) => {
-	    console.log("Play Was Saved");
 	    res.send(doc);
 	},
 	(err) => {
-	    console.error("Play Not Saved");
 	    res.status(400).send(err);
 	}
     ).catch((err) => {
-	console.error("Error: ", err);
+	console.error("Error Why This One?????: ", err);
     });
 });
 

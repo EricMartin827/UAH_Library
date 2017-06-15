@@ -9,7 +9,7 @@ var data = {
 	}
     ],
     
-    fiveUniquePlays:
+    multiPlays:
     [
 	{	
 	    title: "Romeo and Juliet",

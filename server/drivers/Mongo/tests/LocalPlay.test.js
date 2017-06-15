@@ -2,11 +2,10 @@ const expect = require("expect");
 const request = require("supertest");
 const assert = require("assert");
 
-const {DuplicateKey} = require("mongo-errors");
-
 const {TEST_UTILS} = require("./../TOOLS");
 const {UTILS} = require("./../TOOLS");
 const {CONSTANTS} = require("./../TOOLS");
+const {ERRNO} = require("./../TOOLS");
 
 const {app} = require("./LocalMongoServer.js");
 const {Play} = require("./../MongoModels");
@@ -17,6 +16,8 @@ const {printObj} = UTILS;
 var {DATA} = require("./PlayData.js");
 
 "use strict";
+
+
 
 describe("POST /testOnePlay", () => {
 
@@ -57,7 +58,6 @@ describe("POST /testOnePlay", () => {
 		       return done(err);
 		   }
 		   Play.find().then((serverDocArray) => {
-
 		       expect(serverDocArray.length).toBe(1);
 		       var serverPlay = serverDocArray[0];
 		       
@@ -84,7 +84,7 @@ describe("POST /testOnePlay", () => {
 
 		assert.ok(res.clientError);
 		assert.ok(!res.serverError);
-		assert.ok(res.body.code === DuplicateKey);
+		assert.ok(ERRNO[res.body.code] === "DuplicateKey");
 		console.log("Checked Error Response");
 		done();
 	    });
@@ -102,6 +102,8 @@ describe("POST /testOnePlay", () => {
 
     	    play.timePeriod = "18th Century";
     	    play.copies = "9000";
+
+	    /* Update the Play */
 	    Play.update(play).then((res) => {
 
 		assert(res.n === 1);
@@ -130,3 +132,55 @@ describe("POST /testOnePlay", () => {
     });
 });
 
+describe("POST /testMultiPlays", () => {
+
+    var clientDataArray = DATA.multiPlays;
+
+    /* Remove all data before tests in decribe block run */
+    before((done) => {
+	Play.remove({}).then(() => {
+	    done();
+	});
+    });
+
+    /* Clean up the databese after all tests run in describe block */
+    after((done) => {
+    	Play.remove({}).then(() => {
+    	    done();
+    	});
+    });
+
+    it("Test Creating All Plays", (done) => {
+
+	   request(app)
+	       .post("/testMultiPlays")
+	       .send(clientDataArray)
+	       .expect(200)
+	       .expect((res, err) => {
+
+		   var doc = res.body;
+		   assert.ok(!res.clientError);
+		   assert.ok(!res.serverError);
+		   expect(verifyClientServer(play, doc))
+		       .toBe("VERIFIED");
+
+	       })
+	       .end((err, res) => {
+		   if (err) {
+		       return done(err);
+		   }
+		   Play.find().then((serverDocArray) => {
+
+		       expect(serverDocArray.length).toBe(1);
+		       var serverPlay = serverDocArray[0];
+		       
+		       expect(verifyClientServer(play, serverPlay))
+			   .toBe("VERIFIED");
+		       console.log("Checked Instance Data");
+		       done();
+		   }).catch((err) => {
+		       done(err)
+		   });
+	       });
+    });
+});
