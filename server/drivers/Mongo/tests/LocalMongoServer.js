@@ -13,12 +13,9 @@ const {httpJSON_2_ObjArr} = TEST_UTILS;
 app.post("/testOnePlay", (req, res) => {
 
     var cruc = httpJSON_2_ObjArr(req, Play);
-    cruc.pop().save().then(
+    cruc.pop().addToDataBase().then(
 	(doc) => {
 	    res.send(doc);
-	},
-	(err) => {
-	    res.status(400).send(err);
 	}
     ).catch((err) => {
 	console.error("Error Why This One?????: ", err);

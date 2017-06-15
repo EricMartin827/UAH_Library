@@ -57,8 +57,6 @@ const playSchema = new Schema({
  */
 modelMethods = {
 
-//    storePlays
-
     listAllPlays: function(upperLim) {
 
 	Play.find({}).sort({authorLast: -1}).limit(upperLim)
@@ -98,18 +96,42 @@ instanceMethods = {
     /*----------Databse Access-----------*/
     /*-----------------------------------*/
 
-    addToDatabase: function() {
-	this.save()
-	    .then((play) => {
-		console.log("Saved Play: ". play.title);
-		return play;
-	    })
-	    .catch((err) => {
-		console.error("Failed To Update Play: " + this.title +
-			      "ERROR: " + ERRNO[err.code]);
-		return err;
-	    });
+    // addToDataBase : new Promise(
+    // 	(resolve, reject) => {
+    // 	    console.log("SpongeBob Square Pants!!!")
+    // 	    console.log(this);
+    // 	}
+    // ),
+    
+    addToDataBase : function() {
+	var instance = this;
+	return new Promise((resolve, reject) => {
+	    instance.save()
+		.then((play) => {
+		    console.log("Saved Play: ", instance.title);
+		    resolve(play);
+		})
+		.catch((err) => {
+		    console.error("Failed to add Play: " + instance.title +
+				  " --> ERROR: " + ERRNO[err.code]);
+		    reject(err);
+		});
+    	});
     },
+			  
+
+    // addToDatabase: function() {
+    // 	this.save()
+    // 	    .then((play) => {
+    // 		console.log("Saved Play: ". play.title);
+    // 		return play;
+    // 	    })
+    // 	    .catch((err) => {
+    // 		console.error("Failed To Update Play: " + this.title +
+    // 			      "ERROR: " + ERRNO[err.code]);
+    // 		return err;
+    // 	    });
+    // },
 
     saveInDatabase: function() {
 	Play.update(this)

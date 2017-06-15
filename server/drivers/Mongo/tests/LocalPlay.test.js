@@ -1,37 +1,36 @@
+
+/* NPM Modules */
 const expect = require("expect");
 const request = require("supertest");
 const assert = require("assert");
 
+/* Custom Modules */
 const {TEST_UTILS} = require("./../TOOLS");
 const {UTILS} = require("./../TOOLS");
 const {CONSTANTS} = require("./../TOOLS");
 const {ERRNO} = require("./../TOOLS");
-
-const {app} = require("./LocalMongoServer.js");
-const {Play} = require("./../MongoModels");
-
 const {verifyClientServer} = TEST_UTILS;
 const {printObj} = UTILS;
 
+/* Local Modules */
+const {app} = require("./LocalMongoServer.js");
+const {Play} = require("./../MongoModels");
 var {DATA} = require("./PlayData.js");
 
 "use strict";
-
-
-
 describe("POST /testOnePlay", () => {
 
     var clientDataArray = DATA.onePlay;
     var play = clientDataArray[0];
 
-    /* Remove all data before tests in decribe block run */
+    /* Remove all data before unit tests in decribe block run */
     before((done) => {
 	Play.remove({}).then(() => {
 	    done();
 	});
     });
 
-    /* Clean up the databese after all tests run */
+    /* Clean up the databese after all unit tests run */
     after((done) => {
     	Play.remove({}).then(() => {
     	    done();
