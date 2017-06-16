@@ -23,6 +23,18 @@ app.post("/testAddOnePlay", (req, res) => {
 	});
 });
 
+app.post("/testQueryOnePlay", (req, res) => {
+
+    Play.findOneFromDatabase(req[0])
+	.then((doc) => {
+	    res.send(doc);
+	})
+	.catch((err) => {
+	    res.status(400).send(err);
+	});
+    
+});
+
 app.post("/testUpdateOnePlay", (req, res) => {
 
     var playArray = httpJSON_2_ObjArr(req, Play);
@@ -31,16 +43,9 @@ app.post("/testUpdateOnePlay", (req, res) => {
 	    res.send(doc);
 	})
 	.catch((err) => {
+	    console.log(err);
 	    res.status(400).send(err);
 	});
-});
-
-app.get("/getOnePlay", (req, res) => {
-
-    //    var playArray = httpJSON_2_ObjArr(req, Play);
-    Play.
-    playArray.pop().saveToDatabase();
-    
 });
 
 app.post("/addFiveUniquePlays", (req, res) => {
@@ -57,17 +62,6 @@ app.post("/addFiveUniquePlays", (req, res) => {
     ).catch((err) => {
 	console.error("Error: ", e);
     });
-});
-
-
-app.get("/plays", (req, res) => {
-    Play.find().then(
-	(plays) => {
-	    res.send(plays);
-	}, (err) => {
-	    res.status(400).send(err);
-	}
-    );
 });
 
 app.listen(3000, () => {

@@ -14,7 +14,8 @@
 const {MongoDB} = require("./../MongoDatabase.js");
 const {Schema} = require("./../MongoDatabase.js");
 const {ERRNO} = require("./../TOOLS");
-const {genericMethods} = require("./GenericMethods.js");
+const {instanceInterface} = require("./GenericMethods.js");
+const {classInterface} = require("./GenericMethods.js");
 
 const playSchema = new Schema({
 
@@ -72,7 +73,7 @@ modelMethods = {
 
 /* Add the generic class interface funcitons to playSchema */
 for (var prop in classInterface) {
-    playSchema.statics.methods[prop] = classInterface[prop].bind(this);
+    playSchema.statics[prop] = classInterface[prop];
 }
 
 /* Add the local modef functions to playSchema */
@@ -99,7 +100,7 @@ instanceMethods = {
     },
 
     toString: function() {
-	return `Play ${this.title}`;
+	return `Play "${this.title}"`;
     },
 
     /*-----------------------------------*/

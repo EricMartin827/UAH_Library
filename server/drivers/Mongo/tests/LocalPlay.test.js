@@ -33,7 +33,7 @@ after((done) => {
     });
 });
 
-describe("Manipulating A Single Play", () => {
+describe("Running Single Play Unit Tests", () => {
 
     /* Access Test Data */
     var clientDataArray = DATA.onePlay;
@@ -41,37 +41,49 @@ describe("Manipulating A Single Play", () => {
     
     it("Test The Creation of a Single Play", (done) => {
 
-	   request(app)
-	       .post("/testOnePlay")
-	       .send(clientDataArray)
-	       .expect(200)
-	       .expect((res, err) => {
+	/* Create The First Entry and Confirm Data Save is Valid */
+	request(app)
+	    .post("/testAddOnePlay")
+	    .send(clientDataArray)
+	    .expect(200)
+	    .expect((res, err) => {
 
-		   if (err) {
-		       return done(err);
-		   }
-		   var doc = res.body;
-		   expect(res.clientError).toBe(false);
-		   expect(res.serverError).toBe(false);
-		   expect(verifyClientServer(play, doc))
-		       .toBe(true);
-
-	       })
+		if (err) {
+		    return done(err);
+		}
+		
+		var doc = res.body;
+		expect(res.clientError).toBe(false);
+		expect(res.serverError).toBe(false);
+		expect(verifyClientServer(play, doc))
+		    .toBe(true);
+	    })
 	    .end((err, res) => {
 		
 		if (err) {
 		    return done(err);
 		}
-		Play.find().then(
-		    (serverDocArray) => {
+
+		/* Reacees Database To Confirm Data is Present and Valid */
+		request(app)
+		    .post("/testQueryOnePlay")
+		    .send(clientDataArray)
+		    .expect(200)
+		    .expect((res, err) => {
+
+			if (err) {
+			    return done(err);
+			}
 			
-			var serverPlay = serverDocArray[0];
-			expect(serverDocArray.length).toBe(1);
-			expect(verifyClientServer(play, serverPlay))
+			var doc = res.body;
+			expect(res.clientError).toBe(false);
+			expect(res.serverError).toBe(false);
+			expect(verifyClientServer(play, doc))
 			    .toBe(true);
 			return done();
-		    },
-		    (err) => {
+		    })
+		    .catch((err) => {
+			console.log(err);
 			return done(err);
 		    });
 	    });		    
@@ -81,7 +93,7 @@ describe("Manipulating A Single Play", () => {
 
 	/* Resend The Exact Same Data */
 	request(app)
-	    .post("/testOnePlay")
+	    .post("/testAddOnePlay")
 	    .send(clientDataArray)
 	    .expect(400)
 	    .end((err, res) => {
@@ -115,53 +127,57 @@ describe("Manipulating A Single Play", () => {
 		    return done(error);
 		}
 
-		
-	    })
+		expect(res.clientError).toBe(false);
+		expect(res.serverError).toBe(false);
+		expect(verifyClientServer(play, doc))
+		    .toBe(true);
+		return done();
+	    });
 
-	/* Query Previous Play Entry */
-    	Play.find(play).then((serverDocArray) => {
-	    var serverPlay = serverDocArray[0];
+	// /* Query Previous Play Entry */
+    	// Play.find(play).then((serverDocArray) => {
+	//     var serverPlay = serverDocArray[0];
 
-	    /* Verify Database Is Not Corrupted */
-    	    assert.ok(serverDocArray.length === 1);
-    	    expect(verifyClientServer(play, serverPlay)).toBe(true);
+	//     /* Verify Database Is Not Corrupted */
+    	//     assert.ok(serverDocArray.length === 1);
+    	//     expect(verifyClientServer(play, serverPlay)).toBe(true);
 
-	    /* Make Changes To The Client's Play */
-    	    play.timePeriod = "18th Century";
-    	    play.copies = 9000;
+	//     /* Make Changes To The Client's Play */
+    	//     play.timePeriod = "18th Century";
+    	//     play.copies = 9000;
 	    
-	    Play.update(play).then(
-		(res) => {
+	//     Play.update(play).then(
+	// 	(res) => {
 
-		    /* Server AWKS Success */
-		    expect(res.n).toBe(1);
-		    expect(res.nModified).toBe(1);
-		    expect(res.ok).toBe(1);
+	// 	    /* Server AWKS Success */
+	// 	    expect(res.n).toBe(1);
+	// 	    expect(res.nModified).toBe(1);
+	// 	    expect(res.ok).toBe(1);
 
-		    /* Requery the Database for Updated Play */
-		    Play.find(play).then(
-			(serverDocArray) => {
+	// 	    /* Requery the Database for Updated Play */
+	// 	    Play.find(play).then(
+	// 		(serverDocArray) => {
 
-			    /* Verify That The Server is Correctly Updated */
-			    serverPlay = serverDocArray[0];
-			    expect(serverDocArray.length).toBe(1);
-			    expect(verifyClientServer(play, serverDocArray[0]))
-				.toBe(true);
-			    done();
-			},
+	// 		    /* Verify That The Server is Correctly Updated */
+	// 		    serverPlay = serverDocArray[0];
+	// 		    expect(serverDocArray.length).toBe(1);
+	// 		    expect(verifyClientServer(play, serverDocArray[0]))
+	// 			.toBe(true);
+	// 		    done();
+	// 		},
 
-			/* Error While Finding Play*/
-			(err) => {
-			    done(err);
-			})
-		},
+	// 		/* Error While Finding Play*/
+	// 		(err) => {
+	// 		    done(err);
+	// 		})
+	// 	},
 
-		/* Error While Updating Play */
-		(err) => {
+	// 	/* Error While Updating Play */
+	// 	(err) => {
 		    
-		    done(err);
-		});
-	});
+	// 	    done(err);
+	// 	});
+	// });
     });
 
     it("Test That A Play Cannot Be Saved With Undeclared Attrbutes", (done) => {

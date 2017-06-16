@@ -4,7 +4,7 @@
     "description": "A software tracking tool for the UAH Drama Department.",
     "main": "index.js",
     "scripts": {
-	"test": "mocha server/**/*.test.js --no-timeout",
+	"test": "mocha server/**/*.test.js",
 	"test-watch": "nodemon --exec 'npm test'",
       	"test-debug": "mocha server/**/*.test.js --no-timeout",
 	"test-watch-debug": "nodemon --exec 'npm test' --no-timeout"

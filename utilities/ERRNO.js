@@ -161,6 +161,7 @@ var ERRNO = {
     161 : "IncompatibleCollationVersion",
     161 : "IncompatibleCollationVersion",
     161 : "IncompatibleCollationVersion",
+    200 : "NoQuerySpecified",
     9001 : "SocketException",
     9996 : "RecvStaleConfig",
     10107 : "NotMaster",

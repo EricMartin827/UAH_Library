@@ -1,5 +1,5 @@
 const {ERRNO} = require("./../TOOLS");
-const util = require("utils");
+const util = require("util");
 
 var instanceInterface = {
 
@@ -8,12 +8,12 @@ var instanceInterface = {
 	return new Promise((resolve, reject) => {
 	    instance.save()
 		.then((res) => {
-		    util.log(`Saved: ${this.toString()}`);
+		    util.log(`Saved: ${this}`);
 		    resolve(res);
 		})
 		.catch((err) => {
-		    util.error(`Failed To Save: ${instance.toString()} ` +
-			       `--> ERROR: ${ERRNO[err.code]}`);
+		    console.error(`Failed To Save: ${this} ` +
+				  `--> ERROR: ${ERRNO[err.code]}`);
 		    reject(err);
 		});
     	});
@@ -24,12 +24,12 @@ var instanceInterface = {
 	return new Promise((resolve, reject) => {
 	    instance.update()
 		.then((res) => {
-		    util.log(`Updated: ${instance.toString()}`);
+		    util.log(`Updated: ${this}`);
 		    resolve(res);
 		})
 		.catch((err) => {
-		    util.log(`Failed To Update: ${instance.toString()} ` +
-			     `--> ERROR: ERRNO[err.code]`);
+		    console.error(`Failed To Update: ${this} ` +
+				  `--> ERROR: ${ERRNO[err.code]}`);
 		    reject(err);
 		});
 	});
@@ -39,47 +39,52 @@ var instanceInterface = {
 
 /* Bind These in Each MongoModel Class */
 var classInterface = {
-
+    
     findOneFromDatabase : function(query) {
-	return new Promise((resolve, reject) => {
-	    this.findOne(query).exec()
+	var model = this;
+	return new Promise((resolve, reject) => {		
+	    model.findOne(query).exec()
 		.then((res) => {
-		    util.log(`Located: ${query}`);
+		    util.log(`Located: ${res}`);
 		    resolve(res);
 		})
-		.catch(err) => {
-		    util.log(`Failed To Locate: ${query} --> ERROR: ` +
-			     `${err.code}`);
+		.catch((err) => {
+		    query = query || "No Query Specified";
+		    console.error(`Failed To Locate: ${query} --> ERROR: ` +
+				  `${err.code}`);
+		    console.log(err);
 		    reject(err);
-		}
+		});
 	});
     },
 
     findAllFromDatabase: function(query) {
+	var model = this;
 	return new Promise((resolve, reject) => {
-	    this.find(query).exec()
+	    model.find(query).exec()
 		.then((res) => {
 		    util.log(`Located ${res.length}: ${query}`);
 		    resolve(res);
 		})
 		.catch((err) => {
-		    util.error(`Failed To Locate: ${query} --> ERROR: ` +
-			     `${err.code}`);
+		    console.error(`Failed To Locate: ${query} --> ERROR: ` +
+				  `${err.code}`);
 		    resolve(err);
 		})
 	});
     },
 
     findOneModifyDatabase: function(query) {
+	var model = this;
 	return new Promise((resolve, reject) => {
-	    this.findOneAndUpdate(query, update, {new : true})
+	    model.findOneAndUpdate(query, update, {new : true})
 		.exec().then((res) => {
 		    util.log(`Located ${query} : New Document: ${res[0]}`);
 		    resolve(res);
 		})
 		.catch((err) => {
-		    util.error(`Failed To Update From ${query} --> ERROR: ` +
-			       `${err.code}`);
+		    console.error(`Failed To Update From ${query} --> ERROR: ` +
+				  `${err.code}`);
 		    reject(err);
 		});
 	});
@@ -92,8 +97,8 @@ var classInterface = {
 		resolve(res);
 	    })
 	    .catch((err) => {
-		util.error(`Failed To Update From ${query} --> ERROR: ` +
-			   `${err.code}`);
+		console.error(`Failed To Update From ${query} --> ERROR: ` +
+			      `${err.code}`);
 		reject(err);
 	    });
     }
