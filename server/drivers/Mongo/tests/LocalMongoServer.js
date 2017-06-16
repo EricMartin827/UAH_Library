@@ -1,3 +1,4 @@
+
 const express = require("express");
 const bodyParser = require("body-parser");
 
@@ -13,13 +14,13 @@ const {httpJSON_2_ObjArr} = TEST_UTILS;
 app.post("/testOnePlay", (req, res) => {
 
     var cruc = httpJSON_2_ObjArr(req, Play);
-    cruc.pop().addToDataBase().then(
-	(doc) => {
+    cruc.pop().addToDatabase()
+	.then((doc) => {
 	    res.send(doc);
-	}
-    ).catch((err) => {
-	console.error("Error Why This One?????: ", err);
-    });
+	})
+	.catch((err) => {
+	    res.status(400).send(err);
+	});
 });
 
 app.post("/addFiveUniquePlays", (req, res) => {
@@ -28,12 +29,9 @@ app.post("/addFiveUniquePlays", (req, res) => {
 
     cruc.save().then(
 	(doc) => {
-	    console.log("Attempting To Save A Play");
 	    res.send(doc);
 	},
 	(err) => {
-	    console.log("Fuck!!!!!!!!!!!!!!!!!!")
-	    console.error("Failed to Save Play: ", err.message);
 	    res.status(400).send(err);
 	}
     ).catch((err) => {

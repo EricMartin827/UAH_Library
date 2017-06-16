@@ -62,7 +62,7 @@ function verifyClientServer(clientData, serverDoc) {
     if (count) {
 	return console.error("Not All Client Properties Verified");
     }
-    return "VERIFIED";
+    return true;
 }
 
 module.exports = {
@@ -71,22 +71,3 @@ module.exports = {
 	verifyClientServer : verifyClientServer
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

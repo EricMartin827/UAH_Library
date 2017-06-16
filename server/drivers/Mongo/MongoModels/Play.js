@@ -14,6 +14,7 @@
 const {MongoDB} = require("./../MongoDatabase.js");
 const {Schema} = require("./../MongoDatabase.js");
 const {ERRNO} = require("./../TOOLS");
+const {genericMethods} = require("./GenericMethods.js");
 
 const playSchema = new Schema({
 
@@ -96,42 +97,6 @@ instanceMethods = {
     /*----------Databse Access-----------*/
     /*-----------------------------------*/
 
-    // addToDataBase : new Promise(
-    // 	(resolve, reject) => {
-    // 	    console.log("SpongeBob Square Pants!!!")
-    // 	    console.log(this);
-    // 	}
-    // ),
-    
-    addToDataBase : function() {
-	var instance = this;
-	return new Promise((resolve, reject) => {
-	    instance.save()
-		.then((play) => {
-		    console.log("Saved Play: ", instance.title);
-		    resolve(play);
-		})
-		.catch((err) => {
-		    console.error("Failed to add Play: " + instance.title +
-				  " --> ERROR: " + ERRNO[err.code]);
-		    reject(err);
-		});
-    	});
-    },
-			  
-
-    // addToDatabase: function() {
-    // 	this.save()
-    // 	    .then((play) => {
-    // 		console.log("Saved Play: ". play.title);
-    // 		return play;
-    // 	    })
-    // 	    .catch((err) => {
-    // 		console.error("Failed To Update Play: " + this.title +
-    // 			      "ERROR: " + ERRNO[err.code]);
-    // 		return err;
-    // 	    });
-    // },
 
     saveInDatabase: function() {
 	Play.update(this)
@@ -180,6 +145,11 @@ for (var prop in instanceMethods) {
     playSchema.methods[prop] = instanceMethods[prop];
 }
 
+
+/* Add the generic methods instance methods to playSchema */
+for (var prop in genericMethods) {
+    playSchema.methods[prop] = genericMethods[prop];
+}
 
 
 /* Compile the schema into a usable model and export the constructor.
