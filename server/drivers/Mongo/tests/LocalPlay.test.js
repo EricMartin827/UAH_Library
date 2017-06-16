@@ -33,7 +33,7 @@ after((done) => {
     });
 });
 
-describe("POST /testOnePlay", () => {
+describe("Manipulating A Single Play", () => {
 
     /* Access Test Data */
     var clientDataArray = DATA.onePlay;
@@ -69,11 +69,10 @@ describe("POST /testOnePlay", () => {
 			expect(serverDocArray.length).toBe(1);
 			expect(verifyClientServer(play, serverPlay))
 			    .toBe(true);
-			done();
-
+			return done();
 		    },
 		    (err) => {
-			done(err);
+			return done(err);
 		    });
 	    });		    
     });
@@ -89,18 +88,35 @@ describe("POST /testOnePlay", () => {
 
 		/* There Should Not Be A Server Error */
 		if (err) {
-		    done(err);
+		    return done(err);
 		}
 
 		/* Verify The Client is At Fault and Server Detect Duplicate */
 		expect(res.clientError).toBe(true);
 		expect(res.serverError).toBe(false);
 		expect(ERRNO[res.body.code]).toBe("DuplicateKey");
-		done();
+		return done();
 	    });
     });
 
     it("Test That The Play Can Be Updated", (done) => {
+
+	/* Make Changes to the Client's Play and Post For An Update */
+	play.timePeriod = "18th Century";
+    	play.copies = 9000;
+	request(app)
+	    .post("/testUpdateOnePlay")
+	    .send([play])
+	    .expect(200)
+	    .end((err, res) => {
+
+		/* There Should Not Be A Server Error */
+		if (err) {
+		    return done(error);
+		}
+
+		
+	    })
 
 	/* Query Previous Play Entry */
     	Play.find(play).then((serverDocArray) => {
@@ -146,5 +162,10 @@ describe("POST /testOnePlay", () => {
 		    done(err);
 		});
 	});
+    });
+
+    it("Test That A Play Cannot Be Saved With Undeclared Attrbutes", (done) => {
+	
+	done();
     });
 });

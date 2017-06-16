@@ -57,7 +57,7 @@ const playSchema = new Schema({
  * Static methods for Play Model.
  */
 modelMethods = {
-
+    
     listAllPlays: function(upperLim) {
 
 	Play.find({}).sort({authorLast: -1}).limit(upperLim)
@@ -70,7 +70,12 @@ modelMethods = {
     }
 };
 
-/* Add the functions to playSchema for easy access in client */
+/* Add the generic class interface funcitons to playSchema */
+for (var prop in classInterface) {
+    playSchema.statics.methods[prop] = classInterface[prop].bind(this);
+}
+
+/* Add the local modef functions to playSchema */
 for (var prop in modelMethods) {
     playSchema.statics[prop] = modelMethods[prop]
 }
@@ -93,22 +98,13 @@ instanceMethods = {
 	return this.copies === 0;
     },
 
+    toString: function() {
+	return `Play ${this.title}`;
+    },
+
     /*-----------------------------------*/
     /*----------Databse Access-----------*/
     /*-----------------------------------*/
-
-
-    saveInDatabase: function() {
-	Play.update(this)
-	    .then((dbRes) => {
-		console.log("Updated Play: ", dbRes.body.title);
-	    })
-	    .catch((err) => {
-		console.error("Failed to Update Play: " + this.title + " " +
-			     ", ERROR: <Not Specified Yet :) >");
-	    });
-	
-    },
 
 
     findSynopsis: function() {
@@ -137,20 +133,20 @@ instanceMethods = {
 
     flushComments: function() {
 	return null;
-    }
+    },
+
+    
 };
+
+/* Add the generic methods interface functions to playSchema */
+for (var prop in instanceInterface) {
+    playSchema.methods[prop] = instanceInterface[prop];
+}
 
 /* Add the functions to playSchema for easy access in client */
 for (var prop in instanceMethods) {
     playSchema.methods[prop] = instanceMethods[prop];
 }
-
-
-/* Add the generic methods instance methods to playSchema */
-for (var prop in genericMethods) {
-    playSchema.methods[prop] = genericMethods[prop];
-}
-
 
 /* Compile the schema into a usable model and export the constructor.
  * Note that the instance models will have access to the generic static

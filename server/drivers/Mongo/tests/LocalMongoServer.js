@@ -11,16 +11,36 @@ const {app} = UTILS;
 const {printObj} = UTILS;
 const {httpJSON_2_ObjArr} = TEST_UTILS;
 
-app.post("/testOnePlay", (req, res) => {
+app.post("/testAddOnePlay", (req, res) => {
 
-    var cruc = httpJSON_2_ObjArr(req, Play);
-    cruc.pop().addToDatabase()
+    var playArray = httpJSON_2_ObjArr(req, Play);
+    playArray.pop().addToDatabase()
 	.then((doc) => {
 	    res.send(doc);
 	})
 	.catch((err) => {
 	    res.status(400).send(err);
 	});
+});
+
+app.post("/testUpdateOnePlay", (req, res) => {
+
+    var playArray = httpJSON_2_ObjArr(req, Play);
+    playArray.pop().saveToDatabase()
+	.then((doc) => {
+	    res.send(doc);
+	})
+	.catch((err) => {
+	    res.status(400).send(err);
+	});
+});
+
+app.get("/getOnePlay", (req, res) => {
+
+    //    var playArray = httpJSON_2_ObjArr(req, Play);
+    Play.
+    playArray.pop().saveToDatabase();
+    
 });
 
 app.post("/addFiveUniquePlays", (req, res) => {
