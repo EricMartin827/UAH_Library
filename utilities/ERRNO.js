@@ -161,7 +161,8 @@ var ERRNO = {
     161 : "IncompatibleCollationVersion",
     161 : "IncompatibleCollationVersion",
     161 : "IncompatibleCollationVersion",
-    200 : "NoQuerySpecified",
+    200 : "MissingClientInput", // This Is You
+    201 : "NoModifiableDocumentFound", // This Is You
     9001 : "SocketException",
     9996 : "RecvStaleConfig",
     10107 : "NotMaster",
@@ -182,8 +183,22 @@ var ERRNO = {
     13104 : "OBSOLETE_PrepareConfigsFailed",
     13104 : "OBSOLETE_PrepareConfigsFailed",
     13104 : "OBSOLETE_PrepareConfigsFailed"
+};
+
+CUSTOM_ERRNO = {
+    NO_CLIENT_REQUEST : 200,
+    FAILED_UPDATE : 201
+};
+
+function makeErrno(code, msg) {
+    err = new Error(msg);
+    err.code = code;
+    err.name = ERRNO[code];
+    return err;
 }
 
 module.exports = {
-    ERRNO : ERRNO
+    ERRNO : ERRNO,
+    CUSTOM_ERRNO : CUSTOM_ERRNO,
+    makeErrno : makeErrno
 }

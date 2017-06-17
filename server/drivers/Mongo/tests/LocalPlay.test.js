@@ -33,7 +33,7 @@ after((done) => {
     });
 });
 
-describe("Running Single Play Unit Tests", () => {
+describe("Simple Play Unit Tests", () => {
 
     /* Access Test Data */
     var clientDataArray = DATA.onePlay;

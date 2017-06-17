@@ -7,13 +7,14 @@ const {UTILS} = require("./../TOOLS");
 const {TEST_UTILS} = require("./../TOOLS");
 const {CONSTANTS} = require("./../TOOLS");
 
+const {ModelFactory} = require("./../MongoFactory.js");
 const {app} = UTILS;
 const {printObj} = UTILS;
 const {httpJSON_2_ObjArr} = TEST_UTILS;
 
 app.post("/testAddOnePlay", (req, res) => {
 
-    var playArray = httpJSON_2_ObjArr(req, Play);
+    var playArray = ModelFactory(req, Play);
     playArray.pop().addToDatabase()
 	.then((doc) => {
 	    res.send(doc);
@@ -25,7 +26,8 @@ app.post("/testAddOnePlay", (req, res) => {
 
 app.post("/testQueryOnePlay", (req, res) => {
 
-    Play.findOneFromDatabase(req[0])
+    var playArray = ModelFactory(req);
+    Play.findOneFromDatabase(playArray.pop())
 	.then((doc) => {
 	    res.send(doc);
 	})
@@ -37,8 +39,8 @@ app.post("/testQueryOnePlay", (req, res) => {
 
 app.post("/testUpdateOnePlay", (req, res) => {
 
-    var playArray = httpJSON_2_ObjArr(req, Play);
-    playArray.pop().saveToDatabase()
+    var play = ModelFactory(req).pop();
+    Play.findOneModifyDatabase(play, play)
 	.then((doc) => {
 	    res.send(doc);
 	})
@@ -46,22 +48,6 @@ app.post("/testUpdateOnePlay", (req, res) => {
 	    console.log(err);
 	    res.status(400).send(err);
 	});
-});
-
-app.post("/addFiveUniquePlays", (req, res) => {
-
-    var cruc = httpJSON_2_ObjArr(req, Play);
-
-    cruc.save().then(
-	(doc) => {
-	    res.send(doc);
-	},
-	(err) => {
-	    res.status(400).send(err);
-	}
-    ).catch((err) => {
-	console.error("Error: ", e);
-    });
 });
 
 app.listen(3000, () => {

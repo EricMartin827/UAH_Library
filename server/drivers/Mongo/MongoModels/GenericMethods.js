@@ -1,5 +1,15 @@
-const {ERRNO} = require("./../TOOLS");
+
+
+/* Import Node Core Modules */
 const util = require("util");
+
+/* Import and Set Up Custon Node Modules*/
+const NODE_ERROR = require("./../TOOLS");
+const {ERRNO} = NODE_ERROR;
+const {CUSTOM_ERRNO} = NODE_ERROR;
+const {makeErrno} = NODE_ERROR;
+const {FAILED_UPDATE} =  CUSTOM_ERRNO;
+const {NO_CLIENT_REQUEST} = CUSTOM_ERRNO;
 
 var instanceInterface = {
 
@@ -17,23 +27,7 @@ var instanceInterface = {
 		    reject(err);
 		});
     	});
-    },
-
-    saveToDatabase : function() {
-	var instance = this;
-	return new Promise((resolve, reject) => {
-	    instance.update()
-		.then((res) => {
-		    util.log(`Updated: ${this}`);
-		    resolve(res);
-		})
-		.catch((err) => {
-		    console.error(`Failed To Update: ${this} ` +
-				  `--> ERROR: ${ERRNO[err.code]}`);
-		    reject(err);
-		});
-	});
-    }    
+    }
 }
 
 
@@ -42,7 +36,7 @@ var classInterface = {
     
     findOneFromDatabase : function(query) {
 	var model = this;
-	return new Promise((resolve, reject) => {		
+	return new Promise((resolve, reject) => {
 	    model.findOne(query).exec()
 		.then((res) => {
 		    util.log(`Located: ${res}`);
@@ -74,12 +68,17 @@ var classInterface = {
 	});
     },
 
-    findOneModifyDatabase: function(query) {
+    findOneModifyDatabase: function(query, update) {
 	var model = this;
 	return new Promise((resolve, reject) => {
 	    model.findOneAndUpdate(query, update, {new : true})
 		.exec().then((res) => {
-		    util.log(`Located ${query} : New Document: ${res[0]}`);
+		    if (!res) {
+			return reject(makeErrno(FAILED_UPDATE,
+					 `Query=${query} Failed to Provide ` +
+					 `Update=${update}`));
+		    }
+		    util.log(`Located ${query} : New Document: ${res}`);
 		    resolve(res);
 		})
 		.catch((err) => {
@@ -90,7 +89,7 @@ var classInterface = {
 	});
     },
 
-    findManyModifyDatabase: function(query) {
+    findManyModifyDatabase: function(query, update) {
 	this.findOneAndUpdate(query, update, {new : true})
 	    .exec().then((res) => {
 		util.log(`Located ${query} : New Document: ${res[0]}`);
