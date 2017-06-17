@@ -58,6 +58,22 @@ const playSchema = new Schema({
  * Static methods for Play Model.
  */
 modelMethods = {
+
+    stripKeys: function(obj) {
+
+	var keyQuery = {};
+	if (!obj || !typeof(obj) == "object") {
+	    return null;
+	}
+	var primaryKeys = ["title", "authorLast", "authorFirst"];
+	for (var key in primaryKeys) {
+	    if (!obj[key]) {
+		return null;
+	    }
+	    keyQuery[key] = obj[key];
+	}
+	return true;
+    },
     
     listAllPlays: function(upperLim) {
 

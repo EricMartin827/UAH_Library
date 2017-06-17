@@ -39,13 +39,15 @@ app.post("/testQueryOnePlay", (req, res) => {
 
 app.post("/testUpdateOnePlay", (req, res) => {
 
-    var play = ModelFactory(req).pop();
-    Play.findOneModifyDatabase(play, play)
+    //var play = ModelFactory(req).pop();
+    //Play.findOneModifyDatabase(play, play)
+    var playArray = ModelFactory(req, Play);
+    playArray.pop().commitToDatabase()
 	.then((doc) => {
 	    res.send(doc);
 	})
 	.catch((err) => {
-	    console.log(err);
+	    //console.log(err);
 	    res.status(400).send(err);
 	});
 });

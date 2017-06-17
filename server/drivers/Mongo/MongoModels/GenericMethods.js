@@ -4,10 +4,10 @@
 const util = require("util");
 
 /* Import and Set Up Custon Node Modules*/
-const NODE_ERROR = require("./../TOOLS");
-const {ERRNO} = NODE_ERROR;
-const {CUSTOM_ERRNO} = NODE_ERROR;
-const {makeErrno} = NODE_ERROR;
+const {NODE_ERRORS} = require("./../TOOLS");
+const {ERRNO} = NODE_ERRORS;
+const {CUSTOM_ERRNO} = NODE_ERRORS;
+const {makeErrno} = NODE_ERRORS;
 const {FAILED_UPDATE} =  CUSTOM_ERRNO;
 const {NO_CLIENT_REQUEST} = CUSTOM_ERRNO;
 
@@ -27,11 +27,27 @@ var instanceInterface = {
 		    reject(err);
 		});
     	});
+    },
+
+    commitToDatabase : function() {
+    	var instance = this;
+    	return new Promise((resolve, reject) => {
+	    instance.update()
+		.then((res) => {
+		    util.log(`Updated: ${this}`);
+		    resolve(res);
+		})
+		.catch((err) => {
+		    console.error(`Failed To Update: ${this} ` +
+				  `--> ERROR: ${ERRNO[err.code]}`);
+		    //console.log(err);
+		    reject(err);
+		});
+    	})
     }
 }
 
 
-/* Bind These in Each MongoModel Class */
 var classInterface = {
     
     findOneFromDatabase : function(query) {
@@ -75,8 +91,7 @@ var classInterface = {
 		.exec().then((res) => {
 		    if (!res) {
 			return reject(makeErrno(FAILED_UPDATE,
-					 `Query=${query} Failed to Provide ` +
-					 `Update=${update}`));
+						"Failed to Provide Update"));
 		    }
 		    util.log(`Located ${query} : New Document: ${res}`);
 		    resolve(res);

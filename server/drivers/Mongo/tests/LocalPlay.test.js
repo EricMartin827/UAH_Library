@@ -80,6 +80,7 @@ describe("Simple Play Unit Tests", () => {
 			expect(res.serverError).toBe(false);
 			expect(verifyClientServer(play, doc))
 			    .toBe(true);
+			play = doc;
 			return done();
 		    })
 		    .catch((err) => {
@@ -124,7 +125,7 @@ describe("Simple Play Unit Tests", () => {
 
 		/* There Should Not Be A Server Error */
 		if (err) {
-		    return done(error);
+		    return done(err);
 		}
 
 		expect(res.clientError).toBe(false);
@@ -133,51 +134,6 @@ describe("Simple Play Unit Tests", () => {
 		    .toBe(true);
 		return done();
 	    });
-
-	// /* Query Previous Play Entry */
-    	// Play.find(play).then((serverDocArray) => {
-	//     var serverPlay = serverDocArray[0];
-
-	//     /* Verify Database Is Not Corrupted */
-    	//     assert.ok(serverDocArray.length === 1);
-    	//     expect(verifyClientServer(play, serverPlay)).toBe(true);
-
-	//     /* Make Changes To The Client's Play */
-    	//     play.timePeriod = "18th Century";
-    	//     play.copies = 9000;
-	    
-	//     Play.update(play).then(
-	// 	(res) => {
-
-	// 	    /* Server AWKS Success */
-	// 	    expect(res.n).toBe(1);
-	// 	    expect(res.nModified).toBe(1);
-	// 	    expect(res.ok).toBe(1);
-
-	// 	    /* Requery the Database for Updated Play */
-	// 	    Play.find(play).then(
-	// 		(serverDocArray) => {
-
-	// 		    /* Verify That The Server is Correctly Updated */
-	// 		    serverPlay = serverDocArray[0];
-	// 		    expect(serverDocArray.length).toBe(1);
-	// 		    expect(verifyClientServer(play, serverDocArray[0]))
-	// 			.toBe(true);
-	// 		    done();
-	// 		},
-
-	// 		/* Error While Finding Play*/
-	// 		(err) => {
-	// 		    done(err);
-	// 		})
-	// 	},
-
-	// 	/* Error While Updating Play */
-	// 	(err) => {
-		    
-	// 	    done(err);
-	// 	});
-	// });
     });
 
     it("Test That A Play Cannot Be Saved With Undeclared Attrbutes", (done) => {

@@ -161,8 +161,16 @@ var ERRNO = {
     161 : "IncompatibleCollationVersion",
     161 : "IncompatibleCollationVersion",
     161 : "IncompatibleCollationVersion",
-    200 : "MissingClientInput", // This Is You
-    201 : "NoModifiableDocumentFound", // This Is You
+
+    /* Custom Erros Added By You */
+    /*********************************/
+    200 : "MissingClientInput",
+    201 : "InvalidClientInput",
+    202 : "QueryMiss",
+    203 : "NoModifiableDocumentFound",
+    250 : "InvalidServerArguments",
+    /*********************************/
+    
     9001 : "SocketException",
     9996 : "RecvStaleConfig",
     10107 : "NotMaster",
@@ -187,18 +195,28 @@ var ERRNO = {
 
 CUSTOM_ERRNO = {
     NO_CLIENT_REQUEST : 200,
-    FAILED_UPDATE : 201
+    ECINVAL : 201,
+    FAILED_QUERY : 202,
+    FAILED_UPDATE : 203,
+    ESINVAL : 250
 };
 
-function makeErrno(code, msg) {
+function makeErrno(code, msg, doPrint) {
+
     err = new Error(msg);
     err.code = code;
     err.name = ERRNO[code];
+    if (doPrint) {
+	console.error(`${msg} --> ERROR: ${ERRNO[code]}`);
+    }
     return err;
 }
 
 module.exports = {
-    ERRNO : ERRNO,
-    CUSTOM_ERRNO : CUSTOM_ERRNO,
-    makeErrno : makeErrno
+    NODE_ERRORS :
+    {
+	ERRNO : ERRNO,
+	CUSTOM_ERRNO : CUSTOM_ERRNO,
+	makeErrno : makeErrno
+    }
 }
