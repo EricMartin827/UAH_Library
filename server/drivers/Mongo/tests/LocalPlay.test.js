@@ -51,7 +51,7 @@ describe("Simple Play Unit Tests", () => {
 		if (err) {
 		    return done(err);
 		}
-		
+
 		var doc = res.body;
 		expect(res.clientError).toBe(false);
 		expect(res.serverError).toBe(false);
@@ -63,11 +63,11 @@ describe("Simple Play Unit Tests", () => {
 		if (err) {
 		    return done(err);
 		}
-
+		
 		/* Reacees Database To Confirm Data is Present and Valid */
 		request(app)
 		    .post("/testQueryOnePlay")
-		    .send(clientDataArray)
+		    .send([res.body])
 		    .expect(200)
 		    .expect((res, err) => {
 
@@ -136,8 +136,8 @@ describe("Simple Play Unit Tests", () => {
 	    });
     });
 
-    it("Test That A Play Cannot Be Saved With Undeclared Attrbutes", (done) => {
+    // it("Test That A Play Cannot Be Saved With Undeclared Attrbutes", (done) => {
 	
-	done();
-    });
+    // 	done();
+    // });
 });

@@ -201,15 +201,15 @@ CUSTOM_ERRNO = {
     ESINVAL : 250
 };
 
-function makeErrno(code, msg, doPrint) {
+function makeErrno(code, msg) {
 
     err = new Error(msg);
     err.code = code;
-    err.name = ERRNO[code];
-    if (doPrint) {
-	console.error(`${msg} --> ERROR: ${ERRNO[code]}`);
-    }
     return err;
+}
+
+function logErrno(err) {
+    console.error(`ERROR --> ${ERRNO[err.code]} : ${err.message}`);
 }
 
 module.exports = {
@@ -217,6 +217,7 @@ module.exports = {
     {
 	ERRNO : ERRNO,
 	CUSTOM_ERRNO : CUSTOM_ERRNO,
-	makeErrno : makeErrno
+	makeErrno : makeErrno,
+	logErrno : logErrno
     }
 }

@@ -21,11 +21,12 @@ var instanceInterface = {
 		    util.log(`Saved: ${this}`);
 		    resolve(res);
 		})
-		.catch((err) => {
-		    console.error(`Failed To Save: ${this} ` +
-				  `--> ERROR: ${ERRNO[err.code]}`);
-		    reject(err);
-		});
+		.catch((err) => reject(err));
+		// .catch((err) => {
+		//     console.error(`Failed To Save: ${this} ` +
+		// 		  `--> ERROR: ${ERRNO[err.code]}`);
+		//     reject(err);
+		// });
     	});
     },
 

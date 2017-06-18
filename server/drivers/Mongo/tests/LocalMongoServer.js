@@ -6,48 +6,55 @@ const {Play} = require("./../MongoModels");
 const {UTILS} = require("./../TOOLS");
 const {TEST_UTILS} = require("./../TOOLS");
 const {CONSTANTS} = require("./../TOOLS");
+const {NODE_ERRORS} = require("./../TOOLS");
 
 const {ModelFactory} = require("./../MongoFactory.js");
 const {app} = UTILS;
 const {printObj} = UTILS;
-const {httpJSON_2_ObjArr} = TEST_UTILS;
+const {logErrno} = NODE_ERRORS;
+
 
 app.post("/testAddOnePlay", (req, res) => {
 
-    var playArray = ModelFactory(req, Play);
-    playArray.pop().addToDatabase()
+    ModelFactory(req, Play)
+	.then((playArray) => {
+	    return playArray.pop().addToDatabase();
+	})
 	.then((doc) => {
 	    res.send(doc);
 	})
 	.catch((err) => {
+	    logErrno(err);
 	    res.status(400).send(err);
 	});
 });
 
 app.post("/testQueryOnePlay", (req, res) => {
 
-    var playArray = ModelFactory(req);
-    Play.findOneFromDatabase(playArray.pop())
+    ModelFactory(req, Play)
+	.then((playArray) => {
+	    return Play.findOneFromDatabase(playArray.pop());
+	})
 	.then((doc) => {
 	    res.send(doc);
 	})
-	.catch((err) => {
+	.catch((err) =>{
+	    logErrno(err);
 	    res.status(400).send(err);
 	});
-    
 });
 
 app.post("/testUpdateOnePlay", (req, res) => {
 
-    //var play = ModelFactory(req).pop();
-    //Play.findOneModifyDatabase(play, play)
-    var playArray = ModelFactory(req, Play);
-    playArray.pop().commitToDatabase()
+    ModelFactory(req, Play, true)
+	.then((playArray) => {
+	    return Play.commitToDatabase(playArray.pop());
+	})
 	.then((doc) => {
 	    res.send(doc);
 	})
 	.catch((err) => {
-	    //console.log(err);
+	    logErrno(err);
 	    res.status(400).send(err);
 	});
 });
