@@ -22,11 +22,6 @@ var instanceInterface = {
 		    resolve(res);
 		})
 		.catch((err) => reject(err));
-		// .catch((err) => {
-		//     console.error(`Failed To Save: ${this} ` +
-		// 		  `--> ERROR: ${ERRNO[err.code]}`);
-		//     reject(err);
-		// });
     	});
     },
 
@@ -66,6 +61,40 @@ var classInterface = {
 		    console.log(err);
 		    reject(err);
 		});
+	});
+    },
+
+    findOneByID_QueryDatabase : function(id) {
+	var model = this;
+	return new Promise((resolve, reject) => {
+	    if (!ObjectID.isValid(id)) {
+		reject(makeErrno(ECINVAL,
+				 `Invalid ID ${id} Used To Query Mongo`));
+	    }
+	    model.findById(id)
+		.then((res) => {
+		    util.log(`Located: ${res}`);
+		    resolve(res);
+		})
+		.catch((err) => resolve(err));
+	});
+    },
+
+    findOneByID_UpdateDatabase : function(id, update) {
+	var model = this;
+	return new Promise((resolve, reject) => {
+	    
+	    if (!ObjectID.isValid(id)) {
+		reject(makeErrno(ECINVAL,
+				 `Invalid ID ${id} Used To Update Mongo`));
+	    }
+	    
+	    if (!update) {
+		reject(makeErrno(ECINVAL,
+				 `Undfined Update Used To Modify Mongo`));
+	    }
+	    
+	    
 	});
     },
 

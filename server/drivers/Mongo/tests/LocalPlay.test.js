@@ -38,12 +38,11 @@ describe("Simple Play Unit Tests", () => {
     /* Access Test Data */
     var clientDataArray = DATA.onePlay;
     var play = clientDataArray[0];
-    
-    it("Test The Creation of a Single Play", (done) => {
+    it("Should Create And Query of a Single Play", (done) => {
 
 	/* Create The First Entry and Confirm Data Save is Valid */
 	request(app)
-	    .post("/testAddOnePlay")
+	    .post("/addPlay")
 	    .send(clientDataArray)
 	    .expect(200)
 	    .expect((res, err) => {
@@ -66,8 +65,7 @@ describe("Simple Play Unit Tests", () => {
 		
 		/* Reacees Database To Confirm Data is Present and Valid */
 		request(app)
-		    .post("/testQueryOnePlay")
-		    .send([res.body])
+		    .get("/getPlayID/" + res.body._id)
 		    .expect(200)
 		    .expect((res, err) => {
 
@@ -90,11 +88,11 @@ describe("Simple Play Unit Tests", () => {
 	    });		    
     });
 
-    it("Test That The Same Play Cannot Be Reinserted", (done) => {
+    it("Should Not Be Able Reinsert the Same Play", (done) => {
 
 	/* Resend The Exact Same Data */
 	request(app)
-	    .post("/testAddOnePlay")
+	    .post("/addPlay")
 	    .send(clientDataArray)
 	    .expect(400)
 	    .end((err, res) => {
@@ -112,13 +110,13 @@ describe("Simple Play Unit Tests", () => {
 	    });
     });
 
-    it("Test That The Play Can Be Updated", (done) => {
+    it("Should Be Able to Update The Play", (done) => {
 
 	/* Make Changes to the Client's Play and Post For An Update */
 	play.timePeriod = "18th Century";
     	play.copies = 9000;
 	request(app)
-	    .post("/testUpdateOnePlay")
+	    .patch("/updatePlayId/" + play._id + "/" + play)
 	    .send([play])
 	    .expect(200)
 	    .end((err, res) => {

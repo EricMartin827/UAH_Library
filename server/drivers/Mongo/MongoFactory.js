@@ -16,18 +16,23 @@ const {ESINVAL} = CUSTOM_ERRNO;
 const {isFunc} = UTILS;
 const {isObject} = UTILS;
 
+const MODE = {
+    
+    NEW_ENTRY   : "NEW_ENTRY",
+    QUERY_ID    : "QUERY_ID",
+    QUERY_PROP  : "QEURY_PROP",
+    UPDATE_ID   : "UPDATE_ID",
+    REMOVE_ID   : "REMOVE_ID"
+}
+
 function findDocuments(req, Model) {
 
     var arr = [];
     return new Promise((resolve, reject) => {
 
-	// emmiter.on("SUCCESS", () => {
-	//     resolve(arr);
-	// });
-
-	// emtr.on("FAILURE", () => {
-	//     reject(thisErr);
-	// });
+	emtr.on("SUCCESS", () => {
+	    resolve(arr);
+	});
 
 	var clientArr = req.body;
 	for (let ii = 0; ii < clientArr.length; ii++) {
@@ -35,18 +40,16 @@ function findDocuments(req, Model) {
 	    let ele = clientArr[ii];
 	    if (ele._id) {
 	    
-		Model.findByID(ele._id)
+		Model.findById(ele._id)
 		    .then((res) => {
 			if (!res) {
 			    reject(makeErrno(FAILED_QUERY,
 			     		     `Failed to Locate ${ele}`));
-			    // emtr.emit("FAILURE");
-			    // break;
 			}
-			arr.push(res[0]);
-			// if (ii === req.body.length) {
-			//     emmiter.emit("SUCCESS");
-			// }
+			arr.push(res);
+			if (ii === req.body.length - 1) {
+			    emtr.emit("SUCCESS");
+			}
 		    })
 		    .catch((err) => reject(err));
 	    }
@@ -66,7 +69,8 @@ function generateDocuments(req, Model) {
 			 `Use Update to Modify Document`);
 	    continue;
 	}
-	
+
+	console.log("Model.schema.obj")
 	for (var prop in ele) {
 	    
 	    if (!Model.schema.obj.hasOwnProperty(prop)) {
@@ -85,7 +89,7 @@ function generateDocuments(req, Model) {
 		    "Data to Generate New Mongo Documents");
 }
 
-function ModelFactory(req, Model, isUpdate) {
+function ModelFactory(req, Model, isQuery) {
 
     return new Promise((resolve, reject) => {
 
@@ -104,7 +108,7 @@ function ModelFactory(req, Model, isUpdate) {
 			     "Invalid Model: No Schema Object Present"));
 	}
 
-	if (isUpdate) {
+	if (isQuery) {
 	    findDocuments(req, Model)
 		.then((arr) => {
 		    resolve(arr);
@@ -124,3 +128,69 @@ function ModelFactory(req, Model, isUpdate) {
 module.exports = {
     ModelFactory : ModelFactory
 }
+
+
+/*
+function SingleFactory(req, Model, mode, update) {
+
+    return new Promise((resolve, reject) => {
+	
+	if (!req) {
+	    reject(makeErrno(NO_CLIENT_REQUEST,
+			     "SingleFactory Cannot Generate Documents"));
+	}
+
+	if (!(Model && isFunc(Model) && Model.schema && Model.schema.obj)) {
+	    reject(makeErrno(ESINVAL,
+			     "Invalid Model: No Schema Object Present"));
+	}
+
+	switch (mode) {
+	    
+	case MODE.NEW_ENTRY:
+	    try {
+		resolve(makeDocument(req, Model));
+	    } catch (err) {
+		reject(err);
+	    }
+	    break;
+	    
+	case MODE.QUERY_ID:
+	    if (!ObjectID.isValid(req)) {
+		reject(makeErrno(ECINVAL,
+				 "Invalid ID: ${req} Cannot Query Database"));
+	    }
+	    Model.findById(res)
+		.then((doc) => resolve(doc))
+		.catch((err) => reject(err));
+
+	case MODE.UPDATE_ID:
+	    if (!ObjectID.isValid(req)) {
+		reject(makeErrno(ECINVAL,
+				 "Invalid ID: ${req} Cannot Update Database"));
+	    }
+	    Model.findByIdAndUpdate
+	default:
+	    reject(makeErrno(ESINVAL,
+			    "Invalid Mode: ${mode} Passed To Single Factory"));
+	}
+    });
+}
+
+function makeDocument(req, Model) {
+
+    if (req._id || res.__v) {
+	throw makeErrno(ECINVAL,`Client Request ${req} Contains Mongo ID`);
+    }
+    
+    for (var prop in req) {
+	    
+	if (!Model.schema.obj.hasOwnProperty(prop)) {
+	    var model_name = Model.collection.collectionName;
+	    console.warn(`Request property ${prop} not in ${model_name}`);
+	    delete ele[prop];
+	}
+    }
+    return new Model(req);
+}
+*/

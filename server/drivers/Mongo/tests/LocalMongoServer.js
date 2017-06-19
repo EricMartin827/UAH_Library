@@ -12,14 +12,29 @@ const {ModelFactory} = require("./../MongoFactory.js");
 const {app} = UTILS;
 const {printObj} = UTILS;
 const {logErrno} = NODE_ERRORS;
+const {Mongo} = require("./../MongoModels/Mongo.js");
 
 
-app.post("/testAddOnePlay", (req, res) => {
+const Control = new Mongo(Play);
+
+app.post("/addPlay", (req, res) => {
 
     ModelFactory(req, Play)
-	.then((playArray) => {
-	    return playArray.pop().addToDatabase();
-	})
+    	.then((playArray) => {
+    	    return playArray.pop().addToDatabase();
+    	})
+    	.then((doc) => {
+    	    res.send(doc);
+    	})
+    	.catch((err) => {
+    	    logErrno(err);
+    	    res.status(400).send(err);
+    	});
+});
+
+app.get("/getPlayID/:id", (req, res) => {
+
+    Control.findOneByID_QueryDatabase(req)
 	.then((doc) => {
 	    res.send(doc);
 	})
@@ -29,34 +44,18 @@ app.post("/testAddOnePlay", (req, res) => {
 	});
 });
 
-app.post("/testQueryOnePlay", (req, res) => {
+app.patch("/updatePlayId/:id/:update", (req, res) => {
 
-    ModelFactory(req, Play)
-	.then((playArray) => {
-	    return Play.findOneFromDatabase(playArray.pop());
-	})
-	.then((doc) => {
-	    res.send(doc);
-	})
-	.catch((err) =>{
-	    logErrno(err);
-	    res.status(400).send(err);
-	});
-});
-
-app.post("/testUpdateOnePlay", (req, res) => {
-
-    ModelFactory(req, Play, true)
-	.then((playArray) => {
-	    return Play.commitToDatabase(playArray.pop());
-	})
+    console.log(req.params.id);
+    console.log(req.params.update);
+    Control.findOneByID_UpdateDatabase(req)
 	.then((doc) => {
 	    res.send(doc);
 	})
 	.catch((err) => {
 	    logErrno(err);
 	    res.status(400).send(err);
-	});
+	}); 
 });
 
 app.listen(3000, () => {
