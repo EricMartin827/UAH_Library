@@ -51,6 +51,24 @@ function initOneDoc(Model, newEntry) {
     return new Model(newEntry);
 }
 
+function initMultDocs(Model, entryArray) {
+
+    if (!Array.isArray(entryArray)) {
+	throw makeErrno(ECINVAL,
+			`Non Array Value Used in Multiple Document Generation`);
+    }
+
+    for (var entry in entryArray) {
+	if (entry._id || entry.__v) {
+	    throw makeErrno(ECINVAL,
+			    `Attempted To Create A Document With Mongo ID`);
+	}
+	strip(Model, entry);
+	entry = new Model(entry);
+    }
+    return entryArray;
+}
+
 function Mongo(Model) {
 
     if (!(Model && isFunc(Model) && Model.schema && Model.schema.obj)) {
@@ -61,6 +79,10 @@ function Mongo(Model) {
 
 var Interface = {
 
+    /********************************************/
+    /******** Single Document Interface *********/
+    /********************************************/
+    
     addNewDocument_ModifyDatabase : function(req) {
 	return new Promise((resolve, reject) => {
 	    try {
@@ -75,7 +97,6 @@ var Interface = {
 	    } catch(err) {
 		reject(err);
 	    }
-
 	});
     },
 
@@ -131,6 +152,29 @@ var Interface = {
 	    }
 
 	    this.model.findByIdAndUpdate(id, {$set : update}, {new : true})
+		.then((res) => {
+		    resolve(res);
+		})
+		.catch((err) => {
+		    reject(err);
+		});
+	});
+    },
+
+    /********************************************/
+    /******* Multiple Document Interface ********/
+    /********************************************/
+
+    addMultipleDocuments_ModifyDatabase : function(req) {
+	return new Promise((resolve, reject) => {
+
+	    try {
+		var docs = initMultDocs(this.model, req.body);
+	    } catch (err) {
+		reject(err);
+	    }
+
+	    this.model.insertMany(arr)
 		.then((res) => {
 		    resolve(res);
 		})

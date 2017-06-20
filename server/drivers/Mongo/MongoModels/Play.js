@@ -44,13 +44,14 @@ const playSchema = new Schema({
 	trim: true
     },
 
-    /* Non-Key Attributes */
+    /* Mutable Public Attributes */
     genre:         {type: String, default: "Drama"},
     timePeriod:    {type: String, default: "Not Specified"},
     hasSpectacle:  {type: Boolean, default: false},
     actorCount:    {type: Number, min: 1, max: 50, default: 10},
     costumeCount:  {type: Number, min: 1, max: 50, default: 10},
-    copies:        {type: Number, default: 1}
+    copies:        {type: Number, min: 0, max: 50, default: 1}
+ 
 });
 
 
