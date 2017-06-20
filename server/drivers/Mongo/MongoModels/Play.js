@@ -14,8 +14,7 @@
 const {MongoDB} = require("./../MongoDatabase.js");
 const {Schema} = require("./../MongoDatabase.js");
 const {ERRNO} = require("./../TOOLS");
-const {instanceInterface} = require("./GenericMethods.js");
-const {classInterface} = require("./GenericMethods.js");
+const util = require("util");
 
 const playSchema = new Schema({
 
@@ -54,33 +53,6 @@ const playSchema = new Schema({
     copies:        {type: Number, default: 1}
 });
 
-/**
- * Static methods for Play Model.
- */
-modelMethods = {
-    
-    listAllPlays: function(upperLim) {
-
-	Play.find({}).sort({authorLast: -1}).limit(upperLim)
-	    .then((plays) => {
-		console.log("All plays: ", plays);
-		return plays;
-	    }).catch((err) => {
-		console.error("Failed to locate plays: ", err);
-	    });
-    }
-};
-
-/* Add the generic class interface funcitons to playSchema */
-for (var prop in classInterface) {
-    playSchema.statics[prop] = classInterface[prop];
-}
-
-/* Add the local modef functions to playSchema */
-for (var prop in modelMethods) {
-    playSchema.statics[prop] = modelMethods[prop]
-}
-
 
 /**
  * Instance methods for invidual Play objects.
@@ -100,7 +72,8 @@ instanceMethods = {
     },
 
     toString: function() {
-	return `Play "${this.title}"`;
+	return `Play "${this.title}" By: ${this.authorFirst} ` +
+	    `${this.authorLast}`
     },
 
     /*-----------------------------------*/
@@ -139,14 +112,8 @@ instanceMethods = {
     
 };
 
-/* Add the generic methods interface functions to playSchema */
-for (var prop in instanceInterface) {
-    playSchema.methods[prop] = instanceInterface[prop];
-}
-
-/* Add the functions to playSchema for easy access in client */
-for (var prop in instanceMethods) {
-    playSchema.methods[prop] = instanceMethods[prop];
+for (var func in instanceMethods) {
+    playSchema.methods[func] = instanceMethods[func];
 }
 
 /* Compile the schema into a usable model and export the constructor.

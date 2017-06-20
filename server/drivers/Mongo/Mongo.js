@@ -1,7 +1,5 @@
-/* Import Node Core Modules */
-const util = require("util");
-
 /* Import and Set Up Custon Node Modules*/
+const util = require("util");
 const {NODE_ERRORS} = require("./TOOLS");
 const {UTILS} = require("./TOOLS");
 const {isFunc} = UTILS;
@@ -59,7 +57,6 @@ function Mongo(Model) {
 	throw makeErrno(ESINVAL, "Invalid Model: No Schema Object Present");
     }
     this.model = Model;
-
 }
 
 var Interface = {
@@ -68,8 +65,9 @@ var Interface = {
 	return new Promise((resolve, reject) => {
 	    try {
 		initOneDoc(this.model, req.body).save()
-		    .then((addedDoc) => {
-			resolve(addedDoc)
+		    .then((res) => {
+			util.log("Added: ", res.toString());
+			resolve(res);
 		    })
 		    .catch((err) => {
 			reject(err);
@@ -91,7 +89,7 @@ var Interface = {
 	    }
 	    this.model.findById(id)
 		.then((res) => {
-		    util.log(`Located: ${res}`);
+		    util.log("Located: ", res.toString());
 		    resolve(res);
 		})
 		.catch((err) => resolve(err));
