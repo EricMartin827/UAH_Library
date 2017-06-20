@@ -7,11 +7,10 @@ const {TEST_UTILS} = require("./../TOOLS");
 const {CONSTANTS} = require("./../TOOLS");
 const {NODE_ERRORS} = require("./../TOOLS");
 
-const {ModelFactory} = require("./../MongoFactory.js");
 const {app} = UTILS;
 const {printObj} = UTILS;
 const {logErrno} = NODE_ERRORS;
-const {Mongo} = require("./../MongoModels/Mongo.js");
+const {Mongo} = require("./../Mongo.js");
 
 const Control = new Mongo(Play);
 

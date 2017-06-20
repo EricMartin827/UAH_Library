@@ -2,8 +2,8 @@
 const util = require("util");
 
 /* Import and Set Up Custon Node Modules*/
-const {NODE_ERRORS} = require("./../TOOLS");
-const {UTILS} = require("./../TOOLS");
+const {NODE_ERRORS} = require("./TOOLS");
+const {UTILS} = require("./TOOLS");
 const {isFunc} = UTILS;
 const {ERRNO} = NODE_ERRORS;
 const {CUSTOM_ERRNO} = NODE_ERRORS;
