@@ -1,4 +1,3 @@
-
 const express = require("express");
 const bodyParser = require("body-parser");
 
@@ -14,22 +13,18 @@ const {printObj} = UTILS;
 const {logErrno} = NODE_ERRORS;
 const {Mongo} = require("./../MongoModels/Mongo.js");
 
-
 const Control = new Mongo(Play);
 
 app.post("/addPlay", (req, res) => {
 
-    ModelFactory(req, Play)
-    	.then((playArray) => {
-    	    return playArray.pop().addToDatabase();
-    	})
-    	.then((doc) => {
-    	    res.send(doc);
-    	})
-    	.catch((err) => {
-    	    logErrno(err);
-    	    res.status(400).send(err);
-    	});
+    Control.addNewDocument_ModifyDatabase(req)
+	.then((doc) => {
+	    res.send(doc);
+	})
+	.catch((err) => {
+	    logErrno(err);
+	    res.status(400).send(err);
+	});
 });
 
 app.get("/getPlayID/:id", (req, res) => {
@@ -44,10 +39,20 @@ app.get("/getPlayID/:id", (req, res) => {
 	});
 });
 
-app.patch("/updatePlayId/:id/:update", (req, res) => {
+app.get("/getPlay", (req, res) => {
 
-    console.log(req.params.id);
-    console.log(req.params.update);
+    Control.findFirstOneByProp_QueryDatabase(req)
+	.then((doc) => {
+	    res.send(doc);
+	})
+	.catch((err) => {
+	    logErrno(err);
+	    res.status.send(err);
+	});
+});
+
+app.patch("/updatePlayID/:id", (req, res) => {
+
     Control.findOneByID_UpdateDatabase(req)
 	.then((doc) => {
 	    res.send(doc);
@@ -55,7 +60,7 @@ app.patch("/updatePlayId/:id/:update", (req, res) => {
 	.catch((err) => {
 	    logErrno(err);
 	    res.status(400).send(err);
-	}); 
+	});
 });
 
 app.listen(3000, () => {

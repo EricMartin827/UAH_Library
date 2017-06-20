@@ -70,7 +70,6 @@ function generateDocuments(req, Model) {
 	    continue;
 	}
 
-	console.log("Model.schema.obj")
 	for (var prop in ele) {
 	    
 	    if (!Model.schema.obj.hasOwnProperty(prop)) {

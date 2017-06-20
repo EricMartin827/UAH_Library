@@ -1,4 +1,3 @@
-
 /* NPM Modules */
 const expect = require("expect");
 const request = require("supertest");
@@ -29,21 +28,19 @@ before((done) => {
 /* Clean up the databese after all unit tests run */
 after((done) => {
     Play.remove({}).then(() => {
-    	done();
+	done();
     });
 });
 
 describe("Simple Play Unit Tests", () => {
 
-    /* Access Test Data */
-    var clientDataArray = DATA.onePlay;
-    var play = clientDataArray[0];
     it("Should Create And Query of a Single Play", (done) => {
 
 	/* Create The First Entry and Confirm Data Save is Valid */
+	var play = DATA.onePlay[0];
 	request(app)
 	    .post("/addPlay")
-	    .send(clientDataArray)
+	    .send(play)
 	    .expect(200)
 	    .expect((res, err) => {
 
@@ -58,11 +55,11 @@ describe("Simple Play Unit Tests", () => {
 		    .toBe(true);
 	    })
 	    .end((err, res) => {
-		
+
 		if (err) {
 		    return done(err);
 		}
-		
+
 		/* Reacees Database To Confirm Data is Present and Valid */
 		request(app)
 		    .get("/getPlayID/" + res.body._id)
@@ -72,28 +69,27 @@ describe("Simple Play Unit Tests", () => {
 			if (err) {
 			    return done(err);
 			}
-			
+
 			var doc = res.body;
 			expect(res.clientError).toBe(false);
 			expect(res.serverError).toBe(false);
 			expect(verifyClientServer(play, doc))
 			    .toBe(true);
-			play = doc;
 			return done();
 		    })
 		    .catch((err) => {
-			console.log(err);
 			return done(err);
 		    });
-	    });		    
+	    });
     });
 
     it("Should Not Be Able Reinsert the Same Play", (done) => {
 
 	/* Resend The Exact Same Data */
+	var play = DATA.onePlay[0];
 	request(app)
 	    .post("/addPlay")
-	    .send(clientDataArray)
+	    .send(play)
 	    .expect(400)
 	    .end((err, res) => {
 
@@ -110,32 +106,47 @@ describe("Simple Play Unit Tests", () => {
 	    });
     });
 
-    it("Should Be Able to Update The Play", (done) => {
+    it("Should Be Able Query By Properties And Update The Play", (done) => {
 
-	/* Make Changes to the Client's Play and Post For An Update */
-	play.timePeriod = "18th Century";
-    	play.copies = 9000;
+	/* Reacees Database To Confirm Data is Present and Valid */
+	var play = DATA.onePlay[0];
 	request(app)
-	    .patch("/updatePlayId/" + play._id + "/" + play)
-	    .send([play])
+	    .get("/getPlay")
+	    .send(play)
 	    .expect(200)
-	    .end((err, res) => {
+	    .expect((res, err) => {
 
-		/* There Should Not Be A Server Error */
 		if (err) {
 		    return done(err);
 		}
-
 		expect(res.clientError).toBe(false);
 		expect(res.serverError).toBe(false);
-		expect(verifyClientServer(play, doc))
+		expect(verifyClientServer(play, res.body))
 		    .toBe(true);
+
+		/* Make Changes to the Client's Play and Post For An Update */
+		play = res.body;
+		play.timePeriod = "18th Century";
+		play.copies = 9000;
+		request(app)
+		    .patch("/updatePlayID/" + play._id) /* Specify The Play */
+		    .send(play) /* Send The Update */
+		    .expect(200)
+		    .end((err, res) => {
+
+			/* There Should Not Be A Server Error */
+			if (err) {
+			    return done(err);
+			}
+			expect(res.clientError).toBe(false);
+			expect(res.serverError).toBe(false);
+			expect(verifyClientServer(play, res.body))
+			    .toBe(true);
+		    });
 		return done();
+	    })
+	    .catch((err) => {
+		return done(err);
 	    });
     });
-
-    // it("Test That A Play Cannot Be Saved With Undeclared Attrbutes", (done) => {
-	
-    // 	done();
-    // });
 });
