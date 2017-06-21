@@ -9,7 +9,7 @@ var data = {
 	}
     ],
     
-    multiPlays:
+    fivePlays:
     [
 	{	
 	    title: "Romeo and Juliet",
@@ -27,9 +27,9 @@ var data = {
 	    authorFirst: "Tennesee"
 	},
 	{
-	    title: "The Crucible",
-	    authorLast: "Miller",
-	    authorFirst: "Arthur"
+	    title: "Hamlet",
+	    authorLast: "William",
+	    authorFirst: "Shakespeare"
 	},
 	{
 	    title: "Death of A Salesman",

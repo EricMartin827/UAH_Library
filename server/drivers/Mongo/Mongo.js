@@ -58,14 +58,17 @@ function initMultDocs(Model, entryArray) {
 			`Non Array Value Used in Multiple Document Generation`);
     }
 
-    for (var entry in entryArray) {
+    for (let ii = 0; ii < entryArray.length; ii++) {
+
+	var entry = entryArray[ii];
 	if (entry._id || entry.__v) {
 	    throw makeErrno(ECINVAL,
 			    `Attempted To Create A Document With Mongo ID`);
 	}
 	strip(Model, entry);
-	entry = new Model(entry);
+	entryArray[ii] = new Model(entry);
     }
+    
     return entryArray;
 }
 
@@ -165,23 +168,27 @@ var Interface = {
     /******* Multiple Document Interface ********/
     /********************************************/
 
-    addMultipleDocuments_ModifyDatabase : function(req) {
-	return new Promise((resolve, reject) => {
+    addMultipleDocuments_ModifyDatabase : async function(req) {
 
-	    try {
-		var docs = initMultDocs(this.model, req.body);
-	    } catch (err) {
-		reject(err);
-	    }
-
-	    this.model.insertMany(arr)
-		.then((res) => {
-		    resolve(res);
-		})
-		.catch((err) => {
-		    reject(err);
-		});
-	});
+	var docs = initMultDocs(this.model, req.body);
+	for (let ii = 0; ii < docs.length; ii++) {
+//	    console.log(ii + " = "  + docs[]);
+	    docs[ii] = await docs[ii].save(); 
+	}
+	return docs;
+	// return new Promise((resolve, reject) => {
+	    
+	//     try {
+	// 	var docs = initMultDocs(this.model, req.body);
+	// 	for (let ii = 0; ii < docs.length; ii++) {
+	// 	    var entry = docs[ii];
+	// 	    docs[ii] = await entry.save();
+	// 	}
+	//     } catch (err) {
+	// 	reject(err);
+	//     }
+	//     resolve(docs);
+	// });
     }
 }
 
@@ -191,3 +198,4 @@ for (var func in Interface) {
 }
 
 module.exports = {Mongo};
+

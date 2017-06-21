@@ -62,6 +62,19 @@ app.patch("/updatePlayID/:id", (req, res) => {
 	});
 });
 
+
+app.post("/addPlays", (req, res) => {
+
+    Control.addMultipleDocuments_ModifyDatabase(req)
+	.then((docs) => {
+	    res.send(docs);
+	})
+	.catch((err) => {
+	    console.log(err);
+	    res.status(400).send(err);
+	});
+});
+
 app.listen(3000, () => {
     console.log("Starting MongoDB server on port 3000");
 });

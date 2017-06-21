@@ -12,6 +12,7 @@ const {verifyClientServer} = TEST_UTILS;
 const {printObj} = UTILS;
 
 /* Local Modules */
+const {MongoDB} = require("./../MongoDatabase.js");
 const {app} = require("./LocalMongoServer.js");
 const {Play} = require("./../MongoModels");
 var {DATA} = require("./PlayData.js");
@@ -22,7 +23,7 @@ var {DATA} = require("./PlayData.js");
 before((done) => {
     Play.remove({}).then(() => {
 	done();
-    });
+    });;
 });
 
 /* Clean up the databese after all unit tests run */
@@ -151,9 +152,25 @@ describe("Simple Play Unit Tests", () => {
     });
 });
 
+
 describe("Multiple Play Unit Tests", () => {
 
     it("Should Be Able To Create Multiple", (done) => {
-	done();
+
+	var plays = DATA.fivePlays;
+	request(app)
+	    .post("/addPlays")
+	    .send(plays)
+	    .expect(200)
+	    .end((err, res) => {
+
+		if (err) {
+		    return done(err);
+		}
+
+		expect(res.clientError).toBe(false);
+		expect(res.serverError).toBe(false);
+		return done();
+	    });
     })
 });
