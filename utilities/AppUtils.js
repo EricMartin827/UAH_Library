@@ -4,10 +4,10 @@ const bodyParser = require("body-parser")
 var app = express();
 app.use(bodyParser.json());
 
-function printObj(obj) {
+function stringify(obj) {
 
     if (obj) {
-	console.log(JSON.stringify(obj, undefined, 2));
+	return JSON.stringify(obj, undefined, 2);
     }
 }
 
@@ -22,7 +22,7 @@ function isObject(val) {
 module.exports = {
     UTILS : {
 	app: app,
-	printObj: printObj,
+	stringify: stringify,
 	isObject: isObject,
 	isFunc: isFunc,
     }

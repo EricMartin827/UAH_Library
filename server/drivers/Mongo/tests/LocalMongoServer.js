@@ -46,7 +46,7 @@ app.get("/getPlay", (req, res) => {
 	})
 	.catch((err) => {
 	    logErrno(err);
-	    res.status.send(err);
+	    res.status(400).send(err);
 	});
 });
 
@@ -59,6 +59,18 @@ app.patch("/updatePlayID/:id", (req, res) => {
 	.catch((err) => {
 	    logErrno(err);
 	    res.status(400).send(err);
+	});
+});
+
+app.delete("/removePlayID/:id", (req, res) => {
+
+    Control.removeOneByID_ModifyDatabase(req)
+	.then((awk) => {
+	    res.send(awk)
+	})
+	.catch((err) => {
+	    logErrno(err);
+	    res.status(404).send(err);
 	});
 });
 

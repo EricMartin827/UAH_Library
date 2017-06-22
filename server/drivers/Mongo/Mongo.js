@@ -3,6 +3,7 @@ const util = require("util");
 const {NODE_ERRORS} = require("./TOOLS");
 const {UTILS} = require("./TOOLS");
 const {isFunc} = UTILS;
+const {stringify} = UTILS;
 const {ERRNO} = NODE_ERRORS;
 const {CUSTOM_ERRNO} = NODE_ERRORS;
 const {ECINVAL} = CUSTOM_ERRNO;
@@ -10,6 +11,7 @@ const {ESINVAL} = CUSTOM_ERRNO;
 const {makeErrno} = NODE_ERRORS;
 const {FAILED_UPDATE} =  CUSTOM_ERRNO;
 const {NO_CLIENT_REQUEST} = CUSTOM_ERRNO;
+const {FAILED_QUERY} = CUSTOM_ERRNO;
 const {ObjectId} = require("mongoose").Types;
 const {isObject} = UTILS;
 
@@ -128,9 +130,13 @@ var Interface = {
 	    } catch (err) {
 		reject(err);
 	    }
-
 	    this.model.findOne(query).exec()
 		.then((res) => {
+		    if (!res) {
+			reject(makeErrno(FAILED_QUERY,
+					 `Unable to Find Entry With Query:\n` +
+					 `${stringify(query)}`));
+		    }
 		    resolve(res);
 		})
 		.catch((err) => {
@@ -164,6 +170,25 @@ var Interface = {
 	});
     },
 
+    removeOneByID_ModifyDatabase : function(req) {
+	return new Promise((resolve, reject) => {
+
+	    var id = req.params.id;
+	    if (!ObjectId.isValid(id)) {
+		reject(makeErrno(ECINVAL,
+				 `Invalid ID: ${id} Used To Delete Entry`));
+	    }
+
+	    this.model.deleteOne({_id : id})
+		.then((res) => {
+		    resolve(res);
+		})
+		.catch((err) => {
+		    reject(err);
+		});
+	});
+    },
+
     /********************************************/
     /******* Multiple Document Interface ********/
     /********************************************/
@@ -172,23 +197,9 @@ var Interface = {
 
 	var docs = initMultDocs(this.model, req.body);
 	for (let ii = 0; ii < docs.length; ii++) {
-//	    console.log(ii + " = "  + docs[]);
 	    docs[ii] = await docs[ii].save(); 
 	}
-	return docs;
-	// return new Promise((resolve, reject) => {
-	    
-	//     try {
-	// 	var docs = initMultDocs(this.model, req.body);
-	// 	for (let ii = 0; ii < docs.length; ii++) {
-	// 	    var entry = docs[ii];
-	// 	    docs[ii] = await entry.save();
-	// 	}
-	//     } catch (err) {
-	// 	reject(err);
-	//     }
-	//     resolve(docs);
-	// });
+		return docs;
     }
 }
 

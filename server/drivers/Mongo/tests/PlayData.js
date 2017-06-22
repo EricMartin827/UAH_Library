@@ -1,13 +1,11 @@
 var data = {
     
     onePlay :
-    [
-	{
-	    title: "The Crucible",
-	    authorLast: "Miller",
-	    authorFirst: "Arthur"
-	}
-    ],
+    {
+	title: "The Crucible",
+	authorLast: "Miller",
+	authorFirst: "Arthur"
+    },
     
     fivePlays:
     [

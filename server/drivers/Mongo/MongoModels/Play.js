@@ -22,7 +22,6 @@ const playSchema = new Schema({
     title: {
 	type : String,
 	required: true,
-//	unique: true, /* DOES NOT VALIDATE */
 	minLength : 1,
 	maxLencth : 100,
 	trim : true
@@ -30,7 +29,6 @@ const playSchema = new Schema({
     authorLast: {
 	type : String,
 	required: true,
-//	unique: true, /* DOES NOT VALIDATE */
 	minLength: 1,
 	maxLength: 50,
 	trim: true
@@ -38,7 +36,6 @@ const playSchema = new Schema({
     authorFirst: {
 	type : String,
 	required: true,
-//	unique: true, /* DOES NOT VALIDATE */
 	minLength: 1,
 	maxLength: 50,
 	trim: true

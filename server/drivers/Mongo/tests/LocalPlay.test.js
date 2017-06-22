@@ -35,10 +35,10 @@ after((done) => {
 
 describe("Simple Play Unit Tests", () => {
 
-    it("Should Create And Query of a Single Play", (done) => {
+    it("Should Create And Query Via the ID of a Single Play", (done) => {
 
 	/* Create The First Entry and Confirm Data Save is Valid */
-	var play = DATA.onePlay[0];
+	var play = DATA.onePlay;
 	request(app)
 	    .post("/addPlay")
 	    .send(play)
@@ -87,7 +87,7 @@ describe("Simple Play Unit Tests", () => {
     it("Should Not Be Able Reinsert the Same Play", (done) => {
 
 	/* Resend The Exact Same Data */
-	var play = DATA.onePlay[0];
+	var play = DATA.onePlay;
 	request(app)
 	    .post("/addPlay")
 	    .send(play)
@@ -110,7 +110,7 @@ describe("Simple Play Unit Tests", () => {
     it("Should Be Able Query By Properties And Update The Play", (done) => {
 
 	/* Reacees Database To Confirm Data is Present and Valid */
-	var play = DATA.onePlay[0];
+	var play = DATA.onePlay;
 	request(app)
 	    .get("/getPlay")
 	    .send(play)
@@ -150,6 +150,64 @@ describe("Simple Play Unit Tests", () => {
 		return done(err);
 	    });
     });
+
+    it("Should Query and Delete A Play Via ID ", (done) => {
+
+	var play = DATA.onePlay;
+	request(app)
+	    .get("/getPlay")
+	    .send(play)
+	    .expect(200)
+	    .expect((res, err) => {
+
+		if (err) {
+		    return done(err);
+		}
+		expect(res.clientError).toBe(false);
+		expect(res.serverError).toBe(false);
+		expect(verifyClientServer(play, res.body))
+		    .toBe(true);
+
+		play = res.body;
+		request(app)
+		    .delete("/removePlayID/" + play._id)
+		    .expect(200)
+		    .expect((res, err) => {
+
+			if (err) {
+			    return done(err);
+			}
+			var awk = res.body;
+			expect(awk.n).toBe(1);
+			expect(awk.ok).toBe(1);
+
+			/* Need To Test That Proper Error Result is Returned*/
+			/*Code Here :) */
+
+			request(app)
+			    .get("/getPlay")
+			    .send({copies: play.copies})
+			    .expect(400)
+			    .end((err, res) => {
+
+				if (err) {
+				    return done(err);
+				}
+				expect(res.clientError).toBe(true);
+				expect(res.serverError).toBe(false);
+				expect(ERRNO[res.body.code]).toBe("QueryMiss");
+				return done();
+			    });
+		    }).catch((err) => {
+			return done(err);
+		    });
+	    })
+	    .catch((err) => {
+		return done(err)
+	    });
+
+    });
+
 });
 
 
