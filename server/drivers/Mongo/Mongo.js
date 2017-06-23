@@ -1,5 +1,5 @@
 /**
- * Mongo is a module which provides a generic wrapper object/class
+ * Mongo.js is a module which provides a generic wrapper object/class
  * allowing multiple Mongoose Models to be accessed via a common
  * interface in the main server. The module reduces the code
  * size of the server. The interface cleans up and verifies client data before
@@ -7,7 +7,7 @@
  * error checks to ensure the integrity of the database while providing
  * informative error reports to the client program and the developer :).
  *
- * @module Mongo
+ * @module Mongo.js
  * @author Eric William Martin
  */
 

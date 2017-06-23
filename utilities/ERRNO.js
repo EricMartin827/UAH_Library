@@ -6,6 +6,7 @@
  * triggered the error, and a logger which saves errors to standad
  * error.
  *
+ * @module ERRNO.js
  * @author Eric William Martin
  */
 var ERRNO = {
