@@ -1,13 +1,13 @@
 /**
-* Play.js defines the prototype for Play object which are stored as documents
-* in a MongoDB database.
-*
-* For playSchema the combination of title and author is unique. This is set
-* up in the database, NOT HERE!. The unique tag in mongoose is NOT a validator!
-* It is included in the schema merely for documentation purposes. Mongoose does
-* not ensure primary key integrity. This is accomplished via the InitMongo.js
-* file which is executed locally on the server before application deployment.
-*
+ * Play.js defines the prototype for Play object which are stored as documents
+ * in a MongoDB database.
+ *
+ * For playSchema, the combination of title and author is unique. This is set
+ * up in the database, via InitMongo.js. NOT HERE!.
+ * It is included in the schema merely for documentation purposes. Mongoose does
+ * not ensure primary key integrity. This is accomplished via the InitMongo.js
+ * file which is executed locally on the server before application deployment.
+ *
 * @author Eric William Martin
 */
 
@@ -18,7 +18,7 @@ const util = require("util");
 
 const playSchema = new Schema({
 
-    /* Primary Keys */
+    /* Unique Primary Keys */
     title: {
 	type : String,
 	required: true,
