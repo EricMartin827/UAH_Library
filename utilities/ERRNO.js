@@ -1,3 +1,13 @@
+/**
+ * ERRNO.js is an error handling utility. It provides a means
+ * for concisely generating and logging errors in the main server
+ * code. Errors generated via this module record the types of error,
+ * a message providing a context for understanding the event that
+ * triggered the error, and a logger which saves errors to standad
+ * error.
+ *
+ * @author Eric William Martin
+ */
 var ERRNO = {
     0 : "OK",
     1 : "InternalError",
@@ -162,7 +172,7 @@ var ERRNO = {
     161 : "IncompatibleCollationVersion",
     161 : "IncompatibleCollationVersion",
 
-    /* Custom Erros Added By You */
+    /* Custom Erros Added By Developer */
     /*********************************/
     200 : "MissingClientInput",
     201 : "InvalidClientInput",
@@ -170,7 +180,7 @@ var ERRNO = {
     203 : "NoModifiableDocumentFound",
     250 : "InvalidServerArguments",
     /*********************************/
-    
+
     9001 : "SocketException",
     9996 : "RecvStaleConfig",
     10107 : "NotMaster",
@@ -201,10 +211,31 @@ CUSTOM_ERRNO = {
     ESINVAL : 250
 };
 
+
 function makeErrno(code, msg) {
 
-    err = new Error(msg);
+    /* Throw a deterministic error message that can be
+     * reliably processed to isolate the stack line
+     * containing the faulting file and line number.
+     */
+    var err;
+    try {
+	 throw new Error("");
+    } catch (e) {
+	err = e;
+    }
+
+    /* Split the Stack Trace into a 4 element array
+     * and remove the elements at indexes = 0, 1, and 3.
+     */
+    var aux = err.stack.split("\n");
+    aux.splice(0, 2);
+    aux.splice(1, 1);
+
+    /* Set the error code and the desired message */
     err.code = code;
+    err.message = `${msg} : ${aux[0].trim()}`;
+
     return err;
 }
 
