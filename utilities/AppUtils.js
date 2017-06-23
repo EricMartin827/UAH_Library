@@ -1,5 +1,6 @@
 const express = require("express");
 const bodyParser = require("body-parser")
+const {ObjectId} = require("mongoose").Types;
 
 var app = express();
 app.use(bodyParser.json());
@@ -19,11 +20,16 @@ function isObject(val) {
     return typeof(val) === "object";
 }
 
+function isValidID(id) {
+    return ObjectId.isValid(id);
+}
+
 module.exports = {
     UTILS : {
 	app: app,
 	stringify: stringify,
 	isObject: isObject,
 	isFunc: isFunc,
+	isValidID: isValidID
     }
 };
