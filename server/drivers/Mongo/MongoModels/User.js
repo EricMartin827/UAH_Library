@@ -60,7 +60,8 @@ const UserSchema = new Schema({
 	required : true,
 	minLength : 1,
 	maxLength : 100,
-	trim : true
+	trim : true,
+	select : false /* Prevents Password From Being Retrieved */
     },
 
     /* Public Attributes */
@@ -92,8 +93,7 @@ var instanceMethods = {
 
     toString: function() {
 	return `User: "${this.userName}"`;
-    }
-
+    },
 };
 
 for (var func in instanceMethods) {

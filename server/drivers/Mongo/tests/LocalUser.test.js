@@ -122,7 +122,7 @@ describe("Simple User Unit Tests", () => {
     		}
     		expect(res.clientError).toBe(false);
     		expect(res.serverError).toBe(false);
-    		expect(verifyClientServer(user, res.body))
+    		expect(verifyClientServer(user, res.body, ["passWord"]))
     		    .toBe(true);
 
     		/* Make Changes to the Client's Play and Post For An Update */
@@ -153,7 +153,7 @@ describe("Simple User Unit Tests", () => {
     it("Should Query and Delete A User Via ID ", (done) => {
 
     	var user = DATA.oneUser;
-	user.firstName = "Sean"; /* Previos Test Modified User */
+	user.firstName = "Sean"; /* Previous Test Modified User */
     	request(app)
     	    .get("/get/User")
     	    .send(user)

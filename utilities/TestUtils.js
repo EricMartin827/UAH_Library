@@ -3,9 +3,9 @@ const {UTILS} = require("./AppUtils");
 const {isFunc} = UTILS;
 const {isObject} = UTILS;
 
-function verifyClientServer(clientData, serverDoc) {
+function verifyClientServer(clientData, serverDoc, ignore) {
 
-    if (arguments.length !== 2) {
+    if (arguments.length < 2) {
 	return console.error("verifyClientServer requires client and server data, " +
 		      "and a constructor");
     }
@@ -18,24 +18,17 @@ function verifyClientServer(clientData, serverDoc) {
 	return console.error("Server Response Lacks Mongo Document ID");
     }
 
-    var count = Object.keys(clientData).length;
-    if (count < 1) {
-	return console.error("Client Data Must Have Properties");
-    }
- 
-    for (var prop in serverDoc) {
-	if (clientData.hasOwnProperty(prop)) {
-	    count--;
-	    if (isObject(clientData[prop])) {
-		expect(clientData[prop]).toEqual(serverDoc[prop]);
-	    } else {
-		expect(clientData[prop]).toBe(serverDoc[prop]);
-	    }
-	}
-    }
+    ingnore = (ignore && Array.isArray(ignore)) ? new Set(ignore) : new Set();
 
-    if (count) {
-	return console.error("Not All Client Properties Verified");
+    for (var prop in clientData) {
+	if (!serverDoc.hasOwnProperty(prop) || ingnore.has(prop)) {
+	    continue;
+	}
+	if (isObject(clientData[prop])) {
+	    expect(clientData[prop]).toEqual(serverDoc[prop]);
+	} else {
+	    expect(clientData[prop]).toBe(serverDoc[prop]);
+	}
     }
     return true;
 }

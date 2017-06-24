@@ -213,7 +213,7 @@ describe("Simple Play Unit Tests", () => {
 
 describe("Multiple Play Unit Tests", () => {
 
-    it("Should Be Able To Create Multiple", (done) => {
+    it("Should Be Able To Create Multiple Plays", (done) => {
 
 	var plays = DATA.fivePlays;
 	request(app)
@@ -228,6 +228,10 @@ describe("Multiple Play Unit Tests", () => {
 
 		expect(res.clientError).toBe(false);
 		expect(res.serverError).toBe(false);
+		for (var ii = 0; ii < plays.length; ii++) {
+		    expect(verifyClientServer(plays[ii], res.body[ii]))
+			.toBe(true);
+		}
 		return done();
 	    });
     })
