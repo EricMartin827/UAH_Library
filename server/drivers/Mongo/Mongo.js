@@ -19,7 +19,7 @@ const {stringify} = UTILS;
 const {isObject} = UTILS;
 const {isValidID} = UTILS;
 
-/* Error Utilities */
+/* Error Imports */
 const {NODE_ERRORS} = require("./TOOLS");
 const {CUSTOM_ERRNO} = NODE_ERRORS;
 const {NO_CLIENT_REQUEST} = CUSTOM_ERRNO;
@@ -38,7 +38,7 @@ const {makeErrno} = NODE_ERRORS;
  *
  * @class Mongo
  * @constructor
- * @param {Object} a Mongoose Model Class Contructor
+ * @param {Object} Model a Mongoose Model Class Contructor
  * @throws an 'InvalidServerArgument' error if Model lacks a Schema
  */
 function Mongo(Model) {
