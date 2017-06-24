@@ -1,11 +1,11 @@
 /**
- * Play.js is a module which defines the prototype for Play Collections stored
+ * Play.js is a module which defines the prototype for a Play Collections stored
  * in a MongoDB database.
  *
- * All Play models must have a unique combination of titles and primary authors.
- * The unique keys property is set up by the InitMongo.js module located in the
+ * All Play Models must have a unique combination of titles and primary authors.
+ * The unique key property is set up by the InitMongo.js module located in the
  * servers environment. The unique key property is enforced by the database. It
- * is not enforced by this module.
+ * is not enforced by this module nor the Mongoose Library.
  *
  * @module Play.js
  * @author Eric William Martin
@@ -18,7 +18,17 @@ const {ERRNO} = require("./../TOOLS");
 /* Monog Database Imports */
 const {MongoDB} = require("./../MongoDatabase.js");
 const {Schema} = require("./../MongoDatabase.js");
+const {Immutable} = require("./../MongoDatabase.js");
 
+/**
+ * A Mongoose Model that defines the major properties of a Play Collection
+ * and invokes the final system calls which access the database for Play
+ * documents.
+ *
+ * @class Play
+ * @constructor
+ */
+var Play;
 
 /**
  * PlaySchema defines the properties of a Play Collecttion stored in a MongoDB
@@ -34,37 +44,40 @@ const {Schema} = require("./../MongoDatabase.js");
  * @attribute hasSpectacle a {Boolean} signifing if the play has specatacle
  * @attribute genre a {String} specifying the Play's genre
  * @attibute timePeriod a {String} specifying the Play's historical setting
- * @attribute actorCount a {Number} specifying the needed actors for production
- * @attribute costumeCount a {Number} specifying the needed costume for production
+ * @attribute actorCount a {Number} specifying the amount of actors needed
+ * @attribute costumeCount a {Number} specifying the amount of costumes needed
  * @attribute copies a {Number} specifying the amount of available copies
- * 
+ *
  */
 const PlaySchema = new Schema({
 
-    /* Unique Primary Keys */
+    /* Immutable Unique Primary Keys */
     title: {
 	type : String,
 	required: true,
 	minLength : 1,
 	maxLencth : 100,
-	trim : true
+	trim : true,
+	immutable : true
     },
     authorLast: {
 	type : String,
 	required: true,
 	minLength: 1,
 	maxLength: 50,
-	trim: true
+	trim: true,
+	immutable : true
     },
     authorFirst: {
 	type : String,
 	required: true,
 	minLength: 1,
 	maxLength: 50,
-	trim: true
+	trim: true,
+	immutable : true
     },
 
-    /* Mutable Public Attributes */
+    /* Public Attributes */
     genre:         {type: String, default: "Drama"},
     timePeriod:    {type: String, default: "Not Specified"},
     hasSpectacle:  {type: Boolean, default: false},
@@ -74,6 +87,7 @@ const PlaySchema = new Schema({
 
 }, {strict : true}); /* Prevents client from adding new attributes */
 
+PlaySchema.plugin(Immutable);
 
 /**
  * Instance methods for invidual Play objects.
@@ -98,7 +112,7 @@ var instanceMethods = {
     },
 
     /*-----------------------------------*/
-    /*----------Databse Access-----------*/
+    /*----------Database Access-----------*/
     /*-----------------------------------*/
 
 
@@ -130,16 +144,15 @@ var instanceMethods = {
 	return null;
     },
 
-    
 };
 
 for (var func in instanceMethods) {
     PlaySchema.methods[func] = instanceMethods[func];
 }
 
-/* Compile the schema into a usable model and export the constructor.
- * Note that the instance models will have access to the generic static
- * methods added onto playSchema.statics.
+/* Compile the Mongoose Schema into an active Mongoose "Play" model and
+ * export the model. No new database methods/functions can be added to the
+ * Play Class after this point.
  */
-var Play = MongoDB.model("Play", PlaySchema);
+Play = MongoDB.model("Play", PlaySchema);
 module.exports = {Play};

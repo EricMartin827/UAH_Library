@@ -1,18 +1,16 @@
-/*
-* Mongoose will always try to reconnect.
-*/
 
-// Need to change all modules to be accessed at some index diretory
-// at the top of the project. You don't want a lot of paths names
-// to write.
+/* Useful Constants Imports */
 const {CONSTANTS} = require("./TOOLS");
 const {NETWORK_EVENTS} = CONSTANTS;
 const {CONFIG} = CONSTANTS;
 const {HOSTS} = CONSTANTS;
+
+/* Mongoose Import And Configuration */
 const mongoose = require("mongoose");
+const mongooseImmutable = require("mongoose-immutable");
 mongoose.Promise = global.Promise;
 
-
+/* Mongoose will always try to recomnnect */
 db = mongoose.createConnection(HOSTS.LOCAL, CONFIG.CONN_OPTS);
 
 db.on(NETWORK_EVENTS.OPEN, () =>
@@ -48,6 +46,7 @@ process.on("SIGINT", () => {
 
 
 module.exports = {
-    MongoDB: db,
-    Schema: mongoose.Schema
+    MongoDB : db,
+    Schema : mongoose.Schema,
+    Immutable : mongooseImmutable
 };
