@@ -4,8 +4,9 @@
  * interface in the main server. The module reduces the code
  * size of the server. The interface cleans up and verifies client data before
  * attempting to access the databse. The interface also perfroms
- * error checks to ensure the integrity of the database while providing
- * informative error reports to the client program and the developer :).
+ * error checks to ensure the database does not become corrupted while
+ * simultaneously providing informative error reports to the client program
+ * and the developer.
  *
  * @module Mongo.js
  * @author Eric William Martin
@@ -96,6 +97,14 @@ function clean(Model, obj) {
     return obj;
 }
 
+/*
+ * Private helper function which checks if a client is trying to create
+ * an existing document and gnerates a single Mongoose entry which will
+ * be saved in the database via the document.save() call.
+ *
+ * @param Model {Object} the Mongoose Model used to make the document
+ * @param newEntry {Object} JSON data used to initialize the document
+ */
 function initOneDoc(Model, newEntry) {
 
     if (newEntry._id || newEntry.__v) {
@@ -107,6 +116,15 @@ function initOneDoc(Model, newEntry) {
     return new Model(newEntry);
 }
 
+/*
+ * Private helper function which checks if a client is trying to create
+ * an existing document and generates multiple Mongoose entries which will
+ * be saved to the database via a series of asynchronous document.save()
+ * calls.
+ *
+ * @param Model {Object} the Mongoose Model used to make the documents
+ * @param newArray {Array} the array containing entry JSON data
+ */
 function initMultDocs(Model, entryArray) {
 
     if (!Array.isArray(entryArray)) {
@@ -128,12 +146,13 @@ function initMultDocs(Model, entryArray) {
     return entryArray;
 }
 
+/* The Public Database Interface Used To Communicate With the Database */
 var Interface = {
 
     /********************************************/
     /******** Single Document Interface *********/
     /********************************************/
-
+    
     addNewDocument_ModifyDatabase : function(req) {
 	return new Promise((resolve, reject) => {
 	    try {
