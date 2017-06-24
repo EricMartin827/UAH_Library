@@ -87,7 +87,6 @@ const UserSchema = new Schema({
 
 }, {strict : true});
 
-
 /* Compile the Mongoose Schema into an active Mongoose "User" model and
  * export the model. No new database methods/functions can be added to the
  * User Class after this point.

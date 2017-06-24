@@ -34,7 +34,16 @@ var data = {
 	    authorLast: "Miller",
 	    authorFirst: "Arthur"
 	}
-    ]
+    ],
+
+    oneUser :
+    {
+	userName : "eMart",
+	passWord : "open",
+	firstName : "Eric",
+	lastName : "Martin",
+	isAdmin : true
+    }
 };
 
 module.exports = {
