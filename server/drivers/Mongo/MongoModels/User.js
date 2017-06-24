@@ -87,6 +87,19 @@ const UserSchema = new Schema({
 
 }, {strict : true});
 
+/*  Instance methods for invidual Play objects. */
+var instanceMethods = {
+
+    toString: function() {
+	return `User: "${this.userName}"`;
+    }
+
+};
+
+for (var func in instanceMethods) {
+    UserSchema.methods[func] = instanceMethods[func];
+}
+
 /* Compile the Mongoose Schema into an active Mongoose "User" model and
  * export the model. No new database methods/functions can be added to the
  * User Class after this point.

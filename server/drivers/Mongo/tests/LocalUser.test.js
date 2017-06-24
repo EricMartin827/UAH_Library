@@ -30,7 +30,7 @@ before((done) => {
 after((done) => {
     User.remove({}).then(() => {
 	done();
-    });
+    })
 });
 
 describe("Simple User Unit Tests", () => {
@@ -107,49 +107,49 @@ describe("Simple User Unit Tests", () => {
 	    });
     });
 
-    // it("Should Be Able Query By Properties And Update The Play", (done) => {
+    it("Should Be Able Query By Properties And Update The User", (done) => {
 
-    // 	/* Reacees Database To Confirm Data is Present and Valid */
-    // 	var play = DATA.onePlay;
-    // 	request(app)
-    // 	    .get("/getPlay")
-    // 	    .send(play)
-    // 	    .expect(200)
-    // 	    .expect((res, err) => {
+    	/* Reacees Database To Confirm Data is Present and Valid */
+    	var user = DATA.oneUser;
+    	request(app)
+    	    .get("/get/User")
+    	    .send(user)
+    	    .expect(200)
+    	    .expect((res, err) => {
 
-    // 		if (err) {
-    // 		    return done(err);
-    // 		}
-    // 		expect(res.clientError).toBe(false);
-    // 		expect(res.serverError).toBe(false);
-    // 		expect(verifyClientServer(play, res.body))
-    // 		    .toBe(true);
+    		if (err) {
+    		    return done(err);
+    		}
+    		expect(res.clientError).toBe(false);
+    		expect(res.serverError).toBe(false);
+    		expect(verifyClientServer(user, res.body))
+    		    .toBe(true);
 
-    // 		/* Make Changes to the Client's Play and Post For An Update */
-    // 		play = res.body;
-    // 		play.timePeriod = "18th Century";
-    // 		play.copies = 50;
-    // 		request(app)
-    // 		    .patch("/updatePlayID/" + play._id)
-    // 		    .send(play)
-    // 		    .expect(200)
-    // 		    .end((err, res) => {
+    		/* Make Changes to the Client's Play and Post For An Update */
+    		user = res.body;
+    		user.firstName = "Sean";
+    		user.lastName = "Martin";
+    		request(app)
+    		    .patch("/updateID/User/" + user._id)
+    		    .send(user)
+    		    .expect(200)
+    		    .end((err, res) => {
 
-    // 			/* There Should Not Be A Server Error */
-    // 			if (err) {
-    // 			    return done(err);
-    // 			}
-    // 			expect(res.clientError).toBe(false);
-    // 			expect(res.serverError).toBe(false);
-    // 			expect(verifyClientServer(play, res.body))
-    // 			    .toBe(true);
-    // 		    });
-    // 		return done();
-    // 	    })
-    // 	    .catch((err) => {
-    // 		return done(err);
-    // 	    });
-    // });
+    			/* There Should Not Be A Server Error */
+    			if (err) {
+    			    return done(err);
+    			}
+    			expect(res.clientError).toBe(false);
+    			expect(res.serverError).toBe(false);
+    			expect(verifyClientServer(user, res.body))
+    			    .toBe(true);
+			return done();
+    		    });
+    	    })
+    	    .catch((err) => {
+    		return done(err);
+    	    });
+    });
 
     // it("Should Query and Delete A Play Via ID ", (done) => {
 
@@ -209,26 +209,3 @@ describe("Simple User Unit Tests", () => {
     // });
 
 });
-
-
-// describe("Multiple Play Unit Tests", () => {
-
-//     it("Should Be Able To Create Multiple", (done) => {
-
-// 	var plays = DATA.fivePlays;
-// 	request(app)
-// 	    .post("/addPlays")
-// 	    .send(plays)
-// 	    .expect(200)
-// 	    .end((err, res) => {
-
-// 		if (err) {
-// 		    return done(err);
-// 		}
-
-// 		expect(res.clientError).toBe(false);
-// 		expect(res.serverError).toBe(false);
-// 		return done();
-// 	    });
-//     })
-// });

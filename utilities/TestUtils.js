@@ -26,7 +26,11 @@ function verifyClientServer(clientData, serverDoc) {
     for (var prop in serverDoc) {
 	if (clientData.hasOwnProperty(prop)) {
 	    count--;
-	    expect(clientData[prop]).toBe(serverDoc[prop]);
+	    if (isObject(clientData[prop])) {
+		expect(clientData[prop]).toEqual(serverDoc[prop]);
+	    } else {
+		expect(clientData[prop]).toBe(serverDoc[prop]);
+	    }
 	}
     }
 

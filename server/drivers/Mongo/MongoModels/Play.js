@@ -89,9 +89,7 @@ const PlaySchema = new Schema({
 
 PlaySchema.plugin(Immutable);
 
-/**
- * Instance methods for invidual Play objects.
- */
+/*  Instance methods for invidual Play objects. */
 var instanceMethods = {
 
     /*-----------------------------------*/
@@ -102,48 +100,10 @@ var instanceMethods = {
 	return `${this.authorLast}, ${this.authorFirst}`;
     },
 
-    isAvailable: function() {
-	return this.copies === 0;
-    },
-
     toString: function() {
 	return `Play "${this.title}" By: ${this.authorFirst} ` +
 	    `${this.authorLast}`
-    },
-
-    /*-----------------------------------*/
-    /*----------Database Access-----------*/
-    /*-----------------------------------*/
-
-
-    findSynopsis: function() {
-	return null;
-    },
-
-    updateSynopsis: function() {
-	return null;
-    },
-
-    deleteSynopsis: function() {
-	return null;
-    },
-
-    findComments: function() {
-	return null;
-    },
-
-    addComment: function(newComment) {
-	return null;
-    },
-
-    deleteComment: function(commentID) {
-	return null;
-    },
-
-    flushComments: function() {
-	return null;
-    },
-
+    }
 };
 
 for (var func in instanceMethods) {
