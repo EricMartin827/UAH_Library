@@ -19,7 +19,7 @@ var {DATA} = require("./LocalData.js");
 
 "use strict";
 
-/* Remove all data before unit tests in decribe block run */
+/* Remove all Plays data before unit tests in decribe block run */
 before((done) => {
     Play.remove({}).then(() => {
 	done();
@@ -40,7 +40,7 @@ describe("Simple Play Unit Tests", () => {
 	/* Create The First Entry and Confirm Data Save is Valid */
 	var play = DATA.onePlay;
 	request(app)
-	    .post("/addPlay")
+	    .post("/add/Play")
 	    .send(play)
 	    .expect(200)
 	    .expect((res, err) => {
@@ -63,7 +63,7 @@ describe("Simple Play Unit Tests", () => {
 
 		/* Reacees Database To Confirm Data is Present and Valid */
 		request(app)
-		    .get("/getPlayID/" + res.body._id)
+		    .get("/getID/Play/" + res.body._id)
 		    .expect(200)
 		    .expect((res, err) => {
 
@@ -89,7 +89,7 @@ describe("Simple Play Unit Tests", () => {
 	/* Resend The Exact Same Data */
 	var play = DATA.onePlay;
 	request(app)
-	    .post("/addPlay")
+	    .post("/add/Play")
 	    .send(play)
 	    .expect(400)
 	    .end((err, res) => {
@@ -112,7 +112,7 @@ describe("Simple Play Unit Tests", () => {
 	/* Reacees Database To Confirm Data is Present and Valid */
 	var play = DATA.onePlay;
 	request(app)
-	    .get("/getPlay")
+	    .get("/get/Play")
 	    .send(play)
 	    .expect(200)
 	    .expect((res, err) => {
@@ -130,7 +130,7 @@ describe("Simple Play Unit Tests", () => {
 		play.timePeriod = "18th Century";
 		play.copies = 50;
 		request(app)
-		    .patch("/updatePlayID/" + play._id)
+		    .patch("/updateID/Play/" + play._id)
 		    .send(play)
 		    .expect(200)
 		    .end((err, res) => {
@@ -155,7 +155,7 @@ describe("Simple Play Unit Tests", () => {
 
 	var play = DATA.onePlay;
 	request(app)
-	    .get("/getPlay")
+	    .get("/get/Play")
 	    .send(play)
 	    .expect(200)
 	    .expect((res, err) => {
@@ -170,7 +170,7 @@ describe("Simple Play Unit Tests", () => {
 
 		play = res.body;
 		request(app)
-		    .delete("/removePlayID/" + play._id)
+		    .delete("/removeID/Play/" + play._id)
 		    .expect(200)
 		    .expect((res, err) => {
 
@@ -185,7 +185,7 @@ describe("Simple Play Unit Tests", () => {
 			/*Code Here :) */
 
 			request(app)
-			    .get("/getPlay")
+			    .get("/get/Play")
 			    .send({copies: play.copies})
 			    .expect(400)
 			    .end((err, res) => {
@@ -217,7 +217,7 @@ describe("Multiple Play Unit Tests", () => {
 
 	var plays = DATA.fivePlays;
 	request(app)
-	    .post("/addPlays")
+	    .post("/add/batch/Play")
 	    .send(plays)
 	    .expect(200)
 	    .end((err, res) => {

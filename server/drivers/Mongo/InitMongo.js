@@ -12,8 +12,14 @@
 var db = connect("127.0.0.1:27017/UAH_LIBRARY");
 
 db.createCollection("plays");
-
 db.plays.ensureIndex(
     {title: 1, authorLast: 1, authorFirst: 1},
     {unique: true}
 );
+
+db.createCollection("users");
+db.users.ensureIndex(
+    {userName : 1, passWord: 1},
+    {unique: true}
+);
+

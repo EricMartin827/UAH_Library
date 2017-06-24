@@ -91,5 +91,5 @@ const UserSchema = new Schema({
  * export the model. No new database methods/functions can be added to the
  * User Class after this point.
  */
-User = MongDB.model("User", UserSchema);
+User = MongoDB.model("User", UserSchema);
 module.exports = {User};
