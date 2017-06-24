@@ -128,7 +128,6 @@ describe("Simple User Unit Tests", () => {
     		/* Make Changes to the Client's Play and Post For An Update */
     		user = res.body;
     		user.firstName = "Sean";
-    		user.lastName = "Martin";
     		request(app)
     		    .patch("/updateID/User/" + user._id)
     		    .send(user)
@@ -151,61 +150,60 @@ describe("Simple User Unit Tests", () => {
     	    });
     });
 
-    // it("Should Query and Delete A Play Via ID ", (done) => {
+    it("Should Query and Delete A User Via ID ", (done) => {
 
-    // 	var play = DATA.onePlay;
-    // 	request(app)
-    // 	    .get("/getPlay")
-    // 	    .send(play)
-    // 	    .expect(200)
-    // 	    .expect((res, err) => {
+    	var user = DATA.oneUser;
+	user.firstName = "Sean"; /* Previos Test Modified User */
+    	request(app)
+    	    .get("/get/User")
+    	    .send(user)
+    	    .expect(200)
+    	    .expect((res, err) => {
 
-    // 		if (err) {
-    // 		    return done(err);
-    // 		}
-    // 		expect(res.clientError).toBe(false);
-    // 		expect(res.serverError).toBe(false);
-    // 		expect(verifyClientServer(play, res.body))
-    // 		    .toBe(true);
+    		if (err) {
+    		    return done(err);
+    		}
 
-    // 		play = res.body;
-    // 		request(app)
-    // 		    .delete("/removePlayID/" + play._id)
-    // 		    .expect(200)
-    // 		    .expect((res, err) => {
+    		expect(res.clientError).toBe(false);
+    		expect(res.serverError).toBe(false);
+    		expect(verifyClientServer(user, res.body))
+    		    .toBe(true);
 
-    // 			if (err) {
-    // 			    return done(err);
-    // 			}
-    // 			var awk = res.body;
-    // 			expect(awk.n).toBe(1);
-    // 			expect(awk.ok).toBe(1);
+    		user = res.body;
+    		request(app)
+    		    .delete("/removeID/User/" + user._id)
+    		    .expect(200)
+    		    .expect((res, err) => {
 
-    // 			/* Need To Test That Proper Error Result is Returned*/
-    // 			/*Code Here :) */
+    			if (err) {
+    			    return done(err);
+    			}
+    			var awk = res.body;
+    			expect(awk.n).toBe(1);
+    			expect(awk.ok).toBe(1);
 
-    // 			request(app)
-    // 			    .get("/getPlay")
-    // 			    .send({copies: play.copies})
-    // 			    .expect(400)
-    // 			    .end((err, res) => {
+    			request(app)
+    			    .get("/get/User")
+    			    .send({userName: user.userName})
+    			    .expect(400)
+    			    .end((err, res) => {
 
-    // 				if (err) {
-    // 				    return done(err);
-    // 				}
-    // 				expect(res.clientError).toBe(true);
-    // 				expect(res.serverError).toBe(false);
-    // 				expect(ERRNO[res.body.code]).toBe("QueryMiss");
-    // 				return done();
-    // 			    });
-    // 		    }).catch((err) => {
-    // 			return done(err);
-    // 		    });
-    // 	    })
-    // 	    .catch((err) => {
-    // 		return done(err)
-    // 	    });
+    				if (err) {
+    				    return done(err);
+    				}
+    				expect(res.clientError).toBe(true);
+    				expect(res.serverError).toBe(false);
+    				expect(ERRNO[res.body.code]).toBe("QueryMiss");
+    				return done();
+    			    });
+    		    }).catch((err) => {
+    			return done(err);
+    		    });
+    	    })
+    	    .catch((err) => {
+    		return done(err)
+    	    });
 
-    // });
+    });
 
 });
