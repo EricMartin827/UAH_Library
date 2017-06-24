@@ -203,7 +203,5 @@ describe("Simple User Unit Tests", () => {
     	    .catch((err) => {
     		return done(err)
     	    });
-
     });
-
 });

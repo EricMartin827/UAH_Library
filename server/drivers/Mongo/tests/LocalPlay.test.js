@@ -234,5 +234,26 @@ describe("Multiple Play Unit Tests", () => {
 		}
 		return done();
 	    });
-    })
+    });
+
+    it("Should Not Be Able to Add Duplicate Plays", (done) => {
+
+	var plays = DATA.fivePlays
+		request(app)
+	    .post("/add/batch/Play")
+	    .send(plays)
+	    .expect(400)
+	    .end((err, res) => {
+
+		/* Theres Should Be No Server Error */
+		if (err) {
+		    return done(err);
+		}
+
+		expect(res.clientError).toBe(true);
+		expect(res.serverError).toBe(false);
+		expect(ERRNO[res.body.code]).toBe("DuplicateKey");
+		return done();
+	    });
+    });
 });
