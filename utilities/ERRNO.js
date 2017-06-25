@@ -177,8 +177,8 @@ var ERRNO = {
     /*********************************/
     200 : "MissingClientInput",
     201 : "InvalidClientInput",
-    202 : "MongoID_Miss",
-    203 : "Query_Miss",
+    202 : "Removal_ID_Miss",
+    203 : "Removal_Query_Miss",
     204 : "NoModifiableDocumentFound",
     250 : "InvalidServerArguments",
     /*********************************/

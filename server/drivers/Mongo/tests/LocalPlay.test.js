@@ -1,25 +1,25 @@
+
 /* NPM Modules */
 const expect = require("expect");
 const request = require("supertest");
-const assert = require("assert");
 
-/* Custom Modules */
-const {TEST_UTILS} = require("./../TOOLS");
+/* Utility Imports */
 const {UTILS} = require("./../TOOLS");
-const {CONSTANTS} = require("./../TOOLS");
-const {ERRNO} = require("./../TOOLS");
-const {verifyClientServer} = TEST_UTILS;
+const {isValidID} = UTILS;
 const {printObj} = UTILS;
+const {TEST_UTILS} = require("./../TOOLS");
+const {verifyClientServer} = TEST_UTILS;
 
-/* Local Modules */
+/* Error Imports */
+const {ERRNO} = require("./../TOOLS");
+
+/* Local Imports */
 const {MongoDB} = require("./../MongoDatabase.js");
 const {app} = require("./LocalMongoServer.js");
 const {Play} = require("./../MongoModels");
 var {DATA} = require("./LocalData.js");
 
 "use strict";
-
-
 /**
  * Function returns a promise which adds a play to the database
  * and verifies that that document is actually present by using
@@ -80,6 +80,56 @@ function addPlay(play) {
     });
 }
 
+
+
+/**
+ * Function returns a promise which deletes a play via id from the database, and
+ * verifies that the document is actually removed by performing a id query
+ * on the database. Function assumes that the database already contains a 
+ * valid play entry. If the play object passed to the function can either be a
+ * play id or a play document contianing an id.
+ * 
+ * @method removePlay
+ * @params play {Object} the play object containing an ObjectID
+ * @return {Promise} resolves if all tests pass, rejects otherwise
+ */
+function removePlayID(play) {
+    return new Promise((resolve, reject) => {
+
+	var id = play._id || play;
+	if (!idValidID(id)) {
+	    reject("INVALID ID PASSED TO removePlayID()")
+	}
+	
+	request(app)
+	    .delete("/removeID/Play/" + id)
+	    .expect(200)
+	    .expect((res, err) => {
+
+		if (err) {
+		    reject(err);
+		}
+
+		var awk = res.body;
+ 		expect(awk.n).toBe(1);
+		expect(awk.ok).toBe(1);
+
+		request(app)
+		    .get("/getID/Play/" + id)
+		    .expect(400)
+		    .end((err, res) => {
+			expect(res.clientError).toBe(true);
+			expect(res.serverError).toBe(false);
+			expect(ERRNO[res.body.code]).toBe("MongoID_Miss");
+		    })
+		
+	    }).catch((err) => {
+		reject(err);
+	    })
+    });
+}
+
+
 /**
  * Asynchronous function returns a promise which adds a play
  * to the database and then reattempts to reinsert the same
@@ -97,7 +147,7 @@ async function addPlayDup(play) {
      * be added and verified in the database. If there is
      * error, catch and throw it. All returns/throws map
      * to resolves/rejects within an async function. Async
-     * functions return Promises.
+     * functions return Promises. ;)
      */
     try {
 	await addPlay(play);
@@ -207,91 +257,70 @@ async function updatePlay(play, update) {
  * If any of the tests fail, the promise is reject. Otherwise, it resolves.
  *
  * @method updatePlay
- * @param play {Object} JSON test data of the play to added and removed
- * @param criteria {Object} JOSN data specifying the properyties to remove by
+ * @param JSON_Play {Object} JSON test data of the play to added and removed
+ * @param query {Object} JOSN data specifying the properyties to remove by
  * @return {Promise} resolves if all tests pass, rejects otherwise
  */
-async function deletePlay(play, criteria) {
+async function deletePlaySuite(JSON_Play, query) {
 
     try {
-	play = await addPlay(play);
+	var play = await addPlay(JSON_Play);
+	removePlayId(play);
     } catch (err) {
 	throw err;
     }
 
-    try {
-	await request(app)
-	    .delete("./removeID/Play/" + play._id);
-	    .expect(200)
-	    .((res, err) => {
+    // request(app)
+    // 	.get("/get/Play")
+    // 	.send(play)
+    // 	.expect(200)
+    // 	.expect((res, err) => {
 
-		if (err) {
-		    throw err;
-		}
+    // 	    if (err) {
+    // 		return done(err);
+    // 	    }
+    // 	    expect(res.clientError).toBe(false);
+    // 	    expect(res.serverError).toBe(false);
+    // 	    expect(verifyClientServer(play, res.body))
+    // 		.toBe(true);
 
-		expect(res.clientError).toBe(false);
-		expect(res.serverError).toBe(false);
-		
-		var awk = res.body;
-		expect(awk.n).toBe(1);
-		expect(awk.ok).toBe(1);
-	    });
-	
-    } catch (err) {
-	throw err;
-    }
+    // 	    play = res.body;
+    // 	    request(app)
+    // 		.delete("/removeID/Play/" + play._id)
+    // 		.expect(200)
+    // 		.expect((res, err) => {
 
-    request(app)
-	.get("/get/Play")
-	.send(play)
-	.expect(200)
-	.expect((res, err) => {
+    // 		    if (err) {
+    // 			return done(err);
+    // 		    }
+    // 		    var awk = res.body;
+    // 		    expect(awk.n).toBe(1);
+    // 		    expect(awk.ok).toBe(1);
 
-	    if (err) {
-		return done(err);
-	    }
-	    expect(res.clientError).toBe(false);
-	    expect(res.serverError).toBe(false);
-	    expect(verifyClientServer(play, res.body))
-		.toBe(true);
+    // 		    /* Need To Test That Proper Error Result is Returned*/
+    // 		    /*Code Here :) */
 
-	    play = res.body;
-	    request(app)
-		.delete("/removeID/Play/" + play._id)
-		.expect(200)
-		.expect((res, err) => {
+    // 		    request(app)
+    // 			.get("/get/Play")
+    // 			.send({copies: play.copies})
+    // 			.expect(400)
+    // 			.end((err, res) => {
 
-		    if (err) {
-			return done(err);
-		    }
-		    var awk = res.body;
-		    expect(awk.n).toBe(1);
-		    expect(awk.ok).toBe(1);
-
-		    /* Need To Test That Proper Error Result is Returned*/
-		    /*Code Here :) */
-
-		    request(app)
-			.get("/get/Play")
-			.send({copies: play.copies})
-			.expect(400)
-			.end((err, res) => {
-
-			    if (err) {
-				return done(err);
-			    }
-			    expect(res.clientError).toBe(true);
-			    expect(res.serverError).toBe(false);
-			    expect(ERRNO[res.body.code]).toBe("QueryMiss");
-			    return done();
-			});
-		}).catch((err) => {
-		    return done(err);
-		});
-	})
-	.catch((err) => {
-	    return done(err)
-	});
+    // 			    if (err) {
+    // 				return done(err);
+    // 			    }
+    // 			    expect(res.clientError).toBe(true);
+    // 			    expect(res.serverError).toBe(false);
+    // 			    expect(ERRNO[res.body.code]).toBe("QueryMiss");
+    // 			    return done();
+    // 			});
+    // 		}).catch((err) => {
+    // 		    return done(err);
+    // 		});
+    // 	})
+    // 	.catch((err) => {
+    // 	    return done(err)
+    // 	});
 }
 
 describe("Simple Play Unit Tests", () => {
@@ -328,7 +357,7 @@ describe("Simple Play Unit Tests", () => {
     });
 
     it("Should Query and Delete A Play Via ID and Properties ", (done) => {
-	deletePlay(DATA.onePlay, {genre : "Drama"})
+	deletePlaySuite(DATA.onePlay, {genre : "Drama"})
 	    .then(() => done()).catch((err) => done(err));
     });
 });
