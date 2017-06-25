@@ -28,7 +28,7 @@ const {Immutable} = require("./../MongoDatabase.js");
  * @class User
  * @constructor
  */
-var User;
+var User; /* This defined at the bottom due to Mongoose  API .model() */
 
 /**
  * UserSchema defines the properties of a User Collecttion stored in a MongoDB
@@ -61,7 +61,7 @@ const UserSchema = new Schema({
 	minLength : 1,
 	maxLength : 100,
 	trim : true,
-	select : false /* Prevents Password From Being Retrieved */
+	select : false /* Prevents Password From Being Sent To Client */
     },
 
     /* Public Attributes */

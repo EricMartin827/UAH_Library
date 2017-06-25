@@ -2,7 +2,7 @@
  * Mongo.js is a module which provides a generic wrapper object/class
  * allowing multiple Mongoose Models to be accessed via a common
  * interface in the main server. The module reduces the code
- * size of the server. The interface cleans up and verifies client data before
+ * size of the server and cleans up/verifies client data before
  * attempting to access the databse. The interface also perfroms
  * error checks to ensure the database does not become corrupted while
  * simultaneously providing informative error reports to the client program
@@ -152,7 +152,16 @@ var Interface = {
     /********************************************/
     /******** Single Document Interface *********/
     /********************************************/
-    
+
+    /**
+     * Method asynchronously adds a new document to the database. If the
+     * client data does not meet the invoking model's criteria or if the
+     * document is already present in the database, method rejects the
+     * client's request.
+     *
+     * @param req the client's unprocessed request data
+     * @return {Promise} a promise to return either added entry or an error
+     */
     addNewDocument_ModifyDatabase : function(req) {
 	return new Promise((resolve, reject) => {
 	    try {
@@ -170,6 +179,14 @@ var Interface = {
 	});
     },
 
+    /**
+     * Method asynchronously searches for a document in the database. If the
+     * client request does not have a valid Monog _id, the method rejects the
+     * client's request.
+     *
+     * @param req the client's unprocessed request data that should have and _id
+     * @return {Promise} a promise to return either added entry or an error
+     */
     findOneByID_QueryDatabase : function(req) {
 	return new Promise((resolve, reject) => {
 
@@ -187,6 +204,14 @@ var Interface = {
 	});
     },
 
+    /**
+     * Method asynchronously searches for a document in the database using a
+     * client query object. If the client request does not have a valid query,
+     * for the invoking model, the method will reject the client's request.
+     *
+     * @param req the client's unprocessed request data containing a query
+     * @return {Promise} a promise to return either a queried entry or an error
+     */
     findFirstOneByProp_QueryDatabase : function(req) {
 	return new Promise((resolve, reject) => {
 

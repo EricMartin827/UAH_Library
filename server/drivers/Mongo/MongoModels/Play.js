@@ -28,7 +28,7 @@ const {Immutable} = require("./../MongoDatabase.js");
  * @class Play
  * @constructor
  */
-var Play;
+var Play; /* This defined at the bottom due to Mongoose API .model() */
 
 /**
  * PlaySchema defines the properties of a Play Collecttion stored in a MongoDB
