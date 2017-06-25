@@ -17,6 +17,9 @@ const {app} = require("./LocalMongoServer.js");
 const {User} = require("./../MongoModels");
 var {DATA} = require("./LocalData.js");
 
+/* Local Test Case Function */
+const {addPlay} = require("./LocalPlay.test.js");
+
 "use strict";
 
 /* Remove all users before unit tests in decribe block run */
@@ -33,55 +36,59 @@ after((done) => {
     })
 });
 
+
+function addUser(done) {
+
+    /* Create The First Entry and Confirm Data Save is Valid */
+    var user = DATA.oneUser;
+    request(app)
+	.post("/add/" + "User")
+	.send(user)
+	.expect(200)
+	.expect((res, err) => {
+
+	    if (err) {
+		return done(err);
+	    }
+
+	    var doc = res.body;
+	    expect(res.clientError).toBe(false);
+	    expect(res.serverError).toBe(false);
+	    expect(verifyClientServer(user, doc))
+		.toBe(true);
+	})
+	.end((err, res) => {
+
+	    if (err) {
+		return done(err);
+	    }
+
+	    /* Reacees Database To Confirm Data is Present and Valid */
+	    request(app)
+		.get("/getID/User/" + res.body._id)
+		.expect(200)
+		.expect((res, err) => {
+
+		    if (err) {
+			return done(err);
+		    }
+
+		    var doc = res.body;
+		    expect(res.clientError).toBe(false);
+		    expect(res.serverError).toBe(false);
+		    expect(verifyClientServer(user, doc))
+			.toBe(true);
+		    return done();
+		})
+		.catch((err) => {
+		    return done(err);
+		});
+	});
+}
 describe("Simple User Unit Tests", () => {
 
     it("Should Create And Query Via the ID of a Single User", (done) => {
-
-	/* Create The First Entry and Confirm Data Save is Valid */
-	var user = DATA.oneUser;
-	request(app)
-	    .post("/add/" + "User")
-	    .send(user)
-	    .expect(200)
-	    .expect((res, err) => {
-
-		if (err) {
-		    return done(err);
-		}
-
-		var doc = res.body;
-		expect(res.clientError).toBe(false);
-		expect(res.serverError).toBe(false);
-		expect(verifyClientServer(user, doc))
-		    .toBe(true);
-	    })
-	    .end((err, res) => {
-
-		if (err) {
-		    return done(err);
-		}
-
-		/* Reacees Database To Confirm Data is Present and Valid */
-		request(app)
-		    .get("/getID/User/" + res.body._id)
-		    .expect(200)
-		    .expect((res, err) => {
-
-			if (err) {
-			    return done(err);
-			}
-
-			var doc = res.body;
-			expect(res.clientError).toBe(false);
-			expect(res.serverError).toBe(false);
-			expect(verifyClientServer(user, doc))
-			    .toBe(true);
-			return done();
-		    })
-		    .catch((err) => {
-			return done(err);
-		    });
-	    });
+	addUser(done);
     });
 
     it("Should Not Be Able Reinsert the Same User", (done) => {
@@ -204,4 +211,5 @@ describe("Simple User Unit Tests", () => {
     		return done(err)
     	    });
     });
+
 });

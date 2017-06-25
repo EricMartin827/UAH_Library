@@ -177,8 +177,9 @@ var ERRNO = {
     /*********************************/
     200 : "MissingClientInput",
     201 : "InvalidClientInput",
-    202 : "QueryMiss",
-    203 : "NoModifiableDocumentFound",
+    202 : "MongoID_Miss",
+    203 : "Query_Miss",
+    204 : "NoModifiableDocumentFound",
     250 : "InvalidServerArguments",
     /*********************************/
 
@@ -207,8 +208,9 @@ var ERRNO = {
 CUSTOM_ERRNO = {
     NO_CLIENT_REQUEST : 200,
     ECINVAL : 201,
-    FAILED_QUERY : 202,
-    FAILED_UPDATE : 203,
+    FAILED_ID : 202,
+    FAILED_QUERY : 203,
+    FAILED_UPDATE : 204,
     ESINVAL : 250
 };
 

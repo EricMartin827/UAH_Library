@@ -25,6 +25,7 @@ const {NODE_ERRORS} = require("./TOOLS");
 const {CUSTOM_ERRNO} = NODE_ERRORS;
 const {NO_CLIENT_REQUEST} = CUSTOM_ERRNO;
 const {ECINVAL} = CUSTOM_ERRNO;
+const {FAILED_ID} = CUSTOM_ERRNO;
 const {FAILED_QUERY} = CUSTOM_ERRNO;
 const {FAILED_UPDATE} =  CUSTOM_ERRNO;
 const {ESINVAL} = CUSTOM_ERRNO;
@@ -154,11 +155,12 @@ var Interface = {
     /********************************************/
 
     /**
-     * Method asynchronously adds a new document to the database. If the
+     * Function asynchronously adds a new document to the database. If the
      * client data does not meet the invoking model's criteria or if the
      * document is already present in the database, method rejects the
      * client's request.
      *
+     * @method addNewDocument_ModifyDatabase
      * @param req the client's unprocessed request data
      * @return {Promise} a promise to return either added entry or an error
      */
@@ -180,10 +182,11 @@ var Interface = {
     },
 
     /**
-     * Method asynchronously searches for a document in the database. If the
+     * Function asynchronously searches for a document in the database. If the
      * client request does not have a valid Monog _id, the method rejects the
      * client's request.
      *
+     * @method findOneByID_QueryDatabase
      * @param req the client's unprocessed request data that should have and _id
      * @return {Promise} a promise to return either added entry or an error
      */
@@ -196,19 +199,24 @@ var Interface = {
 				 `Invalid ID ${id} Used To Query Mongo`));
 	    }
 	    this.model.findById(id)
-		.then((res) => {
-		    util.log("Located: ", res.toString());
-		    resolve(res);
+		.then((doc) => {
+		    if (!doc) {
+			reject(makeErrno(FAILED_ID,
+					 `ID ${id} Not Present in Mongo`));
+		    }
+		    util.log("Located: ", doc.toString());
+		    resolve(doc);
 		})
-		.catch((err) => resolve(err));
+		.catch((err) => reject(err));
 	});
     },
 
     /**
-     * Method asynchronously searches for a document in the database using a
+     * Function asynchronously searches for a document in the database using a
      * client query object. If the client request does not have a valid query,
      * for the invoking model, the method will reject the client's request.
      *
+     * @method findFirstOneByProp_QueryDatabase(
      * @param req the client's unprocessed request data containing a query
      * @return {Promise} a promise to return either a queried entry or an error
      */

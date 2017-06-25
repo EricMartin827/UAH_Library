@@ -19,26 +19,22 @@ var {DATA} = require("./LocalData.js");
 
 "use strict";
 
-/* Remove all Plays data before unit tests in decribe block run */
-before((done) => {
-    Play.remove({}).then(() => {
-	done();
-    });;
-});
 
-/* Clean up the databese after all unit tests run */
-after((done) => {
-    Play.remove({}).then(() => {
-	done();
-    });
-});
+/**
+ * Function returns a promise which adds a play to the database
+ * and verifies that that document is actually present by using
+ * an id query. The database data is also compared with the client
+ * data to ensure that database is correctly saving the client data.
+ * 
+ * @method addPlay
+ * @params play {Object} JSON data of play to be added to database
+ * @return {Promise} resolves if all tests pass, rejects otherwise
+ */
+function addPlay(play) {
 
-describe("Simple Play Unit Tests", () => {
-
-    it("Should Create And Query Via the ID of a Single Play", (done) => {
+    return new Promise((resolve, reject) => {
 
 	/* Create The First Entry and Confirm Data Save is Valid */
-	var play = DATA.onePlay;
 	request(app)
 	    .post("/add/Play")
 	    .send(play)
@@ -46,7 +42,7 @@ describe("Simple Play Unit Tests", () => {
 	    .expect((res, err) => {
 
 		if (err) {
-		    return done(err);
+		    reject(err);
 		}
 
 		var doc = res.body;
@@ -58,17 +54,16 @@ describe("Simple Play Unit Tests", () => {
 	    .end((err, res) => {
 
 		if (err) {
-		    return done(err);
+		    reject(err);
 		}
 
 		/* Reacees Database To Confirm Data is Present and Valid */
 		request(app)
-		    .get("/getID/Play/" + res.body._id)
+		.get("/getID/Play/" + res.body._id)
 		    .expect(200)
 		    .expect((res, err) => {
-
 			if (err) {
-			    return done(err);
+			    return err;
 			}
 
 			var doc = res.body;
@@ -76,138 +71,266 @@ describe("Simple Play Unit Tests", () => {
 			expect(res.serverError).toBe(false);
 			expect(verifyClientServer(play, doc))
 			    .toBe(true);
-			return done();
+			resolve(doc);
 		    })
 		    .catch((err) => {
-			return done(err);
+			reject(err);
 		    });
 	    });
+    });
+}
+
+/**
+ * Asynchronous function returns a promise which adds a play
+ * to the database and then reattempts to reinsert the same
+ * play. Functiion then verifies that the server correctly
+ * handles the client error and generates an appropriate error
+ * report.
+ * 
+ * @method addPlayDup
+ * @param play {Object} JSON data of the play to be duplicated
+ * @return {Promise} resolves if all tests pass, rejects otherwise
+ */
+async function addPlayDup(play) {
+
+    /* Use JS's async/await to wait for the test play to 
+     * be added and verified in the database. If there is
+     * error, catch and throw it. All returns/throws map
+     * to resolves/rejects within an async function. Async
+     * functions return Promises.
+     */
+    try {
+	await addPlay(play);
+    } catch(err) {
+	throw err;
+    }
+
+    /* Resend the exact same data */
+    request(app)
+	.post("/add/Play")
+	.send(play)
+	.expect(400)
+	.end((err, res) => {
+
+	    /* There should be no server-side error */
+	    if (err) {
+		return err;
+	    }
+
+	    /* Verify the client is at fault and that the server detects
+	     * the duplicate 
+	     */
+	    expect(res.clientError).toBe(true);
+	    expect(res.serverError).toBe(false);
+	    expect(ERRNO[res.body.code]).toBe("DuplicateKey");
+	    return;
+	});
+}
+
+/**
+ * Asynchronous function returns a promise which adds a play
+ * to the database, queries the play via a play property, and then
+ * updates the contents of the play via id. Updates are set to
+ * return the new database entry which is verfied with the client
+ * data.
+ * 
+ * @method updatePlay
+ * @param play {Object} JSON data of the play to be duplicate
+ * @param update {Object} JOSN data specifying the field to change
+ * @return {Promise} resolves if all tests pass, rejects otherwise
+ */
+async function updatePlay(play, update) {
+
+    try {
+	await addPlay(play);
+    } catch(err) {
+	throw err;
+    }
+
+    /* Reaccess the database via a property query */
+    var query = {title : play.title}
+    request(app)
+	.get("/get/Play")
+	.send(query)
+	.expect(200)
+	.expect((res, err) => {
+
+	    if (err) {
+		throw err;
+	    }
+
+	    expect(res.clientError).toBe(false);
+	    expect(res.serverError).toBe(false);
+	    expect(verifyClientServer(play, res.body))
+		.toBe(true);
+
+	    /* Update the client play with update for later verification */
+	    for (var prop  in update) {
+		play[prop] = update[prop];
+	    }
+
+	    /* Send the patch update via the play id to the server */
+	    request(app)
+		.patch("/updateID/Play/" + res.body._id)
+		.send(update)
+		.expect(200)
+		.end((err, res) => {
+
+		    /* There Should Not Be A Server Error */
+		    if (err) {
+			throw err;
+		    }
+		    var doc = res.body;
+		    expect(res.clientError).toBe(false);
+		    expect(res.serverError).toBe(false);
+		    expect(verifyClientServer(play, doc))
+			.toBe(true);
+		    return doc
+		});
+	})
+	.catch((err) => {
+	    throw err;
+	});
+}
+
+/**
+ * Asynchronous function returns a promise to perform the following
+ * tests in order...
+ *    1) Add a play to the database
+ *    2) Delete the play via id
+ *    3) Query via id to ensure play is missing
+ *    4) Query via property to ensure the play is missing
+ *    5) Add the play again
+ *    6) Delete the play via property
+ *    7) Query via id to ensure its missing
+ *    8) Query via property to ensure its missing
+ * If any of the tests fail, the promise is reject. Otherwise, it resolves.
+ *
+ * @method updatePlay
+ * @param play {Object} JSON test data of the play to added and removed
+ * @param criteria {Object} JOSN data specifying the properyties to remove by
+ * @return {Promise} resolves if all tests pass, rejects otherwise
+ */
+async function deletePlay(play, criteria) {
+
+    try {
+	play = await addPlay(play);
+    } catch (err) {
+	throw err;
+    }
+
+    try {
+	await request(app)
+	    .delete("./removeID/Play/" + play._id);
+	    .expect(200)
+	    .((res, err) => {
+
+		if (err) {
+		    throw err;
+		}
+
+		expect(res.clientError).toBe(false);
+		expect(res.serverError).toBe(false);
+		
+		var awk = res.body;
+		expect(awk.n).toBe(1);
+		expect(awk.ok).toBe(1);
+	    });
+	
+    } catch (err) {
+	throw err;
+    }
+
+    request(app)
+	.get("/get/Play")
+	.send(play)
+	.expect(200)
+	.expect((res, err) => {
+
+	    if (err) {
+		return done(err);
+	    }
+	    expect(res.clientError).toBe(false);
+	    expect(res.serverError).toBe(false);
+	    expect(verifyClientServer(play, res.body))
+		.toBe(true);
+
+	    play = res.body;
+	    request(app)
+		.delete("/removeID/Play/" + play._id)
+		.expect(200)
+		.expect((res, err) => {
+
+		    if (err) {
+			return done(err);
+		    }
+		    var awk = res.body;
+		    expect(awk.n).toBe(1);
+		    expect(awk.ok).toBe(1);
+
+		    /* Need To Test That Proper Error Result is Returned*/
+		    /*Code Here :) */
+
+		    request(app)
+			.get("/get/Play")
+			.send({copies: play.copies})
+			.expect(400)
+			.end((err, res) => {
+
+			    if (err) {
+				return done(err);
+			    }
+			    expect(res.clientError).toBe(true);
+			    expect(res.serverError).toBe(false);
+			    expect(ERRNO[res.body.code]).toBe("QueryMiss");
+			    return done();
+			});
+		}).catch((err) => {
+		    return done(err);
+		});
+	})
+	.catch((err) => {
+	    return done(err)
+	});
+}
+
+describe("Simple Play Unit Tests", () => {
+
+    /* Remove all Plays data before each unit test */
+    beforeEach((done) => {
+	console.log("BeforeEach Removal");
+	Play.remove({}).then(() => {
+	    done();
+	});;
+    });
+
+    /* Clean up the databasee after each unit test */
+    afterEach((done) => {
+	console.log("AfterEach Removal");
+    	Play.remove({}).then(() => {
+    	    done();
+    	});
+    });
+
+    it("Should Create And Query Via the ID of a Single Play", (done) => {
+	addPlay(DATA.onePlay)
+	    .then(() => done()).catch((err) => done(err));
     });
 
     it("Should Not Be Able Reinsert the Same Play", (done) => {
-
-	/* Resend The Exact Same Data */
-	var play = DATA.onePlay;
-	request(app)
-	    .post("/add/Play")
-	    .send(play)
-	    .expect(400)
-	    .end((err, res) => {
-
-		/* There Should Not Be A Server Error */
-		if (err) {
-		    return done(err);
-		}
-
-		/* Verify The Client is At Fault and Server Detect Duplicate */
-		expect(res.clientError).toBe(true);
-		expect(res.serverError).toBe(false);
-		expect(ERRNO[res.body.code]).toBe("DuplicateKey");
-		return done();
-	    });
+	addPlayDup(DATA.onePlay)
+	    .then(() => done()).catch((err) => done(err));
     });
 
     it("Should Be Able Query By Properties And Update The Play", (done) => {
-
-	/* Reacees Database To Confirm Data is Present and Valid */
-	var play = DATA.onePlay;
-	request(app)
-	    .get("/get/Play")
-	    .send(play)
-	    .expect(200)
-	    .expect((res, err) => {
-
-		if (err) {
-		    return done(err);
-		}
-		expect(res.clientError).toBe(false);
-		expect(res.serverError).toBe(false);
-		expect(verifyClientServer(play, res.body))
-		    .toBe(true);
-
-		/* Make Changes to the Client's Play and Post For An Update */
-		play = res.body;
-		play.timePeriod = "18th Century";
-		play.copies = 50;
-		request(app)
-		    .patch("/updateID/Play/" + play._id)
-		    .send(play)
-		    .expect(200)
-		    .end((err, res) => {
-
-			/* There Should Not Be A Server Error */
-			if (err) {
-			    return done(err);
-			}
-			expect(res.clientError).toBe(false);
-			expect(res.serverError).toBe(false);
-			expect(verifyClientServer(play, res.body))
-			    .toBe(true);
-		    });
-		return done();
-	    })
-	    .catch((err) => {
-		return done(err);
-	    });
+	updatePlay(DATA.onePlay, {copies : 9000, TimePeriod : "18th Century"})
+	    .then(() => done()).catch((err) => done(err));
     });
 
-    it("Should Query and Delete A Play Via ID ", (done) => {
-
-	var play = DATA.onePlay;
-	request(app)
-	    .get("/get/Play")
-	    .send(play)
-	    .expect(200)
-	    .expect((res, err) => {
-
-		if (err) {
-		    return done(err);
-		}
-		expect(res.clientError).toBe(false);
-		expect(res.serverError).toBe(false);
-		expect(verifyClientServer(play, res.body))
-		    .toBe(true);
-
-		play = res.body;
-		request(app)
-		    .delete("/removeID/Play/" + play._id)
-		    .expect(200)
-		    .expect((res, err) => {
-
-			if (err) {
-			    return done(err);
-			}
-			var awk = res.body;
-			expect(awk.n).toBe(1);
-			expect(awk.ok).toBe(1);
-
-			/* Need To Test That Proper Error Result is Returned*/
-			/*Code Here :) */
-
-			request(app)
-			    .get("/get/Play")
-			    .send({copies: play.copies})
-			    .expect(400)
-			    .end((err, res) => {
-
-				if (err) {
-				    return done(err);
-				}
-				expect(res.clientError).toBe(true);
-				expect(res.serverError).toBe(false);
-				expect(ERRNO[res.body.code]).toBe("QueryMiss");
-				return done();
-			    });
-		    }).catch((err) => {
-			return done(err);
-		    });
-	    })
-	    .catch((err) => {
-		return done(err)
-	    });
-
+    it("Should Query and Delete A Play Via ID and Properties ", (done) => {
+	deletePlay(DATA.onePlay, {genre : "Drama"})
+	    .then(() => done()).catch((err) => done(err));
     });
-
 });
 
 
@@ -257,3 +380,8 @@ describe("Multiple Play Unit Tests", () => {
 	    });
     });
 });
+
+
+module.exports = {
+    addPlay : addPlay
+};
