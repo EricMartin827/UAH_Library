@@ -1,4 +1,3 @@
-
 /* Error Imports */
 const {NODE_ERRORS} = require("./../TOOLS");
 const {CUSTOM_ERRNO} = NODE_ERRORS;
@@ -23,21 +22,37 @@ const $User = require("./User.js").User;
 
 /* 
 * Wrap the Models. All Models now share a common interface which can be
-* accessed dynamically from server by using Models("Play"), Models("User"),
+* accessed dynamically from server by using Control("Play"), Control("User"),
 * etc..
 */
 const Play = new Mongo($Play);
 const User = new Mongo($User);
 
+
+/*
+ * All objects in JavaScript are collections of name/value pairs. By having
+ * four names map to the same mode {or more specifically the same Mongoose 
+ * Database Model}, the code enables the API to handle both lowercase and
+ * uppercase {play or Play}. It gives the client a litle more flexibility in
+ * communicating wiht the server.
+ */
 const Modes = {
-    Play : Play,
-    User : User
+
+    play  : Play,
+    plays : Play,
+    Play  : Play,
+    Plays : Play,
+
+    user  : User,
+    users : User,
+    Uesr  : User,
+    Users : User
 }
 
 function Control(clientArg) {
     
     if (!Modes.hasOwnProperty(clientArg)) {
-	throw makeErrno("ECINVAL",
+	throw makeErrno(ECINVAL,
 			`${clientArg} is not a valid database collection`);
     }
     return Modes[clientArg];

@@ -12,7 +12,7 @@ const {logErrno} = NODE_ERRORS;
 
 const {Control} = require("./../MongoModels")
 
-function initMode(req) {
+function initMode(req, res) {
 
     try {
 	var Mode = Control(req.params.mode);
@@ -27,7 +27,7 @@ function initMode(req) {
 app.post("/add/:mode", (req, res) => {
 
     var Mode;
-    if ((Mode = initMode(req))) {
+    if ((Mode = initMode(req, res))) {
 	Mode.addNewDocument_ModifyDatabase(req)
 	    .then((doc) => {
 		res.send(doc);
@@ -102,7 +102,6 @@ app.delete("/removeID/:mode/:id", (req, res) => {
 
 app.post("/add/batch/:mode", (req, res) => {
 
-    var Mode;
     if ((Mode = initMode(req))) {
 	Mode.addMultipleDocuments_ModifyDatabase(req)
 	    .then((docs) => {

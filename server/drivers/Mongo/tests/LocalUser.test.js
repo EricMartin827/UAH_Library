@@ -1,15 +1,13 @@
 /* NPM Modules */
 const expect = require("expect");
 const request = require("supertest");
-const assert = require("assert");
 
 /* Custom Modules */
-const {TEST_UTILS} = require("./../TOOLS");
 const {UTILS} = require("./../TOOLS");
-const {CONSTANTS} = require("./../TOOLS");
+const {Tester} = require("./../TOOLS");
+
+/* Error Imports */
 const {ERRNO} = require("./../TOOLS");
-const {verifyClientServer} = TEST_UTILS;
-const {printObj} = UTILS;
 
 /* Local Modules */
 const {MongoDB} = require("./../MongoDatabase.js");
@@ -17,199 +15,60 @@ const {app} = require("./LocalMongoServer.js");
 const {User} = require("./../MongoModels");
 var {DATA} = require("./LocalData.js");
 
-/* Local Test Case Function */
-const {addPlay} = require("./LocalPlay.test.js");
-
 "use strict";
 
-/* Remove all users before unit tests in decribe block run */
-before((done) => {
-    User.remove({}).then(() => {
-	done();
-    });;
-});
-
-/* Clean up the databese after all unit tests run */
-after((done) => {
-    User.remove({}).then(() => {
-	done();
-    })
-});
-
-
-function addUser(done) {
-
-    /* Create The First Entry and Confirm Data Save is Valid */
-    var user = DATA.oneUser;
-    request(app)
-	.post("/add/" + "User")
-	.send(user)
-	.expect(200)
-	.expect((res, err) => {
-
-	    if (err) {
-		return done(err);
-	    }
-
-	    var doc = res.body;
-	    expect(res.clientError).toBe(false);
-	    expect(res.serverError).toBe(false);
-	    expect(verifyClientServer(user, doc))
-		.toBe(true);
-	})
-	.end((err, res) => {
-
-	    if (err) {
-		return done(err);
-	    }
-
-	    /* Reacees Database To Confirm Data is Present and Valid */
-	    request(app)
-		.get("/getID/User/" + res.body._id)
-		.expect(200)
-		.expect((res, err) => {
-
-		    if (err) {
-			return done(err);
-		    }
-
-		    var doc = res.body;
-		    expect(res.clientError).toBe(false);
-		    expect(res.serverError).toBe(false);
-		    expect(verifyClientServer(user, doc))
-			.toBe(true);
-		    return done();
-		})
-		.catch((err) => {
-		    return done(err);
-		});
-	});
-}
+const UserTester = new Tester(app, User);
 describe("Simple User Unit Tests", () => {
 
-    it("Should Create And Query Via the ID of a Single User", (done) => {
-	addUser(done);
+    /* Remove all users before unit tests in decribe block run */
+    beforeEach((done) => {
+	User.remove({}).then(() => {
+	    done();
+	});;
     });
 
-    it("Should Not Be Able Reinsert the Same User", (done) => {
-
-	/* Resend The Exact Same Data */
-	var user = DATA.oneUser;
-	request(app)
-	    .post("/add/User")
-	    .send(user)
-	    .expect(400)
-	    .end((err, res) => {
-
-		/* There Should Not Be A Server Error */
-		if (err) {
-		    return done(err);
-		}
-
-		/* Verify The Client is At Fault and Server Detect Duplicate */
-		expect(res.clientError).toBe(true);
-		expect(res.serverError).toBe(false);
-		expect(ERRNO[res.body.code]).toBe("DuplicateKey");
-		return done();
-	    });
+    /* Clean up the databese after all unit tests run */
+    afterEach((done) => {
+	User.remove({}).then(() => {
+	    done();
+	})
     });
 
-    it("Should Be Able Query By Properties And Update The User", (done) => {
-
-    	/* Reacees Database To Confirm Data is Present and Valid */
-    	var user = DATA.oneUser;
-    	request(app)
-    	    .get("/get/User")
-    	    .send(user)
-    	    .expect(200)
-    	    .expect((res, err) => {
-
-    		if (err) {
-    		    return done(err);
-    		}
-    		expect(res.clientError).toBe(false);
-    		expect(res.serverError).toBe(false);
-    		expect(verifyClientServer(user, res.body, ["passWord"]))
-    		    .toBe(true);
-
-    		/* Make Changes to the Client's Play and Post For An Update */
-    		user = res.body;
-    		user.firstName = "Sean";
-    		request(app)
-    		    .patch("/updateID/User/" + user._id)
-    		    .send(user)
-    		    .expect(200)
-    		    .end((err, res) => {
-
-    			/* There Should Not Be A Server Error */
-    			if (err) {
-    			    return done(err);
-    			}
-    			expect(res.clientError).toBe(false);
-    			expect(res.serverError).toBe(false);
-    			expect(verifyClientServer(user, res.body))
-    			    .toBe(true);
-			return done();
-    		    });
-    	    })
-    	    .catch((err) => {
-    		return done(err);
-    	    });
+    it("Should Create And Query A User By ID", (done) => {
+	UserTester.add(DATA.oneUser)
+	    .then(() => done()).catch((err) => done());
     });
 
-    it("Should Query and Delete A User Via ID ", (done) => {
+    it("Should Not Reinsert A Duplicate User", (done) => {
+    	UserTester.duplicateAdd(DATA.oneUser)
+    	    .then(() => done()).catch((err) => done(err));
+    });
 
-    	var user = DATA.oneUser;
-	user.firstName = "Sean"; /* Previous Test Modified User */
-    	request(app)
-    	    .get("/get/User")
-    	    .send(user)
-    	    .expect(200)
-    	    .expect((res, err) => {
+    it("Should Query And Update A User By ID", (done) => {
+	UserTester.queryUpdateID(DATA.oneUser, {lastName : "Sullivan"})
+	    .then(() => done()).catch((err) => done(err));
+    });
 
-    		if (err) {
-    		    return done(err);
-    		}
+    it("Should Query And Update A User By Property", (done) => {
+	done(1);
+    });
 
-    		expect(res.clientError).toBe(false);
-    		expect(res.serverError).toBe(false);
-    		expect(verifyClientServer(user, res.body))
-    		    .toBe(true);
+    it("Should Query By Properties And Update A User By ID", (done) => {
+	UserTester.queryProp_UpdateID(
+	    DATA.oneUser, {userName : "eMart"}, {userName : "Joanne"})
+	    .then(() => done()).catch((err) => done(err));
+    });
 
-    		user = res.body;
-    		request(app)
-    		    .delete("/removeID/User/" + user._id)
-    		    .expect(200)
-    		    .expect((res, err) => {
+    it("Should Query By Id and Update A User By Property", (done) => {
+	done(1);
+    });
 
-    			if (err) {
-    			    return done(err);
-    			}
-    			var awk = res.body;
-    			expect(awk.n).toBe(1);
-    			expect(awk.ok).toBe(1);
+    it("Should Query and Delete Delete A User By ID ", (done) => {
+	done(1);
+    });
 
-    			request(app)
-    			    .get("/get/User")
-    			    .send({userName: user.userName})
-    			    .expect(400)
-    			    .end((err, res) => {
-
-    				if (err) {
-    				    return done(err);
-    				}
-    				expect(res.clientError).toBe(true);
-    				expect(res.serverError).toBe(false);
-    				expect(ERRNO[res.body.code]).toBe("QueryMiss");
-    				return done();
-    			    });
-    		    }).catch((err) => {
-    			return done(err);
-    		    });
-    	    })
-    	    .catch((err) => {
-    		return done(err)
-    	    });
+    it("Should Query and Delete Delete A User By Propery ", (done) => {
+	done(1);
     });
 
 });
