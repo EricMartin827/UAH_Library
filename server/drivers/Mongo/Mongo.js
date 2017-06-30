@@ -25,9 +25,10 @@ const {NODE_ERRORS} = require("./TOOLS");
 const {CUSTOM_ERRNO} = NODE_ERRORS;
 const {NO_CLIENT_REQUEST} = CUSTOM_ERRNO;
 const {ECINVAL} = CUSTOM_ERRNO;
-const {FAILED_ID} = CUSTOM_ERRNO;
-const {FAILED_QUERY} = CUSTOM_ERRNO;
-const {FAILED_UPDATE} =  CUSTOM_ERRNO;
+const {FAILED_ID_UPDATE} = CUSTOM_ERRNO;
+const {FAILED_QUERY_UPDATE} = CUSTOM_ERRNO;
+const {FAILED_ID_REMOVE} =  CUSTOM_ERRNO;
+const {FAILED_QUERY_REMOVE} =  CUSTOM_ERRNO;
 const {ESINVAL} = CUSTOM_ERRNO;
 const {makeErrno} = NODE_ERRORS;
 
@@ -202,13 +203,10 @@ Interface.findOneByID_QueryDatabase = function(req) {
 			     `Invalid ID ${id} Used To Query Mongo`));
 	}
 	this.model.findById(id)
-	    .then((doc) => {
-		if (!doc) {
-		    reject(makeErrno(FAILED_ID,
-				     `ID ${id} Not Present in Mongo`));
-		}
-		util.log("Located: ", doc.toString());
-		resolve(doc);
+	    .then((res) => {
+
+		/* Resolve an empty object if there is no match */
+		resolve(res ? res : {});
 	    })
 	    .catch((err) => reject(err));
     });
@@ -231,14 +229,41 @@ Interface.findFirstOneByProp_QueryDatabase = function(req) {
 	} catch (err) {
 	    reject(err);
 	}
+
 	this.model.findOne(query).exec()
 	    .then((res) => {
-		if (!res) {
-		    reject(makeErrno(FAILED_QUERY,
-				     `Unable to Find Entry With Query:\n` +
-				     `${stringify(query)}`));
+
+		/* Resolve an empty object if there is no match */
+		resolve(res ? res : {});
+	    })
+	    .catch((err) => {
+		reject(err);
+	    });
+    });
+}
+
+Interface.findFirstOneByProp_UpdateDatabase = function(req) {
+    return new Promise((resolve, reject) => {
+
+	if (!req.body.query || !req.body.update) {
+	    reject(mkaeErrno(ECINVAL,
+			     `Client Request Does Not Specify Query/Update`));
+	}
+	
+	try {
+	    var query = clean(this.model, req.body.query);
+	    var update = clean(this.model, req.body.update);
+	} catch (err) {
+	    reject(err);
+	}
+
+	this.model.findOneAndUpdate(query, update, {new : true})
+	    .then((doc) => {
+		if (!doc) {
+		    reject(makeErrno(FAILED_QUERY_UPDATE,
+				    `Query: ${query} Has No Match`));
 		}
-		resolve(res);
+		resolve(doc);
 	    })
 	    .catch((err) => {
 		reject(err);
@@ -263,6 +288,10 @@ Interface.findOneByID_UpdateDatabase = function(req) {
 
 	this.model.findByIdAndUpdate(id, {$set : update}, {new : true})
 	    .then((res) => {
+		if (!res) {
+		    reject(makeErrno(FAILD_ID_UPDATE,
+				     `ID: ${id} not present in database`));
+		}
 		resolve(res);
 	    })
 	    .catch((err) => {
@@ -282,6 +311,10 @@ Interface.removeOneByID_ModifyDatabase = function(req) {
 
 	this.model.deleteOne({_id : id})
 	    .then((res) => {
+		if (res.result.n === 0) {
+		    reject(makeErrno(FAILED_ID_REMOVE,
+				     `ID: ${id} not present in database`));
+		}
 		resolve(res);
 	    })
 	    .catch((err) => {
@@ -290,8 +323,8 @@ Interface.removeOneByID_ModifyDatabase = function(req) {
     });
 }
 
-Interface.removeOneByProp_ModidyDatabase = function(req) {
-    return new Promise((result, resolve) => {
+Interface.removeFirstOneByProp_ModifyDatabase = function(req) {
+    return new Promise((resolve, reject) => {
 
 	try {
 	    var query = clean(this.model, req.body);
@@ -299,12 +332,18 @@ Interface.removeOneByProp_ModidyDatabase = function(req) {
 	    reject(err);
 	}
 
-	this.model.deleteOne({query})
+	this.model.deleteOne(query)
 	    .then((res) => {
+		if (res.result.n === 0) {
+		    reject(makeErrno(FAILED_QUERY_REMOVE,
+				     `\nQuery: ${stringify(query)} not ` +
+				     `in database`));
+		}
 		resolve(res);
 	    })
 	    .catch((err) => {
-		reject(err);
+		reject(makeErrno(ESINVAL,
+				`Query: ${query} Violcated Database Protocol`));
 	    });
     });
 }

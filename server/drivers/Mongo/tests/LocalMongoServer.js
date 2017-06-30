@@ -17,6 +17,7 @@ function initMode(req, res) {
     try {
 	var Mode = Control(req.params.mode);
     } catch (err) {
+	console.log("Fuck Russia");
 	logErrno(err);
 	res.status(400).send(err);
 	return null;
@@ -42,7 +43,7 @@ app.post("/add/:mode", (req, res) => {
 app.get("/get/:mode", (req, res) => {
 
     var Mode;
-    if ((Mode = initMode(req))) {
+    if ((Mode = initMode(req, res))) {
 	Mode.findFirstOneByProp_QueryDatabase(req)
 	    .then((doc) => {
 		res.send(doc);
@@ -57,8 +58,23 @@ app.get("/get/:mode", (req, res) => {
 app.get("/getID/:mode/:id", (req, res) => {
 
     var Mode;
-    if ((Mode = initMode(req))) {
+    if ((Mode = initMode(req, res))) {
 	Mode.findOneByID_QueryDatabase(req)
+	    .then((doc) => {
+		res.send(doc);
+	    })
+	    .catch((err) => {
+		logErrno(err);
+		res.status(400).send(err);
+	    });
+    }
+});
+
+app.patch("/update/:mode", (req, res) => {
+
+    var Mode;
+    if ((Mode = initMode(req, res))) {
+	Mode.findFirstOneByProp_UpdateDatabase(req)
 	    .then((doc) => {
 		res.send(doc);
 	    })
@@ -72,7 +88,7 @@ app.get("/getID/:mode/:id", (req, res) => {
 app.patch("/updateID/:mode/:id", (req, res) => {
 
     var Mode;
-    if ((Mode = initMode(req))) {
+    if ((Mode = initMode(req, res))) {
 	Mode.findOneByID_UpdateDatabase(req)
 	    .then((doc) => {
 		res.send(doc);
@@ -84,10 +100,25 @@ app.patch("/updateID/:mode/:id", (req, res) => {
     }
 });
 
+app.delete("/remove/:mode", (req, res) => {
+
+    var Mode;
+    if ((Mode = initMode(req, res))) {
+	Mode.removeFirstOneByProp_ModifyDatabase(req)
+	    .then((awk) => {
+		res.send(awk);
+	    })
+	    .catch((err) => {
+		logErrno(err);
+		res.status(400).send(err);
+	});
+    }
+});
+
 app.delete("/removeID/:mode/:id", (req, res) => {
 
     var Mode;
-    if ((Mode = initMode(req))) {
+    if ((Mode = initMode(req, res))) {
 	Mode.removeOneByID_ModifyDatabase(req)
 	    .then((awk) => {
 		res.send(awk);
@@ -102,7 +133,7 @@ app.delete("/removeID/:mode/:id", (req, res) => {
 
 app.post("/add/batch/:mode", (req, res) => {
 
-    if ((Mode = initMode(req))) {
+    if ((Mode = initMode(req, res))) {
 	Mode.addMultipleDocuments_ModifyDatabase(req)
 	    .then((docs) => {
 		res.send(docs);

@@ -51,25 +51,32 @@ describe("Simple Play Unit Tests", () => {
     });
 
     it("Should Query And Update A Play By Property", (done) => {
-	done(1);
+	PlayTester.queryUpdateProp(DATA.onePlay,
+				   {genre : "Drama"}, {genre : "New Age"})
+	    .then(() => done()).catch((err) => done(err));
     });
 
-    it("Should Query By Properties And Update A Play By ID", (done) => {
+    it("Should Query By Property And Update A Play By ID", (done) => {
 	PlayTester.queryProp_UpdateID(
 	    DATA.onePlay, {copies : 1}, {copies : 9000})
 	    .then(() => done()).catch((err) => done(err));
     });
 
     it("Should Query By Id and Update A Play By Property", (done) => {
-	done(1);
+	PlayTester.queryID_UpdateProp(
+	    DATA.onePlay, {hasSpectacle : false}, {copies : 9000})
+	    .then(() => done()).catch((err) => done(err));
     });
 
-    it("Should Query and Delete Delete A Play By ID ", (done) => {
-	done(1);
+    it("Should Delete Delete A Play By ID ", (done) => {
+	PlayTester.queryDeleteID(DATA.onePlay)
+	    .then(() => done()).catch((err) => done(err));
     });
 
-    it("Should Query and Delete Delete A Play By Propery ", (done) => {
-	done(1);
+    it("Should Delete A Play By Property ", (done) => {
+	PlayTester.queryDeleteProp(
+	    DATA.onePlay, {timePeriod : "Not Specified"}, true)
+	    .then(() => done()).catch((err) => done(err));
     });
 });
 

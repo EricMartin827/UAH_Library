@@ -177,9 +177,10 @@ var ERRNO = {
     /*********************************/
     200 : "MissingClientInput",
     201 : "InvalidClientInput",
-    202 : "Removal_ID_Miss",
-    203 : "Removal_Query_Miss",
-    204 : "NoModifiableDocumentFound",
+    202 : "ID_Miss_OnUpdate -> NoModifiableDocument",
+    203 : "Query_Miss_OnUpdate -> NoModifiableDocument",
+    204 : "ID_Miss_OnRemove -> NoRemovableDocument",
+    205 : "Query_Miss_OnRemove -> NoRemovableDocument",
     250 : "InvalidServerArguments",
     /*********************************/
 
@@ -206,12 +207,13 @@ var ERRNO = {
 };
 
 CUSTOM_ERRNO = {
-    NO_CLIENT_REQUEST : 200,
-    ECINVAL : 201,
-    FAILED_ID : 202,
-    FAILED_QUERY : 203,
-    FAILED_UPDATE : 204,
-    ESINVAL : 250
+    NO_CLIENT_REQUEST   : 200,
+    ECINVAL             : 201,
+    FAILED_ID_UPDATE    : 202,
+    FAILED_QUERY_UPDATE : 203,
+    FAILED_ID_REMOVE    : 204,
+    FAILED_QUERY_REMOVE : 205,
+    ESINVAL             : 250
 };
 
 

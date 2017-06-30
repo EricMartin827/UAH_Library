@@ -22,6 +22,7 @@
 /* NPM Imports */
 const expect = require("expect");
 const request = require("supertest");
+const util = require("util");
 
 /* Utility Imports */
 const {UTILS} = require("./AppUtils");
@@ -34,6 +35,10 @@ const {isValidID} = UTILS;
 const {NODE_ERRORS} = require("./ERRNO.js");
 const {ERRNO} = NODE_ERRORS;
 const {ECINVAL} = NODE_ERRORS;
+const {FAILED_ID_UPDATE} = NODE_ERRORS;
+const {FAILED_QUERY_UPDATE} = NODE_ERRORS;
+const {FAILED_ID_REMOVE} = NODE_ERRORS;
+const {FAILED_QUERY_REMOVE} = NODE_ERRORS;
 const {makeErrno} = NODE_ERRORS;
 
 "use strict"
@@ -201,11 +206,7 @@ function getID(_app, _mode, id) {
 	request(_app)
 	    .get(`/getID/${_mode}/${id}`)
 	    .expect(200)
-	    .expect((res, err) => {
-
-		if (err) {
-		    reject(err);
-		}
+	    .expect((res) => {
 
 		var doc = res.body;
 		expect(res.clientError).toBe(false);
@@ -220,7 +221,24 @@ function getID(_app, _mode, id) {
 
 /* Private Helper for updateProp */
 function updateProp(_app, _mode, query, update) {
-    return null;
+
+    return new Promise((resolve, reject) => {
+
+	request(_app)
+	    .patch(`/update/${_mode}`)
+	    .send({query : query, update : update})
+	    .expect(200)
+	    .then((res) => {
+
+		var doc = res.body;
+		expect(res.clientError).toBe(false);
+		expect(res.serverError).toBe(false);
+		resolve(doc);
+	    }).
+	    catch((err) => {
+		reject(err);
+	    });
+    });
 }
 
 /* Private Helper for updateID */
@@ -250,8 +268,49 @@ function updateID(_app, _mode, id, update) {
 }
 
 /* Private Helper for Remove */
-function remove(_app, _mode, query) {
-    return null;
+function remove(_app, _mode, query, lastEntry) {
+
+    return new Promise((resolve, reject) => {
+
+	request(_app)
+	    .delete(`/remove/${_mode}`)
+	    .send(query)
+	    .expect(200)
+	    .then((res) => {
+
+		/* Verify the server awks a single deletion */
+		var awk = res.body;
+		expect(awk.n).toBe(1)
+		expect(awk.ok).toBe(1);
+
+		/* 
+		 * If the unit tester expects the query to no longer 
+		 * match any documents in the database collection, then
+		 * check that a query reaccess produces an empty object.
+		 */
+		if (lastEntry) {
+		    request(_app)
+			.get(`/get/${_mode}`)
+			.send(query)
+			.expect(200)
+			.then((res) => {
+
+			    var noDoc = res.body;
+			    expect(res.clientError).toBe(false);
+			    expect(res.serverError).toBe(false);
+			    expect(noDoc).toEqual({});
+			    util.log("Verified Property Deletion");
+			    resolve();
+			})
+			.catch((err) => {
+			    reject(err);
+			})
+		}
+	    })
+	    .catch((err) => {
+		reject(err);
+	    })
+    });
 }
 
 /* Private Helper for RemoveID */
@@ -260,27 +319,30 @@ function removeID(_app, _mode, id) {
     return new Promise((resolve, reject) => {
 
 	request(_app)
-	    .delete(`/removeID/${this.mode}/${id}`)
+	    .delete(`/removeID/${_mode}/${id}`)
 	    .expect(200)
-	    .expect((res, err) => {
+	    .then((res) => {
 
-		if (err) {
-		    reject(err);
-		}
-
+		/* Verify the server awks a single deletion */
 		var awk = res.body;
  		expect(awk.n).toBe(1);
 		expect(awk.ok).toBe(1);
 
+		/* Reaccess databse by id to ensure the removed id misses */
 		request(_app)
-		    .get('/getID/${_mode}/${res.body._id}')
-		    .expect(400)
-		    .end((err, res) => {
-			expect(res.clientError).toBe(true);
+		    .get(`/getID/${_mode}/${id}`)
+		    .expect(200)
+		    .then((res) => {
+
+			var noDoc = res.body;
+			expect(res.clientError).toBe(false);
 			expect(res.serverError).toBe(false);
-			expect(ERRNO[res.body.code]).toBe("Removal_ID_Miss");
+			expect(noDoc).toEqual({});
+			util.log("Verified ID Deletion");
+			resolve();
+		    }).catch((err) => {
+			reject(err);
 		    })
-		
 	    }).catch((err) => {
 		reject(err);
 	    })
@@ -347,7 +409,7 @@ Interface.getID = function(id) {
  * @param update the change to make to the database entry
  * @return {Promise} a promise to return the updated document matching the query
  */
-Interface.updateProp = function(query, update) {
+Interface.update = function(query, update) {
     return updateProp(this.app, this.mode, query, update);
 }
 
@@ -364,8 +426,8 @@ Interface.updateID = function(id, update) {
     return updateID(this.app, this.mode, id, update);
 }
 
-Interface.remove = function(query) {
-    return remove(this.app, this.mode, query);
+Interface.remove = function(query, lastEntry) {
+    return remove(this.app, this.mode, query, lastEntry);
 }
 
 Interface.removeID = function(id) {
@@ -417,6 +479,7 @@ Interface.duplicateAdd = async function(json) {
 	    expect(err.clientError).toBe(true);
 	    expect(err.serverError).toBe(false);
 	    expect(ERRNO[err.body.code]).toBe("DuplicateKey");
+	    util.log("Verified Duplicate Key");
 	});
 }
 
@@ -447,14 +510,10 @@ Interface.queryUpdateID = async function(json, update) {
 Interface.queryUpdateProp = async function(json, query, update) {
 
     var added = await add(this.app, this.mode, json);
+    var updated = await updateProp(this.app, this.mode, query, update);
 
-    var queried = await get(this.app, this.mode, query);
-    expect(added).toEqual(queried);
-
-    var updated = await updateID(id, update);
-    Object.assign(queried, update);
-    expect(updated).toEqual(queried);
-
+    Object.assign(added, update);
+    expect(updated).toEqual(added);
 }
 
 Interface.queryProp_UpdateID = async function(json, query, update) {
@@ -468,6 +527,47 @@ Interface.queryProp_UpdateID = async function(json, query, update) {
     Object.assign(queried, update);
     expect(updated).toEqual(queried);
     
+}
+
+Interface.queryID_UpdateProp = async function(json, query, update) {
+
+    var added = await add(this.app, this.mode, json);
+
+    var queried = await getID(this.app, this.mode, added._id);
+    expect(added).toEqual(queried);
+
+    var updated = await updateProp(this.app, this.mode, query, update);
+    Object.assign(queried, update);
+    expect(updated).toEqual(queried);
+}
+
+Interface.queryDeleteID = async function(json) {
+
+    var added = await add(this.app, this.mode, json);
+    await removeID(this.app, this.mode, added._id);
+
+    try {
+	await removeID(this.app, this.mode, added._id)
+    } catch (err) {
+	expect(err.code).toBe(FAILED_ID_REMOVE);
+	util.log("Verified Error");
+	return;
+    }
+    expect(true).toBe(false);
+}
+
+Interface.queryDeleteProp = async function(json, query, lastEntry) {
+
+    var added = await add(this.app, this.mode, json);
+    await remove(this.app, this.mode, query, lastEntry)
+
+    try {
+	await remove(this.app, this.mode, query);
+    } catch(err) {
+	expect(err.code).toBe(FAILED_QUERY_REMOVE);
+	return;
+    }
+    expect(true).toBe(false);
 }
 
 module.exports = {Tester}
