@@ -13,11 +13,15 @@ function stringify(obj) {
 }
 
 function isFunc(val) {
-    return typeof(val) === "function";
+    return val.constructor === Function;
 }
 
 function isObject(val) {
-    return typeof(val) === "object";
+    return val.constructor === Object;
+}
+
+function isEmptyObject(val) {
+    return val.constructor === Object && Object.keys(val).length === 0;
 }
 
 function isValidID(id) {
@@ -30,6 +34,7 @@ module.exports = {
 	stringify: stringify,
 	isObject: isObject,
 	isFunc: isFunc,
+	isEmptyObject : isEmptyObject,
 	isValidID: isValidID
     }
 };

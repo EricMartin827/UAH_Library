@@ -74,7 +74,7 @@ describe("Simple User Unit Tests", () => {
 
     it("Should Query and Delete Delete A User By Propery ", (done) => {
 	UserTester.queryDeleteProp(
-	    DATA.oneUser, {isAdmin: true}, true)
+	    DATA.oneUser, {isAdmi: true}, true)
 	    .then(() => done()).catch((err) => done(err));
     });
 

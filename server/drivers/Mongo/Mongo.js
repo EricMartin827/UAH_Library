@@ -19,6 +19,7 @@ const {isFunc} = UTILS;
 const {stringify} = UTILS;
 const {isObject} = UTILS;
 const {isValidID} = UTILS;
+const {isEmptyObject} = UTILS;
 
 /* Error Imports */
 const {NODE_ERRORS} = require("./TOOLS");
@@ -93,7 +94,7 @@ function clean(Model, obj) {
 		       `Invalid Criteria ${obj} For Query/Mod Database`);
     }
     strip(Model, obj);
-    if ( obj === {}) {
+    if (isEmptyObject(obj)) {
 	throw makeErrno(ECINVAL,
 			`Client Update Failed To Comply With Model Schema`);
     }
