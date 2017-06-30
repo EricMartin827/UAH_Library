@@ -41,42 +41,35 @@ describe("Simple Play Unit Tests", () => {
     });
 
     it("Should Not Reinsert A Duplicate Play", (done) => {
-    	PlayTester.duplicateAdd(DATA.onePlay)
-    	    .then(() => done()).catch((err) => done(err));
+    	PlayTester.duplicateAdd(done, DATA.onePlay);
     });
 
     it("Should Query And Update A Play By ID", (done) => {
-	PlayTester.queryUpdateID(DATA.onePlay, {authorLast : "Martin"})
-	    .then(() => done()).catch((err) => done(err));
+	PlayTester.queryUpdateID(done,DATA.onePlay, {authorLast : "Martin"});
     });
 
     it("Should Query And Update A Play By Property", (done) => {
-	PlayTester.queryUpdateProp(DATA.onePlay,
-				   {genre : "Drama"}, {genre : "New Age"})
-	    .then(() => done()).catch((err) => done(err));
+	PlayTester.queryUpdateProp(done, DATA.onePlay,
+				   {genre : "Drama"}, {genre : "New Age"});
     });
 
     it("Should Query By Property And Update A Play By ID", (done) => {
-	PlayTester.queryProp_UpdateID(
-	    DATA.onePlay, {copies : 1}, {copies : 9000})
-	    .then(() => done()).catch((err) => done(err));
+	PlayTester.queryProp_UpdateID(done, DATA.onePlay,
+				      {copies : 1}, {copies : 9000});
     });
 
     it("Should Query By Id and Update A Play By Property", (done) => {
-	PlayTester.queryID_UpdateProp(
-	    DATA.onePlay, {hasSpectacle : false}, {copies : 9000})
-	    .then(() => done()).catch((err) => done(err));
+	PlayTester.queryID_UpdateProp(done, DATA.onePlay,
+				      {hasSpectacle : false}, {copies : 9000});
     });
 
     it("Should Delete Delete A Play By ID ", (done) => {
-	PlayTester.queryDeleteID(DATA.onePlay)
-	    .then(() => done()).catch((err) => done(err));
+	PlayTester.queryDeleteID(done, DATA.onePlay);
     });
 
     it("Should Delete A Play By Property ", (done) => {
-	PlayTester.queryDeleteProp(
-	    DATA.onePlay, {timePeriod : "Not Specified"}, true)
-	    .then(() => done()).catch((err) => done(err));
+	PlayTester.queryDeleteProp(done, DATA.onePlay,
+				   {timePeriod : "Not Specified"}, true);
     });
 });
 

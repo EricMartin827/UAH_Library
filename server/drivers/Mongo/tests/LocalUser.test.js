@@ -40,42 +40,34 @@ describe("Simple User Unit Tests", () => {
     });
 
     it("Should Not Reinsert A Duplicate User", (done) => {
-    	UserTester.duplicateAdd(DATA.oneUser)
-    	    .then(() => done()).catch((err) => done(err));
+    	UserTester.duplicateAdd(done, DATA.oneUser);
     });
 
     it("Should Query And Update A User By ID", (done) => {
-	UserTester.queryUpdateID(DATA.oneUser, {lastName : "Sullivan"})
-	    .then(() => done()).catch((err) => done(err));
+	UserTester.queryUpdateID(done, DATA.oneUser, {lastName : "Sullivan"});
     });
 
     it("Should Query And Update A User By Property", (done) => {
-	UserTester.queryUpdateProp(
-	    DATA.oneUser, {lastName: "Martin"}, {firstName: "Andy"})
-	    .then(() => done()).catch((err) => done(err));
+	UserTester.queryUpdateProp(done, DATA.oneUser,
+				   {lastName: "Martin"}, {firstName: "Andy"});
     });
 
     it("Should Query By Property And Update A User By ID", (done) => {
-	UserTester.queryProp_UpdateID(
-	    DATA.oneUser, {userName : "eMart"}, {userName : "Joanne"})
-	    .then(() => done()).catch((err) => done(err));
+	UserTester.queryProp_UpdateID(done, DATA.oneUser,
+				      {userName : "eMart"}, {userName : "Joanne"});
     });
 
     it("Should Query By Id and Update A User By Property", (done) => {
-	UserTester.queryID_UpdateProp(
-	    DATA.oneUser, {firstName : "Eric"}, {firstName : "Sean"})
-	    .then(() => done()).catch((err) => done(err));
+	UserTester.queryID_UpdateProp(done, DATA.oneUser,
+				      {firstName : "Eric"}, {firstName : "Sean"});
     });
 
     it("Should Query and Delete Delete A User By ID ", (done) => {
-	UserTester.queryDeleteID(DATA.oneUser).
-	    then(() => done()).catch((err) => done(err));
+	UserTester.queryDeleteID(done, DATA.oneUser);
     });
 
     it("Should Query and Delete Delete A User By Propery ", (done) => {
-	UserTester.queryDeleteProp(
-	    DATA.oneUser, {isAdmi: true}, true)
-	    .then(() => done()).catch((err) => done(err));
+	UserTester.queryDeleteProp(done, DATA.oneUser, {isAdmin: true}, true);
     });
 
 });

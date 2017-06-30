@@ -456,8 +456,11 @@ Interface.removeID = function(id) {
  * @param json JSON data to be added and readded to the database
  * @return {Promise} a promise to return the added entry or terminates test
  */
-Interface.duplicateAdd = async function(json) {
+Interface.duplicateAdd = async function(done, json) {
 
+    /* Sanity Test On Supertest's done() callback function */
+    expect(isFunc(done)).toBe(true)
+    
     /* Use JS's async/await to wait for the json data to
      * be added and verified in the database. If there is
      * error, allow the JavaScript engine to throw it up to the unit test.
@@ -479,8 +482,8 @@ Interface.duplicateAdd = async function(json) {
 	    expect(err.clientError).toBe(true);
 	    expect(err.serverError).toBe(false);
 	    expect(ERRNO[err.body.code]).toBe("DuplicateKey");
-	    util.log("Verified Duplicate Key");
-	});
+	    done()
+	}).catch((err) => done(err));
 }
 
 /**
@@ -493,81 +496,119 @@ Interface.duplicateAdd = async function(json) {
  * @param update the change to made on the test data in the database
  * @return {Promise} 
  */
-Interface.queryUpdateID = async function(json, update) {
+Interface.queryUpdateID = async function(done, json, update) {
 
-    var added = await add(this.app, this.mode, json);
-    var id = added._id;
+    expect(isFunc(done)).toBe(true)
+    try {
+	var added = await add(this.app, this.mode, json);
+	var id = added._id;
 
-    var queried = await getID(this.app, this.mode, id);
-    expect(added).toEqual(queried);
+	var queried = await getID(this.app, this.mode, id);
+	expect(added).toEqual(queried);
 
-    var updated = await updateID(this.app, this.mode, id, update);
-    Object.assign(queried, update);
-    expect(updated).toEqual(queried);
+	var updated = await updateID(this.app, this.mode, id, update);
+	Object.assign(queried, update);
+	expect(updated).toEqual(queried);
+	done();
+    } catch(err) {
+	done(err);
+    }
 
 }
 
-Interface.queryUpdateProp = async function(json, query, update) {
+Interface.queryUpdateProp = async function(done, json, query, update) {
 
-    var added = await add(this.app, this.mode, json);
-    var updated = await updateProp(this.app, this.mode, query, update);
-
-    Object.assign(added, update);
-    expect(updated).toEqual(added);
-}
-
-Interface.queryProp_UpdateID = async function(json, query, update) {
-
-    var added = await add(this.app, this.mode, json);
+    expect(isFunc(done)).toBe(true)
     
-    var queried = await get(this.app, this.mode, query);
-    expect(added).toEqual(queried);
+    try {
+	var added = await add(this.app, this.mode, json);
+	var updated = await updateProp(this.app, this.mode, query, update);
 
-    var updated = await updateID(this.app, this.mode, queried._id, update);
-    Object.assign(queried, update);
-    expect(updated).toEqual(queried);
+	Object.assign(added, update);
+	expect(updated).toEqual(added);
+	done();
+    } catch(err) {
+	done(err);
+    }
+}
+
+Interface.queryProp_UpdateID = async function(done, json, query, update) {
+
+    expect(isFunc(done)).toBe(true)
+    
+    try {
+	var added = await add(this.app, this.mode, json);
+    
+	var queried = await get(this.app, this.mode, query);
+	expect(added).toEqual(queried);
+
+	var updated = await updateID(this.app, this.mode, queried._id, update);
+	Object.assign(queried, update);
+	expect(updated).toEqual(queried);
+	done();
+    } catch(err) {
+	done(err);
+    }
     
 }
 
-Interface.queryID_UpdateProp = async function(json, query, update) {
+Interface.queryID_UpdateProp = async function(done, json, query, update) {
 
-    var added = await add(this.app, this.mode, json);
+    expect(isFunc(done)).toBe(true)
 
-    var queried = await getID(this.app, this.mode, added._id);
-    expect(added).toEqual(queried);
+    try {
+	var added = await add(this.app, this.mode, json);
 
-    var updated = await updateProp(this.app, this.mode, query, update);
-    Object.assign(queried, update);
-    expect(updated).toEqual(queried);
+	var queried = await getID(this.app, this.mode, added._id);
+	expect(added).toEqual(queried);
+	
+	var updated = await updateProp(this.app, this.mode, query, update);
+	Object.assign(queried, update);
+	expect(updated).toEqual(queried);
+	done();
+    } catch (err) {
+	done(err);
+    }
 }
 
-Interface.queryDeleteID = async function(json) {
+Interface.queryDeleteID = async function(done, json) {
 
-    var added = await add(this.app, this.mode, json);
-    await removeID(this.app, this.mode, added._id);
+    expect(isFunc(done)).toBe(true)
 
+    try {
+	var added = await add(this.app, this.mode, json);
+	await removeID(this.app, this.mode, added._id);
+    } catch (err) {
+	return done(err);
+    }
+    
     try {
 	await removeID(this.app, this.mode, added._id)
     } catch (err) {
 	expect(err.code).toBe(FAILED_ID_REMOVE);
-	util.log("Verified Error");
-	return;
+	return done();
     }
-    expect(true).toBe(false);
+    return done(new Error("Failed To Verify Error Code"));
 }
 
-Interface.queryDeleteProp = async function(json, query, lastEntry) {
+Interface.queryDeleteProp = async function(done, json, query, lastEntry) {
 
-    var added = await add(this.app, this.mode, json);
-    await remove(this.app, this.mode, query, lastEntry)
+    expect(isFunc(done)).toBe(true)
+
+    try {
+	var added = await add(this.app, this.mode, json);
+	await remove(this.app, this.mode, query, lastEntry)
+    } catch(err) {
+	return done(err);
+    }
 
     try {
 	await remove(this.app, this.mode, query);
     } catch(err) {
 	expect(err.code).toBe(FAILED_QUERY_REMOVE);
-	return;
+	return done();
     }
-    expect(true).toBe(false);
+    return done(new Error("Failed To Verify Error Code"));
 }
 
 module.exports = {Tester}
