@@ -4,9 +4,9 @@
  * interface in the main server. The module reduces the code
  * size of the server and cleans up/verifies client data before
  * attempting to access the databse. The interface also perfroms
- * error checks to ensure the database does not become corrupted while
- * simultaneously providing informative error reports to the client program
- * and the developer.
+ * error checks to ensure the database does not become corrupted. These
+ * error reports are also used to message client programs and assist
+ * development.
  *
  * @module Mongo.js
  * @author Eric William Martin
@@ -32,6 +32,7 @@ const {ESINVAL} = CUSTOM_ERRNO;
 const {makeErrno} = NODE_ERRORS;
 
 
+"use strict"
 /**
  * The Mongo object/class is a generic wrapper. It takes a valid
  * Mongoose Model Class and extends the aformentioned model's
@@ -147,183 +148,178 @@ function initMultDocs(Model, entryArray) {
     return entryArray;
 }
 
+
 /* The Public Database Interface Used To Communicate With the Database */
-var Interface = {
+var Interface = Mongo.prototype;
 
-    /********************************************/
-    /******** Single Document Interface *********/
-    /********************************************/
 
-    /**
-     * Function asynchronously adds a new document to the database. If the
-     * client data does not meet the invoking model's criteria or if the
-     * document is already present in the database, method rejects the
-     * client's request.
-     *
-     * @method addNewDocument_ModifyDatabase
-     * @param req the client's unprocessed request data
-     * @return {Promise} a promise to return either added entry or an error
-     */
-    addNewDocument_ModifyDatabase : function(req) {
-	return new Promise((resolve, reject) => {
-	    try {
-		initOneDoc(this.model, req.body).save()
-		    .then((res) => {
-			util.log("Added: ", res.toString());
-			resolve(res);
-		    })
-		    .catch((err) => {
-			reject(err);
-		    });
-	    } catch(err) {
-		reject(err);
-	    }
-	});
-    },
+/***********************************************************************/
+/******************* Single Document Interface *************************/
+/***********************************************************************/
 
-    /**
-     * Function asynchronously searches for a document in the database. If the
-     * client request does not have a valid Monog _id, the method rejects the
-     * client's request.
-     *
-     * @method findOneByID_QueryDatabase
-     * @param req the client's unprocessed request data that should have and _id
-     * @return {Promise} a promise to return either added entry or an error
-     */
-    findOneByID_QueryDatabase : function(req) {
-	return new Promise((resolve, reject) => {
-
-	    var id = req.params.id;
-	    if (!isValidID(id)) {
-		reject(makeErrno(ECINVAL,
-				 `Invalid ID ${id} Used To Query Mongo`));
-	    }
-	    this.model.findById(id)
+/**
+ * Function asynchronously adds a new document to the database. If the
+ * client data does not meet the invoking model's criteria or if the
+ * document is already present in the database, method rejects the
+ * client's request.
+ *
+ * @method addNewDocument_ModifyDatabase
+ * @param req the client's unprocessed request data
+ * @return {Promise} a promise to return either added entry or an error
+ */
+Interface.addNewDocument_ModifyDatabase = function(req) {
+    return new Promise((resolve, reject) => {
+	try {
+	    initOneDoc(this.model, req.body).save()
 		.then((doc) => {
-		    if (!doc) {
-			reject(makeErrno(FAILED_ID,
-					 `ID ${id} Not Present in Mongo`));
-		    }
-		    util.log("Located: ", doc.toString());
+		    util.log("Added: ", doc.toString());
 		    resolve(doc);
 		})
-		.catch((err) => reject(err));
-	});
-    },
-
-    /**
-     * Function asynchronously searches for a document in the database using a
-     * client query object. If the client request does not have a valid query,
-     * for the invoking model, the method will reject the client's request.
-     *
-     * @method findFirstOneByProp_QueryDatabase(
-     * @param req the client's unprocessed request data containing a query
-     * @return {Promise} a promise to return either a queried entry or an error
-     */
-    findFirstOneByProp_QueryDatabase : function(req) {
-	return new Promise((resolve, reject) => {
-
-	    try {
-		var query = clean(this.model, req.body);
-	    } catch (err) {
-		reject(err);
-	    }
-	    this.model.findOne(query).exec()
-		.then((res) => {
-		    if (!res) {
-			reject(makeErrno(FAILED_QUERY,
-					 `Unable to Find Entry With Query:\n` +
-					 `${stringify(query)}`));
-		    }
-		    resolve(res);
-		})
 		.catch((err) => {
 		    reject(err);
 		});
-	});
-    },
-
-    findOneByID_UpdateDatabase : function(req) {
-	return new Promise((resolve, reject) => {
-
-	    var id = req.params.id;
-	    if (!isValidID(id)) {
-		reject(makeErrno(ECINVAL,
-				 `Invalid ID: ${id} Used To Update Mongo`));
-	    }
-
-	    try {
-		var update = clean(this.model, req.body);
-	    } catch (err) {
-		reject(err);
-	    }
-
-	    this.model.findByIdAndUpdate(id, {$set : update}, {new : true})
-		.then((res) => {
-		    resolve(res);
-		})
-		.catch((err) => {
-		    reject(err);
-		});
-	});
-    },
-
-    removeOneByID_ModifyDatabase : function(req) {
-	return new Promise((resolve, reject) => {
-
-	    var id = req.params.id;
-	    if (!isValidID(id)) {
-		reject(makeErrno(ECINVAL,
-				 `Invalid ID: ${id} Used To Delete Entry`));
-	    }
-
-	    this.model.deleteOne({_id : id})
-		.then((res) => {
-		    resolve(res);
-		})
-		.catch((err) => {
-		    reject(err);
-		});
-	});
-    },
-
-    removeOneByProp_ModidyDatabase : function(req) {
-	return new Promise((result, resolve) => {
-
-	    try {
-		var query = clean(this.model, req.body);
-	    } catch (err) {
-		reject(err);
-	    }
-
-	    this.model.deleteOne({query})
-		.then((res) => {
-		    resolve(res);
-		})
-		.catch((err) => {
-		    reject(err);
-		});
-	});
-    },
-
-    /********************************************/
-    /******* Multiple Document Interface ********/
-    /********************************************/
-
-    addMultipleDocuments_ModifyDatabase : async function(req) {
-
-	var docs = initMultDocs(this.model, req.body);
-	for (let ii = 0; ii < docs.length; ii++) {
-	    docs[ii] = await docs[ii].save();
+	} catch(err) {
+	    reject(err);
 	}
-		return docs;
-    }
+    });
 }
 
+/**
+ * Function asynchronously searches for a document in the database. If the
+ * client request does not have a valid Monog _id, the method rejects the
+ * client's request.
+ *
+ * @method findOneByID_QueryDatabase
+ * @param req the client's unprocessed request data that should have and _id
+ * @return {Promise} a promise to return either added entry or an error
+ */
+Interface.findOneByID_QueryDatabase = function(req) {
+    return new Promise((resolve, reject) => {
 
-/* Add each interface method*/
-for (var func in Interface) {
-    Mongo.prototype[func] = Interface[func];
+	var id = req.params.id;
+	if (!isValidID(id)) {
+	    reject(makeErrno(ECINVAL,
+			     `Invalid ID ${id} Used To Query Mongo`));
+	}
+	this.model.findById(id)
+	    .then((doc) => {
+		if (!doc) {
+		    reject(makeErrno(FAILED_ID,
+				     `ID ${id} Not Present in Mongo`));
+		}
+		util.log("Located: ", doc.toString());
+		resolve(doc);
+	    })
+	    .catch((err) => reject(err));
+    });
+}
+
+/**
+ * Function asynchronously searches for a document in the database using a
+ * client query object. If the client request does not have a valid query,
+ * for the invoking model, the method will reject the client's request.
+ *
+ * @method findFirstOneByProp_QueryDatabase(
+ * @param req the client's unprocessed request data containing a query
+ * @return {Promise} a promise to return either a queried entry or an error
+ */
+Interface.findFirstOneByProp_QueryDatabase = function(req) {
+    return new Promise((resolve, reject) => {
+
+	try {
+	    var query = clean(this.model, req.body);
+	} catch (err) {
+	    reject(err);
+	}
+	this.model.findOne(query).exec()
+	    .then((res) => {
+		if (!res) {
+		    reject(makeErrno(FAILED_QUERY,
+				     `Unable to Find Entry With Query:\n` +
+				     `${stringify(query)}`));
+		}
+		resolve(res);
+	    })
+	    .catch((err) => {
+		reject(err);
+	    });
+    });
+}
+
+Interface.findOneByID_UpdateDatabase = function(req) {
+    return new Promise((resolve, reject) => {
+
+	var id = req.params.id;
+	if (!isValidID(id)) {
+	    reject(makeErrno(ECINVAL,
+			     `Invalid ID: ${id} Used To Update Mongo`));
+	}
+
+	try {
+	    var update = clean(this.model, req.body);
+	} catch (err) {
+	    reject(err);
+	}
+
+	this.model.findByIdAndUpdate(id, {$set : update}, {new : true})
+	    .then((res) => {
+		resolve(res);
+	    })
+	    .catch((err) => {
+		reject(err);
+	    });
+    });
+}
+
+Interface.removeOneByID_ModifyDatabase = function(req) {
+    return new Promise((resolve, reject) => {
+
+	var id = req.params.id;
+	if (!isValidID(id)) {
+	    reject(makeErrno(ECINVAL,
+			     `Invalid ID: ${id} Used To Delete Entry`));
+	}
+
+	this.model.deleteOne({_id : id})
+	    .then((res) => {
+		resolve(res);
+	    })
+	    .catch((err) => {
+		reject(err);
+	    });
+    });
+}
+
+Interface.removeOneByProp_ModidyDatabase = function(req) {
+    return new Promise((result, resolve) => {
+
+	try {
+	    var query = clean(this.model, req.body);
+	} catch (err) {
+	    reject(err);
+	}
+
+	this.model.deleteOne({query})
+	    .then((res) => {
+		resolve(res);
+	    })
+	    .catch((err) => {
+		reject(err);
+	    });
+    });
+}
+
+/********************************************/
+/******* Multiple Document Interface ********/
+/********************************************/
+
+Interface.addMultipleDocuments_ModifyDatabase = async function(req) {
+
+    var docs = initMultDocs(this.model, req.body);
+    for (let ii = 0; ii < docs.length; ii++) {
+	docs[ii] = await docs[ii].save();
+    }
+    return docs;
 }
 
 module.exports = {Mongo};

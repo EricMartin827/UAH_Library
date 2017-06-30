@@ -25,14 +25,14 @@ describe("Simple Play Unit Tests", () => {
     beforeEach((done) => {
 	Play.remove({}).then(() => {
 	    done();
-	});;
+	});
     });
 
     /* Clean up the databasee after each unit test */
     afterEach((done) => {
     	Play.remove({}).then(() => {
     	    done();
-    	});
+    	})  
     });
 
     it("Should Create And Query A Play By ID", (done) => {

@@ -24,7 +24,7 @@ describe("Simple User Unit Tests", () => {
     beforeEach((done) => {
 	User.remove({}).then(() => {
 	    done();
-	});;
+	});
     });
 
     /* Clean up the databese after all unit tests run */
