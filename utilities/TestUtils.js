@@ -14,7 +14,7 @@
  * on their specified collection/schema. In otherwords, if a test for plays is
  * created by 'var PlayTester = new Tester(Play)', then all database operations
  * will be centered on the Play's collection/schema in the database.
- * 
+ *
  * @module Tester.js
  * @author Eric William Martin
  */
@@ -50,11 +50,12 @@ const {makeErrno} = NODE_ERRORS;
  *
  * @class Tester
  * @constructor
- * @param {Object} an express application/a running server application
- * @param {Object} a Mongoose Model Class Constructor
+ * @param app an acitve NPM Express server
+ * @param model a Mongoose model class constructor
  * @example
- *     var PlayTester = new Tester(Play)
- *     PlayTester.duplicateAdd(data) -> tests adding to identical plays
+ *     // Tests adding a play to the database managed by app
+ *     var PlayTester = new Tester(app, Play);
+ *     PlayTester.add(data);
  */
 function Tester(app, model) {
 
@@ -113,13 +114,12 @@ function verify(clientJSON, serverDoc) {
  * functions also check that the client and server are communicating with the
  * proper protocol messages and that the database has the correct state.
  *
- * These private functions are necessary because when the code contructs a
+ * These private functions are necessary because when the code constructs a
  * Promise with [ new Promise(...) ], the 'this' reference is modified to
  * point to the Promise instance, not the Tester instance. In short, the code
  * needs _app and _mode since this.app and this.mode will be undefined within
  * the Promise. The public interface functions pass the app and the mode to
  * the private inner functions. Ex: [add(this.app, this.mode, json)]
- * 
  */
 
 /**************************************************************************/
@@ -153,7 +153,7 @@ function add(_app, _mode, json) {
 		    return reject(err);
 		}
 
-		/* Retrieve data to confirm that server document 
+		/* Retrieve data to confirm that server document
 		 * matches the client's json data.
 		 */
 		request(_app)
@@ -240,8 +240,8 @@ function getBadQuery(_app, _mode, query) {
     });
 }
 
-/* Private Helper for updateProp */
-function updateProp(_app, _mode, query, update) {
+/* Private Helper for update */
+function update(_app, _mode, query, update) {
 
     return new Promise((resolve, reject) => {
 
@@ -329,8 +329,8 @@ function remove(_app, _mode, query, lastEntry) {
 		expect(awk.n).toBe(1)
 		expect(awk.ok).toBe(1);
 
-		/* 
-		 * If the unit tester expects the query to no longer 
+		/*
+		 * If the unit tester expects the query to no longer
 		 * match any documents in the database collection, then
 		 * check that a query reaccess produces an empty object.
 		 */
@@ -371,7 +371,7 @@ function removeID(_app, _mode, id) {
 
 		/* Verify the server awks a single deletion */
 		var awk = res.body;
- 		expect(awk.n).toBe(1);
+		expect(awk.n).toBe(1);
 		expect(awk.ok).toBe(1);
 
 		/* Reaccess databse by id to ensure the removed id misses */
@@ -425,21 +425,20 @@ function removeBadQuery(_app, _mode, query) {
 /**************************************************************************/
 
 /*
- * Alias the Interface with Tester's prototype. Allows any instance of
+ * Alias the Tester's prototype with Interface. Allows any instance of
  * Tester generated via 'new Tester(Model)' to access the public testing
- * utilities/functions.
+ * functions.
  */
 var Interface = Tester.prototype;
 
 /**
  * Function asynchronously tests adding JSON data to a database collection.
- * The JSON data being added should match the calling instance's mode. If
- * the JSON data is not successfully added, add() will either kill the unit
- * test or return an error.
+ * The JSON data being added should match the calling instance's mode.
  *
  * @method add
- * @param json JSON data to be added to the database
- * @return {Promise} a promise to return the added entry or terminates the test
+ * @param json the raw JSON data to be added to the database
+ * @return {JS Promise} a promise to resolve the newly added document stored
+ *                      in the database or an error indicating test failure
  */
 Interface.add = function(json) {
     return add(this.app, this.mode, json);
@@ -450,8 +449,10 @@ Interface.add = function(json) {
  * using a query. The query should match the calling instance's mode.
  *
  * @method get
- * @param query the JSON data used to query the database
- * @return {Promise} a promise to return the first document matching the query
+ * @param query the raw JSON data used to query the database
+ * @return {JS Promise} a promise to return the first database document matching
+ *                      the query or an empty object {} if no match occurs. An
+ *                      error can also be generated indicating test failure.
  */
 Interface.get = function(query) {
     return get(this.app, this.mode, query);
@@ -459,13 +460,15 @@ Interface.get = function(query) {
 
 /**
  * Function asynchronously tests fetching JSON data from a database collection
- * using an _id. The _id should match the calling instance's mode. In otherword,
- * if the current mode is 'Plays', then the _id can only return a result if the
- * _id belongs to a Plays document.
+ * using an _id. The _id should match the calling instance's mode. In
+ * otherwords, if the current mode is 'Plays', then the _id can only return
+ * a populated result if the _id belongs to a Play's document.
  *
  * @method getID
- * @param id the document _id used to query the database collection
- * @return {Promise} a promise to return the first document matching the query
+ * @param id the document _id used to search the database collection/mode
+ * @return {JS Promise} a promise to return the mathcing database document or
+ *                      an empty object {} if no match occurs. An error can
+ *                      also be generated indicating test failure.
  */
 Interface.getID = function(id) {
     return getID(this.app, this.mode, id);
@@ -475,32 +478,73 @@ Interface.getID = function(id) {
  * Function asynchronously tests updating a database doucment using a query
  * to locate the document. The query should match the calling instance's mode.
  *
- * @method updateProp
- * @param query the JSON data used to query the database
- * @param update the change to make to the database entry
- * @return {Promise} a promise to return the updated document matching the query
+ * @method update
+ * @param query the raw JSON data used to query the database
+ * @param update the raw JSON data indicating which fields to change within
+ *               the selected database entry
+ * @return {JS Promise} a promise to return the updated document matching the
+ *                      query or an error either indicating that no document
+ *                      was found or some other network/pipe/etc. error occured
+ *                      causing test failure
  */
 Interface.update = function(query, update) {
-    return updateProp(this.app, this.mode, query, update);
+    return update(this.app, this.mode, query, update);
 }
 
 /**
- * Function asynchronously tests updating a database doucment using an id.
+ * Function asynchronously tests updating a database doucment using an _id.
  * to locate the document. The _id should match the calling instance's mode.
+ * In otherwords, if the current mode is 'Plays', then the _id can only update
+ * an populate a result if the _id belongs to a Play's document.
  *
  * @method updateID
- * @param id the document id JSON used to query the database collection
- * @param update the change to make to the database entry
- * @return {Promise} a promise to return the updated document matching the id
+ * @param id the document _id used to query the database collection
+ * @param update the raw JSON data indicating which fields to change within
+ *               the selected database entry
+ * @return {JS Promise} a promise to return the updated document matching the
+ *                      idor an error either indicating that no document
+ *                      was found or some other network/pipe/etc. error occured
+ *                      causing test failure
  */
 Interface.updateID = function(id, update) {
     return updateID(this.app, this.mode, id, update);
 }
 
+/**
+ * Function asynchronously tests deleting a database doucment using a query
+ * to locate the document. The query should match the calling instance's mode.
+ * Function can also be used to verify that there no longer exits any matching
+ * documents if the unit tester expect no other matching queries.
+ *
+ * @method remove
+ * @param query the raw JSON data used to query the database
+ * @param lastEntry {Boolean} true if the unit tester expects that the queried
+ *                            document to be removed is the last entry, false
+ *                            or unspecified otherwise
+ * @return {JS Promise} a promise to return the updated document matching the
+ *                      query or an error either indicating that no document
+ *                      was found or some other network/pipe/etc. error occured
+ *                      causing test failure
+ */
 Interface.remove = function(query, lastEntry) {
     return remove(this.app, this.mode, query, lastEntry);
 }
 
+/**
+ * Function asynchronously tests deleting a database doucment using an _id.
+ * to locate the document. The _id should match the calling instance's mode.
+ * In otherwords, if the current mode is 'Plays', then the _id can only delete
+ * if the _id belongs to a Play's document.
+ *
+ * @method removeID
+ * @param id the document _id used to query the database collection
+ * @param update the raw JSON data indicating which fields to change within
+ *               the selected database entry
+ * @return {JS Promise} a promise to return the updated document matching the
+ *                      idor an error either indicating that no document
+ *                      was found or some other network/pipe/etc. error occured
+ *                      causing test failure
+ */
 Interface.removeID = function(id) {
     return removeID(this.app, this.mode, id);
 }
@@ -509,36 +553,37 @@ Interface.removeID = function(id) {
 /**************Generic Suite Tests***********************/
 /********************************************************/
 
-/*
- * JavaScript Note: The result of an 'async' function is automatically
- * casted to a Promise. Therefore the code does not directly state
- * reject(err) or resolve(res) within the scope of an 'async' function.
- * It happens under the hood; DON'T PANIC :).
- */
-
 /**
- * Function asynchronously tests adding two identical entries to the same
+ * Function synchronously tests adding two identical entries to the same
  * collection/schema. Function ensures that a Duplicate Key Error is generated
  * by the server. The JSON data being added should match the calling
- * instance's mode. If the function fails to return a promise, then it either 
- * terminates the unit test or generates an error.
+ * instance's mode. Function signals suceess/failure to the caller by invoking
+ * the unit tester's Supertest callback function 'done'. See NPM package
+ * Supetest for more information.
  *
  * @method duplicateAdd
- * @param json JSON data to be added and readded to the database
- * @return {Promise} a promise to return the added entry or terminates test
+ * @param done Supertest callback function passed by the unit tester
+ * @param json the raw JSON data to be added and readded to the database
+ * @example
+ *     it("Should Not Double Add", (done) => {
+ *          Tester.duplicateAdd(done, {JSON_DATA})
+ *     });
  */
 Interface.duplicateAdd = async function(done, json) {
 
     /* Sanity Test On Supertest's done() callback function */
     expect(isFunc(done)).toBe(true)
-    
-    /* Use JS's async/await to wait for the json data to
-     * be added and verified in the database. If there is
-     * error, allow the JavaScript engine to throw it up to the unit test.
-     * All returns/throws map to resolves/rejects within an async function.
-     * Async functions ALWAYS return Promises or an Exception. ;)
+
+    /*
+     * Use JS's async/await to wait for the json data to
+     * be added and verified in the database.
      */
-    await add(this.app, this.mode, json);
+    try {
+	await add(this.app, this.mode, json);
+    } catch (err) {
+	done(err);
+    }
+
     /* Resend the exact same data and generate a Duplicate Key Error. */
     await request(this.app)
 	.post(`/add/${this.mode}`)
@@ -558,19 +603,30 @@ Interface.duplicateAdd = async function(done, json) {
 }
 
 /**
- * Function asynchronously tests that the json data can be added to the database,
- * queried by it's _id, and then updated via its _id. The json data beging tested
- * should match the instance's mode.
- * 
+ * Function synchronously tests that a added document for a given collection
+ * or shcema can be added, queried by it's id, and updated by it's id.
+ * The JSON data being added should match the calling instance's mode.
+ * Function signals suceess/failure to the caller by invoking the unit tester's
+ * Supertest callback function 'done'. See NPM package Supetest for more
+ * information.
+ *
  * @method queryUpdateID
- * @param json the JSON data to be added and queried
- * @param update the change to made on the test data in the database
- * @return {Promise} 
+ * @param done Supertest callback function passed by the unit tester
+ * @param json the raw JSON data to be added to the database for test case
+ * @param update the raw JSON data specifying the changes to make to the
+ *               test document
+ * @example
+ *     it("Should Query/Update Using an ID", (done) => {
+ *          Tester.queryUpdateID(done, {JSON_DATA}, {JSON_UPDATE})
+ *     });
  */
 Interface.queryUpdateID = async function(done, json, update) {
 
+    /* Sanity Test On Supertest's done() callback function */
     expect(isFunc(done)).toBe(true)
+
     try {
+
 	var added = await add(this.app, this.mode, json);
 	var id = added._id;
 
@@ -578,24 +634,26 @@ Interface.queryUpdateID = async function(done, json, update) {
 	expect(added).toEqual(queried);
 
 	var updated = await updateID(this.app, this.mode, id, update);
+
+	/* Merge the update into the originally stored document */
 	Object.assign(queried, update);
+
+	/* Confirm that the database returns the correctly updated document */
 	expect(updated).toEqual(queried);
 	done();
     } catch(err) {
 	done(err);
     }
-
 }
 
-Interface.queryUpdateProp = async function(done, json, query, update) {
+Interface.queryUpdateProp = async function(done, json, query, _update) {
 
     expect(isFunc(done)).toBe(true)
-    
     try {
 	var added = await add(this.app, this.mode, json);
-	var updated = await updateProp(this.app, this.mode, query, update);
+	var updated = await update(this.app, this.mode, query, _update);
 
-	Object.assign(added, update);
+	Object.assign(added, _update);
 	expect(updated).toEqual(added);
 	done();
     } catch(err) {
@@ -606,10 +664,10 @@ Interface.queryUpdateProp = async function(done, json, query, update) {
 Interface.queryProp_UpdateID = async function(done, json, query, update) {
 
     expect(isFunc(done)).toBe(true)
-    
+
     try {
 	var added = await add(this.app, this.mode, json);
-    
+
 	var queried = await get(this.app, this.mode, query);
 	expect(added).toEqual(queried);
 
@@ -623,7 +681,7 @@ Interface.queryProp_UpdateID = async function(done, json, query, update) {
     
 }
 
-Interface.queryID_UpdateProp = async function(done, json, query, update) {
+Interface.queryID_UpdateProp = async function(done, json, query, _update) {
 
     expect(isFunc(done)).toBe(true)
 
@@ -633,8 +691,8 @@ Interface.queryID_UpdateProp = async function(done, json, query, update) {
 	var queried = await getID(this.app, this.mode, added._id);
 	expect(added).toEqual(queried);
 	
-	var updated = await updateProp(this.app, this.mode, query, update);
-	Object.assign(queried, update);
+	var updated = await update(this.app, this.mode, query, _update);
+	Object.assign(queried, _update);
 	expect(updated).toEqual(queried);
 	done();
     } catch (err) {
