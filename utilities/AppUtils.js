@@ -16,6 +16,14 @@ function isFunc(val) {
     return val.constructor === Function;
 }
 
+function isNumber(val) {
+    return val.constructor === Number;
+}
+
+function isArray(val) {
+    return val.constructor === Array;
+}
+
 function isObject(val) {
     return val.constructor === Object;
 }
@@ -32,6 +40,8 @@ module.exports = {
     UTILS : {
 	app: app,
 	stringify: stringify,
+	isNumber : isNumber,
+	isArray : isArray,
 	isObject: isObject,
 	isFunc: isFunc,
 	isEmptyObject : isEmptyObject,

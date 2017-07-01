@@ -12,6 +12,7 @@ const {logErrno} = NODE_ERRORS;
 
 const {Control} = require("./../MongoModels")
 
+"use strict"
 function initMode(req, res) {
 
     try {
@@ -130,16 +131,34 @@ app.delete("/removeID/:mode/:id", (req, res) => {
     }
 });
 
+/***********************************************************************/
+/************************* BATCH API ***********************************/
+/***********************************************************************/
 
 app.post("/add/batch/:mode", (req, res) => {
 
+    var Mode
     if ((Mode = initMode(req, res))) {
 	Mode.addMultipleDocuments_ModifyDatabase(req)
 	    .then((docs) => {
 		res.send(docs);
 	    })
 	    .catch((err) => {
-		console.log(err);
+		logErrno(err);
+		res.status(400).send(err);
+	    });
+    }
+});
+
+app.get("/get/batch/:mode/:limit/:sort", (req, res) => {
+
+    if ((Mode = initMode(req, res))) {
+	Mode.findMultipleDocuments_QueryDatabase(req)
+	    .then((docs) => {
+		res.send(docs);
+	    })
+	    .catch((err) => {
+		logErrno(err);
 		res.status(400).send(err);
 	    });
     }

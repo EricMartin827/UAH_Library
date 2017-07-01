@@ -20,6 +20,7 @@ const {stringify} = UTILS;
 const {isObject} = UTILS;
 const {isValidID} = UTILS;
 const {isEmptyObject} = UTILS;
+const {isNumber} = UTILS;
 
 /* Error Imports */
 const {NODE_ERRORS} = require("./TOOLS");
@@ -33,7 +34,6 @@ const {FAILED_QUERY_REMOVE} =  CUSTOM_ERRNO;
 const {ESINVAL} = CUSTOM_ERRNO;
 const {makeErrno} = NODE_ERRORS;
 
-
 "use strict"
 /**
  * The Mongo object/class is a generic wrapper. It takes a valid
@@ -43,8 +43,8 @@ const {makeErrno} = NODE_ERRORS;
  *
  * @class Mongo
  * @constructor
- * @param {Object} Model a Mongoose Model Class Contructor
- * @throws an 'InvalidServerArgument' error if Model lacks a Schema
+ * @param Model a Mongoose Model Class Contructor
+ * @throws'InvalidServerArgument' Error if Model lacks a Schema
  */
 function Mongo(Model) {
 
@@ -54,7 +54,6 @@ function Mongo(Model) {
     }
     this.model = Model;
 }
-
 
 /*
  * Private helper function which removes any property in the target object
@@ -150,7 +149,6 @@ function initMultDocs(Model, entryArray) {
     return entryArray;
 }
 
-
 /* The Public Database Interface Used To Communicate With the Database */
 var Interface = Mongo.prototype;
 
@@ -167,7 +165,7 @@ var Interface = Mongo.prototype;
  *
  * @method addNewDocument_ModifyDatabase
  * @param req the client's unprocessed request data
- * @return {Promise} a promise to return either added entry or an error
+ * @return {JS Promise} a promise to return either added entry or an error
  */
 Interface.addNewDocument_ModifyDatabase = function(req) {
     return new Promise((resolve, reject) => {
@@ -349,9 +347,9 @@ Interface.removeFirstOneByProp_ModifyDatabase = function(req) {
     });
 }
 
-/********************************************/
-/******* Multiple Document Interface ********/
-/********************************************/
+/***********************************************************************/
+/******************* Multiple Document Interface ***********************/
+/***********************************************************************/
 
 Interface.addMultipleDocuments_ModifyDatabase = async function(req) {
 
@@ -360,6 +358,23 @@ Interface.addMultipleDocuments_ModifyDatabase = async function(req) {
 	docs[ii] = await docs[ii].save();
     }
     return docs;
+}
+
+Interface.findMultipleDocuments_QueryDatabase = function(req) {
+
+    return new Promise((resolve, reject) => {
+
+	var lim = (isNumber(req.params.limit)) ? req.params.limit : 25;
+	var sort = req.params.sort;
+
+	this.model.where().limit(lim).exec().
+	    then((docs) => {
+		resolve(docs);
+	    }).
+	    catch((err) => {
+		reject(err);
+	    })
+    });
 }
 
 module.exports = {Mongo};

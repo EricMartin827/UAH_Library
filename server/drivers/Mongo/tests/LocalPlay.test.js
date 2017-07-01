@@ -17,23 +17,23 @@ var {DATA} = require("./LocalData.js");
 
 "use strict";
 
+/* Remove all Plays data before each unit test */
+beforeEach((done) => {
+    Play.remove({}).then(() => {
+	done();
+    });
+});
+
+/* Clean up the databasee after each unit test */
+afterEach((done) => {
+    Play.remove({}).then(() => {
+    	done();
+    })  
+});
 
 const PlayTester = new Tester(app, Play);
+
 describe("Simple Play Unit Tests", () => {
-
-    /* Remove all Plays data before each unit test */
-    beforeEach((done) => {
-	Play.remove({}).then(() => {
-	    done();
-	});
-    });
-
-    /* Clean up the databasee after each unit test */
-    afterEach((done) => {
-    	Play.remove({}).then(() => {
-    	    done();
-    	})  
-    });
 
     it("Should Create And Query A Play By ID", (done) => {
 	PlayTester.add(DATA.onePlay)
@@ -78,6 +78,14 @@ describe("Simple Play Unit Tests", () => {
 
     it("Should Not Allow Bad JSON Data to Be Added to the Database", (done) => {
 	PlayTester.badAddition(done, {GOOD : "C", BAD : "C++"});
+    });
+});
+
+describe("Multple Plays Unit Tests", () => {
+
+    it("Should Create Multiple Plays", (done) => {
+	PlayTester.addMultiple(DATA.fivePlays)
+	    .then(() => done()).catch((err) => done(err));
     });
 });
 

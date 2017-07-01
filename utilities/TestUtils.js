@@ -30,6 +30,7 @@ const {isFunc} = UTILS;
 const {isObject} = UTILS;
 const {stringify} = UTILS;
 const {isValidID} = UTILS;
+const {isArray} = UTILS;
 
 /* Error Imports */
 const {NODE_ERRORS} = require("./ERRNO.js");
@@ -76,17 +77,13 @@ function Tester(app, model) {
  * such as a user's password, then verify() safely ingnores the comparing the
  * hidden attribute.
  *
- * @param clientJSON client's json data to be save in the database
- * @param serverDoc server's response following a client's save request
+ * @param clientJSON client's raw json data to be saved in the database
+ * @param serverDoc server's document response following a client's save request
  * @return true if client data matches server document, undefined otherwise
  */
 function verify(clientJSON, serverDoc) {
 
-    if (arguments.length < 2) {
-	return console.error("verify requires client and server data");
-    }
-
-    if (Array.isArray(clientJSON) || !isObject(clientJSON)) {
+    if (!isObject(clientJSON)) {
 	return console.error("Client Data Must Be an Object");
     }
 
@@ -103,6 +100,23 @@ function verify(clientJSON, serverDoc) {
 	} else {
 	    expect(clientJSON[prop]).toBe(serverDoc[prop]);
 	}
+    }
+    return true;
+}
+
+function verifyCollection(clientArray, serverArray) {
+
+    if (!isArray(clientArray) || !isArray(serverArray)) {
+	return console.error("verifyCollection requires input arrays");
+    }
+
+    if (clientArray.length != serverArray.length) {
+	return false;
+    }
+    
+    for (var ii = 0; ii < clientArray.length; ii++) {
+	if (!verify(clientArray[ii], serverArray[ii]))
+	    return false
     }
     return true;
 }
@@ -141,17 +155,13 @@ function add(_app, _mode, json) {
 		if (err) {
 		    return reject(err);
 		}
-
+		
 		var doc = res.body;
 		expect(res.clientError).toBe(false);
 		expect(res.serverError).toBe(false);
 		expect(verify(json, doc)).toBe(true);
 	    })
-	    .end((err, res) => {
-
-		if (err) {
-		    return reject(err);
-		}
+	    .then((res) => {
 
 		/* Retrieve data to confirm that server document
 		 * matches the client's json data.
@@ -159,16 +169,62 @@ function add(_app, _mode, json) {
 		request(_app)
 		    .get(`/getID/${_mode}/${res.body._id}`)
 		    .expect(200)
-		    .end((err, res) => {
-			if (err) {
-			    return reject(err);
-			}
+		    .then((res) => {
+
 			expect(res.clientError).toBe(false);
 			expect(res.serverError).toBe(false);
 			expect(verify(json, res.body)).toBe(true);
 			return resolve(res.body);
 		    })
+		    .catch((err) => {
+			reject(err);
+		    })
+	    }).catch((err) => {
+		reject(err);
+	    });
+    });
+}
+
+function addMultiple(_app, _mode, jsonArray) {
+
+    return new Promise((resolve, reject) => {
+
+	request(_app)
+	    .post(`/add/batch/${_mode}`)
+	    .send(jsonArray)
+	    .expect(200)
+	    .expect((res, err) => {
+
+		if (err) {
+		    return reject(err);
+		}
+
+		var docArray = res.body;
+		expect(res.clientError).toBe(false);
+		expect(res.serverError).toBe(false);
+		verifyCollection(jsonArray, docArray);
 	    })
+	    .then(() => {
+
+		request(_app)
+		    .get(`/get/batch/${_mode}/25/false`) /* Default Limit Should Work */
+		    .expect(200)
+		    .then((res) => {
+
+			var docArray = res.body;
+			expect(res.clientError).toBe(false);
+			expect(res.serverError).toBe(false);
+			verifyCollection(jsonArray, docArray);
+			resolve(docArray);
+		    })
+		    .catch((err) => {
+			return reject(err);
+		    });
+	    })
+	    .catch((err) => {
+		return reject(err);
+	    })
+	
     });
 }
 
@@ -345,7 +401,6 @@ function remove(_app, _mode, query, lastEntry) {
 			    expect(res.clientError).toBe(false);
 			    expect(res.serverError).toBe(false);
 			    expect(noDoc).toEqual({});
-			    util.log("Verified Property Deletion");
 			    resolve();
 			})
 			.catch((err) => {
@@ -355,7 +410,7 @@ function remove(_app, _mode, query, lastEntry) {
 	    })
 	    .catch((err) => {
 		reject(err);
-	    })
+	    });
     });
 }
 
@@ -384,7 +439,6 @@ function removeID(_app, _mode, id) {
 			expect(res.clientError).toBe(false);
 			expect(res.serverError).toBe(false);
 			expect(noDoc).toEqual({});
-			util.log("Verified ID Deletion");
 			resolve();
 		    }).catch((err) => {
 			reject(err);
@@ -612,7 +666,7 @@ Interface.duplicateAdd = async function(done, json) {
  *
  * @method queryUpdateID
  * @param done Supertest callback function passed by the unit tester
- * @param json the raw JSON data to be added to the database for test case
+ * @param json the raw JSON data to be added to the database for the test case
  * @param update the raw JSON data specifying the changes to make to the
  *               test document
  * @example
@@ -646,6 +700,25 @@ Interface.queryUpdateID = async function(done, json, update) {
     }
 }
 
+/**
+ * Function synchronously tests that a added document for a given collection
+ * or shcema can be added, queried and updated by it's properites/attibutes.
+ * The JSON data being added should match the calling instance's mode.
+ * Function signals suceess/failure to the caller by invoking the unit tester's
+ * Supertest callback function 'done'. See NPM package Supetest for more
+ * information.
+ *
+ * @method queryUpdateProp
+ * @param done Supertest callback function passed by the unit tester
+ * @param json the raw JSON data to be added to the database for the test case
+ * @param query the raw JSON data used to query/retrieve the added test document
+ * @param update the raw JSON data specifying the changes to make to the
+ *               test document
+ * @example
+ *     it("Should Query/Update Using a Document; Properties", (done) => {
+ *          Tester.queryUpdateProp(done, {JSON_DATA}, {QUERY}, {UPDATE})
+ *     });
+ */
 Interface.queryUpdateProp = async function(done, json, query, _update) {
 
     expect(isFunc(done)).toBe(true)
@@ -764,5 +837,8 @@ Interface.badQuery = async function(done, json, query) {
     }
 }
 
+Interface.addMultiple = function(jsonArray) {
+    return addMultiple(this.app, this.mode, jsonArray);
+}
 
 module.exports = {Tester}
