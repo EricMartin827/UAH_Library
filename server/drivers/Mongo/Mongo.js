@@ -228,7 +228,7 @@ Interface.findFirstOneByProp_QueryDatabase = function(req) {
 	try {
 	    var query = clean(this.model, req.body);
 	} catch (err) {
-	    reject(err);
+	    return reject(err);
 	}
 
 	this.model.findOne(query).exec()

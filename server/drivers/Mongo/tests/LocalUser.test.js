@@ -31,7 +31,7 @@ describe("Simple User Unit Tests", () => {
     afterEach((done) => {
 	User.remove({}).then(() => {
 	    done();
-	})
+	});
     });
 
     it("Should Create And Query A User By ID", (done) => {
@@ -68,6 +68,14 @@ describe("Simple User Unit Tests", () => {
 
     it("Should Query and Delete Delete A User By Propery ", (done) => {
 	UserTester.queryDeleteProp(done, DATA.oneUser, {isAdmin: true}, true);
+    });
+
+    it("Should Detect That The Query is Not in Sync With Users", (done) => {
+	UserTester.badQuery(done, DATA.oneUser, {Nappa : "Vegeta :)"});
+    });
+
+    it("Should Not Allow Bad JSON Data to Be Added to the Database", (done) => {
+	UserTester.badAddition(done, {user : "Charlie", unicorns : "Steal Kidneys"});
     });
 
 });

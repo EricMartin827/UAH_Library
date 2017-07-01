@@ -181,11 +181,7 @@ function get(_app, _mode, query) {
 	    .get(`/get/${_mode}`)
 	    .send(query)
 	    .expect(200)
-	    .expect((res, err) => {
-
-		if (err) {
-		    return err;
-		}
+	    .expect((res) => {
 
 		var doc = res.body;
 		expect(res.clientError).toBe(false);
@@ -215,6 +211,31 @@ function getID(_app, _mode, id) {
 	    })
 	    .catch((err) => {
 		reject(err);
+	    });
+    });
+}
+
+/*
+ * Private helper for testing nonsense queries. Not queries that
+ * could possibly return valid
+ */
+function getBadQuery(_app, _mode, query) {
+
+    return new Promise((resolve, reject) => {
+
+	request(_app)
+	    .get(`/get/${_mode}`)
+	    .send(query)
+	    .expect(400)
+	    .expect((err) => {
+
+		expect(err.clientError).toBe(true);
+		expect(err.serverError).toBe(false);
+		expect(err.code).toBe(ECINVAL);
+		return resolve(err);
+	    })
+	    .catch((err) => {
+		return reject(err);
 	    });
     });
 }
@@ -263,6 +284,31 @@ function updateID(_app, _mode, id, update) {
 	    })
 	    .catch((err) => {
 		reject(err);
+	    });
+    });
+}
+
+/*
+ * Private helper for testing nonsense queries. Not queries that
+ * could possibly return valid
+ */
+function updateBadQuery(_app, _mode, query) {
+
+    return new Promise((resolve, reject) => {
+
+	request(_app)
+	    .patch(`/update/${_mode}`)
+	    .send(query)
+	    .expect(400)
+	    .expect((err) => {
+
+		expect(err.clientError).toBe(true);
+		expect(err.serverError).toBe(false);
+		expect(err.code).toBe(ECINVAL);
+		return resolve(err);
+	    })
+	    .catch((err) => {
+		return reject(err);
 	    });
     });
 }
@@ -346,6 +392,31 @@ function removeID(_app, _mode, id) {
 	    }).catch((err) => {
 		reject(err);
 	    })
+    });
+}
+
+/*
+ * Private helper for testing nonsense queries. Not queries that
+ * could possibly return valid
+ */
+function removeBadQuery(_app, _mode, query) {
+
+    return new Promise((resolve, reject) => {
+
+	request(_app)
+	    .delete(`/remove/${_mode}`)
+	    .send(query)
+	    .expect(400)
+	    .expect((err) => {
+
+		expect(err.clientError).toBe(true);
+		expect(err.serverError).toBe(false);
+		expect(err.code).toBe(ECINVAL);
+		return resolve(err);
+	    })
+	    .catch((err) => {
+		return reject(err);
+	    });
     });
 }
 
@@ -610,5 +681,30 @@ Interface.queryDeleteProp = async function(done, json, query, lastEntry) {
     }
     return done(new Error("Failed To Verify Error Code"));
 }
+
+Interface.badAddition = async function(done, badJSON) {
+
+    try {
+	await add(this.app, this.mode, badJSON);
+	done(new Error(`Nonsense Data ${strinify(badJSON)} Entered ` +
+		       `The Database`));
+    } catch (err) {
+	expect(err.code).toBe(ECINVAL);
+	done();
+    }
+}
+
+Interface.badQuery = async function(done, json, query) {
+
+    try {
+	await getBadQuery(this.app, this.mode, query);
+	await updateBadQuery(this.app, this.mode, query);
+	await removeBadQuery(this.app, this.mode, query);
+	done()
+    } catch(err) {
+	done(err);
+    }
+}
+
 
 module.exports = {Tester}

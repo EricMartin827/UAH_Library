@@ -71,5 +71,13 @@ describe("Simple Play Unit Tests", () => {
 	PlayTester.queryDeleteProp(done, DATA.onePlay,
 				   {timePeriod : "Not Specified"}, true);
     });
+
+    it("Should Detect That The Query is Not in Sync With Plays", (done) => {
+	PlayTester.badQuery(done, DATA.oneUser, {Coke : ">Pepsi"});
+    });
+
+    it("Should Not Allow Bad JSON Data to Be Added to the Database", (done) => {
+	PlayTester.badAddition(done, {GOOD : "C", BAD : "C++"});
+    });
 });
 
