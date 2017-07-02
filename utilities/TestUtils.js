@@ -206,8 +206,9 @@ function addMultiple(_app, _mode, jsonArray) {
 	    })
 	    .then(() => {
 
+		var lim = jsonArray.length;
 		request(_app)
-		    .get(`/get/batch/${_mode}/25/false`) /* Default Limit Should Work */
+		    .get(`/get/batch/${_mode}/${lim}/false`)
 		    .expect(200)
 		    .then((res) => {
 

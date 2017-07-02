@@ -59,12 +59,12 @@ function Mongo(Model) {
  * Private helper function which removes any property in the target object
  * not present in the model's schema prior to the object's use in database
  * operations. It's primary purpose is to ensure that the client browser can
- * never introduce new/unwanted properties witin a MongoDB Collections.
+ * never introduce new/unwanted properties within a MongoDB Collections.
  * For example, strip() prevents the client from attaching a property such as
  * {Dog : "Rabies"} onto a collection defining Plays.
  *
- * @param {Object} a Mongoose Model used to select desired properties
- * @param {Object} client object to be cleaned before database creation
+ * @param Model a Mongoose Model used to select desired properties
+ * @param object client object to be cleaned before database creation
  */
 function strip(Model, object) {
 
@@ -83,7 +83,7 @@ function strip(Model, object) {
  * Private helper function which works with strip() to perpare a
  * query for accessing and removing data from a MongoDB database.
  *
- * @throws an "InvalidCleintInput" if client data does not requirements
+ * @throws "InvalidCleintInput" error if client data does not requirements
  * @return {Object} an object which can safely access the database
  */
 function clean(Model, obj) {
@@ -245,7 +245,7 @@ Interface.findFirstOneByProp_UpdateDatabase = function(req) {
     return new Promise((resolve, reject) => {
 
 	if (!req.body.query || !req.body.update) {
-	    reject(mkaeErrno(ECINVAL,
+	    reject(makeErrno(ECINVAL,
 			     `Client Request Does Not Specify Query/Update`));
 	}
 	

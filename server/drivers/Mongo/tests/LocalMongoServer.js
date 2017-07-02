@@ -18,7 +18,6 @@ function initMode(req, res) {
     try {
 	var Mode = Control(req.params.mode);
     } catch (err) {
-	console.log("Fuck Russia");
 	logErrno(err);
 	res.status(400).send(err);
 	return null;
