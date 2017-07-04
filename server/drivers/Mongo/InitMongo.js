@@ -19,7 +19,7 @@ db.plays.ensureIndex(
 
 db.createCollection("users");
 db.users.ensureIndex(
-    {userName : 1, passWord: 1},
+    {email : 1},
     {unique: true}
 );
 

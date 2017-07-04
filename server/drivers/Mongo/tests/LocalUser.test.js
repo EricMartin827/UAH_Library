@@ -44,22 +44,26 @@ describe("Simple User Unit Tests", () => {
     });
 
     it("Should Query And Update A User By ID", (done) => {
-	UserTester.queryUpdateID(done, DATA.oneUser, {lastName : "Sullivan"});
+	UserTester.queryUpdateID(done, DATA.oneUser,
+				 {lastName : "Sullivan"}); /* Update Via ID */
     });
 
     it("Should Query And Update A User By Property", (done) => {
 	UserTester.queryUpdateProp(done, DATA.oneUser,
-				   {lastName: "Martin"}, {firstName: "Andy"});
+				   {lastName: "Martin"}, /* Query */
+				   {firstName: "Andy"}); /* Update */
     });
 
     it("Should Query By Property And Update A User By ID", (done) => {
 	UserTester.queryProp_UpdateID(done, DATA.oneUser,
-				      {userName : "eMart"}, {userName : "Joanne"});
+				      {email : "ericmartin827@gmail.com"}, /* Query */
+				      {firstName : "Joanne"}); /* Update Via ID */
     });
 
     it("Should Query By Id and Update A User By Property", (done) => {
 	UserTester.queryID_UpdateProp(done, DATA.oneUser,
-				      {firstName : "Eric"}, {firstName : "Sean"});
+				      {firstName : "Eric"}, /* Update Query */
+				      {firstName : "Sean"}); /* Update */
     });
 
     it("Should Query and Delete Delete A User By ID ", (done) => {

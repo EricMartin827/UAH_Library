@@ -1,4 +1,5 @@
 const express = require("express");
+const validator = require("validator");
 const bodyParser = require("body-parser")
 const {ObjectId} = require("mongoose").Types;
 
@@ -39,6 +40,7 @@ function isValidID(id) {
 module.exports = {
     UTILS : {
 	app: app,
+	validator : validator,
 	stringify: stringify,
 	isNumber : isNumber,
 	isArray : isArray,

@@ -12,6 +12,10 @@
  */
 "use strict"
 
+/* Utility Imports */
+const {UTILS} = require("./../TOOLS");
+const {validator} = UTILS;
+
 /* Error Imports */
 const {ERRNO} = require("./../TOOLS");
 
@@ -46,28 +50,34 @@ var User; /* This defined at the bottom due to Mongoose API */
  */
 const UserSchema = new Schema({
 
-    /* Unique Primary Keys */
-    userName : {
+    email : {
 	type : String,
-	required : true,
-	minLength : 1,
-	maxLength : 100,
-	trim : true
+	required : [true, "Email is Required"],
+	unique : [true, "Email is Already Taken"],
+	minLength : [1, "Email Contains Too Few Characters"],
+	maxLength : [50, "Email Cannot Exceed 50 Characters"],
+	trim : true,
+	validate : {
+	    validator : (value) => {
+		return validator.isEmail(value);
+	    },
+	    message : `{VALUE} Is Not A Valid Email`
+	}
     },
 
-    passWord : {
+    password : {
 	type : String,
-	required : true,
-	minLength : 1,
+	required : [true, "All Users Must Have A Password"],
+	minLength : [6, "Password Must Have At Least 6 Characters"],
 	maxLength : 100,
-	trim : true,
-	select : false /* Prevents Password From Being Sent To Client */
+	trim : true
+	//select : false -> prevents password from being sent back
     },
 
     /* Public Attributes */
     firstName : {
 	type : String,
-	required : true,
+	required : [true, "All Users Must Supply A First Name"],
 	minLength : 1,
 	maxLength : 100,
 	trim: true
@@ -75,7 +85,7 @@ const UserSchema = new Schema({
 
     lastName : {
 	type : String,
-	required : true,
+	required : [true, "All Users Must Have a Last Name"],
 	minLength : 1,
 	maxLength : 100,
 	trim: true
@@ -91,7 +101,7 @@ UserSchema.plugin(Immutable);
 var instanceMethods = UserSchema.methods;
 
 instanceMethods.toString = function() {
-    return `User: "${this.userName}"`;
+    return `User: "${this.email.substr(0, this.email.indexOf("@"))}"`;
 }
 
 /* Compile the Mongoose Schema into an active Mongoose "User" model and

@@ -38,8 +38,8 @@ var data = {
 
     oneUser :
     {
-	userName : "eMart",
-	passWord : "open",
+	email : "ericmartin827@gmail.com",
+	password : "giveMeAccess",
 	firstName : "Eric",
 	lastName : "Martin",
 	isAdmin : true
