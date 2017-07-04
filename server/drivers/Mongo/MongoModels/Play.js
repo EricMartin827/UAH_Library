@@ -90,24 +90,16 @@ const PlaySchema = new Schema({
 PlaySchema.plugin(Immutable);
 
 /*  Instance methods for invidual Play objects. */
-var instanceMethods = {
+var instanceMethods = PlaySchema.methods;
 
-    /*-----------------------------------*/
-    /*--------Client Side Helpers--------*/
-    /*-----------------------------------*/
+instanceMethods.getAuthorFormal = function() {
+    return `${this.authorLast}, ${this.authorFirst}`;
+}
 
-    getAuthorFormal: function() {
-	return `${this.authorLast}, ${this.authorFirst}`;
-    },
 
-    toString: function() {
-	return `Play "${this.title}" By: ${this.authorFirst} ` +
-	    `${this.authorLast}`
-    }
-};
-
-for (var func in instanceMethods) {
-    PlaySchema.methods[func] = instanceMethods[func];
+instanceMethods.toString = function() {
+    return `Play "${this.title}" By: ${this.authorFirst} ` +
+	`${this.authorLast}`
 }
 
 /* Compile the Mongoose Schema into an active Mongoose "Play" model and

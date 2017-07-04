@@ -7,7 +7,7 @@
  * servers environment. The unique key property is enforced by the database. It
  * is not enforced by this module and the Mongoose Library.
  *
- * @module User.js
+ * @submodule User.js
  * @author Eric William Martin
  */
 "use strict"
@@ -15,7 +15,7 @@
 /* Error Imports */
 const {ERRNO} = require("./../TOOLS");
 
-/* Monog Database Imports */
+/* Mongo Database Imports */
 const {MongoDB} = require("./../MongoDatabase.js");
 const {Schema} = require("./../MongoDatabase.js");
 const {Immutable} = require("./../MongoDatabase.js");
@@ -28,7 +28,7 @@ const {Immutable} = require("./../MongoDatabase.js");
  * @class User
  * @constructor
  */
-var User; /* This defined at the bottom due to Mongoose  API .model() */
+var User; /* This defined at the bottom due to Mongoose API */
 
 /**
  * UserSchema defines the properties of a User Collecttion stored in a MongoDB
@@ -83,21 +83,15 @@ const UserSchema = new Schema({
 
     isAdmin : {type: Boolean, default: false, immutable : true},
 
-    oldPlays : [{type : Schema.Types.ObjectId, ref : "Play"}],
-    curPlays : [{type : Schema.Types.ObjectId, ref : "Play"}]
-
 }, {strict : true});
 
-/*  Instance methods for invidual Play objects. */
-var instanceMethods = {
+UserSchema.plugin(Immutable);
 
-    toString: function() {
-	return `User: "${this.userName}"`;
-    },
-};
+/* Instance methods for invidual Play objects. */
+var instanceMethods = UserSchema.methods;
 
-for (var func in instanceMethods) {
-    UserSchema.methods[func] = instanceMethods[func];
+instanceMethods.toString = function() {
+    return `User: "${this.userName}"`;
 }
 
 /* Compile the Mongoose Schema into an active Mongoose "User" model and
