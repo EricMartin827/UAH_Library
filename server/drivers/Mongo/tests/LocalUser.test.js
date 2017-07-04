@@ -56,7 +56,7 @@ describe("Simple User Unit Tests", () => {
 
     it("Should Query By Property And Update A User By ID", (done) => {
 	UserTester.queryProp_UpdateID(done, DATA.oneUser,
-				      {email : "ericmartin827@gmail.com"}, /* Query */
+				      {email : "eMart257@aol.com"}, /* Query */
 				      {firstName : "Joanne"}); /* Update Via ID */
     });
 

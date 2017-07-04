@@ -4,6 +4,7 @@ const bodyParser = require("body-parser")
 const {ObjectId} = require("mongoose").Types;
 
 var app = express();
+var router = express.Router();
 app.use(bodyParser.json());
 
 function stringify(obj) {
@@ -40,6 +41,7 @@ function isValidID(id) {
 module.exports = {
     UTILS : {
 	app: app,
+	router : router,
 	validator : validator,
 	stringify: stringify,
 	isNumber : isNumber,

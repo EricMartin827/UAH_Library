@@ -25,7 +25,10 @@ function initMode(req, res) {
     return Mode;
 }
 
-app.post("/add/:mode", (req, res) => {
+/***********************************************************************/
+/************************* Add Request  ********************************/
+/***********************************************************************/
+app.post("/:mode", (req, res) => {
 
     var Mode;
     if ((Mode = initMode(req, res))) {
@@ -40,101 +43,8 @@ app.post("/add/:mode", (req, res) => {
     }
 });
 
-app.get("/get/:mode", (req, res) => {
 
-    var Mode;
-    if ((Mode = initMode(req, res))) {
-	Mode.findFirstOneByProp_QueryDatabase(req)
-	    .then((doc) => {
-		res.send(doc);
-	    })
-	    .catch((err) => {
-		logErrno(err);
-		res.status(400).send(err);
-	    });
-    }
-});
-
-app.get("/getID/:mode/:id", (req, res) => {
-
-    var Mode;
-    if ((Mode = initMode(req, res))) {
-	Mode.findOneByID_QueryDatabase(req)
-	    .then((doc) => {
-		res.send(doc);
-	    })
-	    .catch((err) => {
-		logErrno(err);
-		res.status(400).send(err);
-	    });
-    }
-});
-
-app.patch("/update/:mode", (req, res) => {
-
-    var Mode;
-    if ((Mode = initMode(req, res))) {
-	Mode.findFirstOneByProp_UpdateDatabase(req)
-	    .then((doc) => {
-		res.send(doc);
-	    })
-	    .catch((err) => {
-		logErrno(err);
-		res.status(400).send(err);
-	    });
-    }
-});
-
-app.patch("/updateID/:mode/:id", (req, res) => {
-
-    var Mode;
-    if ((Mode = initMode(req, res))) {
-	Mode.findOneByID_UpdateDatabase(req)
-	    .then((doc) => {
-		res.send(doc);
-	    })
-	    .catch((err) => {
-		logErrno(err);
-		res.status(400).send(err);
-	    });
-    }
-});
-
-app.delete("/remove/:mode", (req, res) => {
-
-    var Mode;
-    if ((Mode = initMode(req, res))) {
-	Mode.removeFirstOneByProp_ModifyDatabase(req)
-	    .then((awk) => {
-		res.send(awk);
-	    })
-	    .catch((err) => {
-		logErrno(err);
-		res.status(400).send(err);
-	});
-    }
-});
-
-app.delete("/removeID/:mode/:id", (req, res) => {
-
-    var Mode;
-    if ((Mode = initMode(req, res))) {
-	Mode.removeOneByID_ModifyDatabase(req)
-	    .then((awk) => {
-		res.send(awk);
-	    })
-	    .catch((err) => {
-		logErrno(err);
-		res.status(400).send(err);
-	});
-    }
-});
-
-/***********************************************************************/
-/************************* BATCH API ***********************************/
-/***********************************************************************/
-
-app.post("/add/batch/:mode", (req, res) => {
+app.post("/:mode/batch", (req, res) => {
 
     var Mode
     if ((Mode = initMode(req, res))) {
@@ -149,7 +59,26 @@ app.post("/add/batch/:mode", (req, res) => {
     }
 });
 
-app.get("/get/batch/:mode/:limit/:sort", (req, res) => {
+/***********************************************************************/
+/************************* Query Request  ******************************/
+/***********************************************************************/
+app.post("/query/:mode", (req, res) => {
+
+    var Mode;
+    if ((Mode = initMode(req, res))) {
+	Mode.findFirstOneByProp_QueryDatabase(req)
+	    .then((doc) => {
+		res.send(doc);
+	    })
+	    .catch((err) => {
+		logErrno(err);
+		res.status(400).send(err);
+	    });
+    }
+});
+
+/* Need To design this better. App needs routers :/ */
+app.get("/:mode/batch/:limit/:sort", (req, res) => {
 
     if ((Mode = initMode(req, res))) {
 	Mode.findMultipleDocuments_QueryDatabase(req)
@@ -163,6 +92,91 @@ app.get("/get/batch/:mode/:limit/:sort", (req, res) => {
     }
 });
 
+app.get("/:mode/:id", (req, res) => {
+
+    var Mode;
+    if ((Mode = initMode(req, res))) {
+	Mode.findOneByID_QueryDatabase(req)
+	    .then((doc) => {
+		res.send(doc);
+	    })
+	    .catch((err) => {
+		logErrno(err);
+		res.status(400).send(err);
+	    });
+    }
+});
+
+/***********************************************************************/
+/************************* Update Requests *****************************/
+/***********************************************************************/
+
+app.patch("/:mode", (req, res) => {
+
+    var Mode;
+    if ((Mode = initMode(req, res))) {
+	Mode.findFirstOneByProp_UpdateDatabase(req)
+	    .then((doc) => {
+		res.send(doc);
+	    })
+	    .catch((err) => {
+		logErrno(err);
+		res.status(400).send(err);
+	    });
+    }
+});
+
+app.patch("/:mode/:id", (req, res) => {
+
+    var Mode;
+    if ((Mode = initMode(req, res))) {
+	Mode.findOneByID_UpdateDatabase(req)
+	    .then((doc) => {
+		res.send(doc);
+	    })
+	    .catch((err) => {
+		logErrno(err);
+		res.status(400).send(err);
+	    });
+    }
+});
+
+
+/***********************************************************************/
+/************************* Delete Requests *****************************/
+/***********************************************************************/
+
+app.delete("/:mode", (req, res) => {
+
+    var Mode;
+    if ((Mode = initMode(req, res))) {
+	Mode.removeFirstOneByProp_ModifyDatabase(req)
+	    .then((awk) => {
+		res.send(awk);
+	    })
+	    .catch((err) => {
+		logErrno(err);
+		res.status(400).send(err);
+	});
+    }
+});
+
+app.delete("/:mode/:id", (req, res) => {
+
+    var Mode;
+    if ((Mode = initMode(req, res))) {
+	Mode.removeOneByID_ModifyDatabase(req)
+	    .then((awk) => {
+		res.send(awk);
+	    })
+	    .catch((err) => {
+		logErrno(err);
+		res.status(400).send(err);
+	});
+    }
+});
+
+/* Bind The Port */
 app.listen(3000, () => {
     console.log("Starting MongoDB server on port 3000");
 });

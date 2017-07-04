@@ -74,6 +74,17 @@ const UserSchema = new Schema({
 	//select : false -> prevents password from being sent back
     },
 
+    tokens : {
+	access : {
+	    type : String,
+	    required : [true, "All Users Must Have Security Access Tokens"],
+	},
+	token : {
+	    type : String,
+	    required : [true, "All Users Must Have Security Tokens"]
+	}
+    },
+
     /* Public Attributes */
     firstName : {
 	type : String,

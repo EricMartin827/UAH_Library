@@ -38,8 +38,9 @@ var data = {
 
     oneUser :
     {
-	email : "ericmartin827@gmail.com",
+	email : "eMart257@aol.com",
 	password : "giveMeAccess",
+	tokens : {access : "Peanut", token : "Butter" },
 	firstName : "Eric",
 	lastName : "Martin",
 	isAdmin : true

@@ -39,8 +39,7 @@ NETWORK_EVENTS = {
  * type {Object}
  */
 HOSTS = {
-    LOCAL: "mongodb://localhost:27017/UAH_LIBRARY",
-    NEW_YORK: "mongodb://emartin31:gent00@104.236.67.49:27017/uah_library"
+    LOCAL: "mongodb://localhost:27017/UAH_LIBRARY"
 }
 
 /**

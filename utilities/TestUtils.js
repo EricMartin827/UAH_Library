@@ -147,7 +147,7 @@ function add(_app, _mode, json) {
 
 	/* Create the first entry and confirm json data was saved */
 	request(_app)
-	    .post(`/add/${_mode}`)
+	    .post(`/${_mode}`)
 	    .send(json)
 	    .expect(200)
 	    .expect((res, err) => {
@@ -167,7 +167,7 @@ function add(_app, _mode, json) {
 		 * matches the client's json data.
 		 */
 		request(_app)
-		    .get(`/getID/${_mode}/${res.body._id}`)
+		    .get(`/${_mode}/${res.body._id}`)
 		    .expect(200)
 		    .then((res) => {
 
@@ -190,7 +190,7 @@ function addMultiple(_app, _mode, jsonArray) {
     return new Promise((resolve, reject) => {
 
 	request(_app)
-	    .post(`/add/batch/${_mode}`)
+	    .post(`/${_mode}/batch`)
 	    .send(jsonArray)
 	    .expect(200)
 	    .expect((res, err) => {
@@ -208,7 +208,7 @@ function addMultiple(_app, _mode, jsonArray) {
 
 		var lim = jsonArray.length;
 		request(_app)
-		    .get(`/get/batch/${_mode}/${lim}/false`)
+		    .get(`/${_mode}/batch/${lim}/false`)
 		    .expect(200)
 		    .then((res) => {
 
@@ -235,7 +235,7 @@ function get(_app, _mode, query) {
     return new Promise((resolve, reject) => {
 
 	request(_app)
-	    .get(`/get/${_mode}`)
+	    .post(`/query/${_mode}`)
 	    .send(query)
 	    .expect(200)
 	    .expect((res) => {
@@ -257,7 +257,7 @@ function getID(_app, _mode, id) {
     return new Promise((resolve, reject) => {
 
 	request(_app)
-	    .get(`/getID/${_mode}/${id}`)
+	    .get(`/${_mode}/${id}`)
 	    .expect(200)
 	    .expect((res) => {
 
@@ -281,7 +281,7 @@ function getBadQuery(_app, _mode, query) {
     return new Promise((resolve, reject) => {
 
 	request(_app)
-	    .get(`/get/${_mode}`)
+	    .post(`/query/${_mode}`)
 	    .send(query)
 	    .expect(400)
 	    .expect((err) => {
@@ -303,7 +303,7 @@ function update(_app, _mode, query, update) {
     return new Promise((resolve, reject) => {
 
 	request(_app)
-	    .patch(`/update/${_mode}`)
+	    .patch(`/${_mode}`)
 	    .send({query : query, update : update})
 	    .expect(200)
 	    .then((res) => {
@@ -325,7 +325,7 @@ function updateID(_app, _mode, id, update) {
     return new Promise((resolve, reject) => {
 
 	request(_app)
-	    .patch(`/updateID/${_mode}/${id}`)
+	    .patch(`/${_mode}/${id}`)
 	    .send(update)
 	    .expect(200)
 	    .expect((res, err) =>  {
@@ -354,7 +354,7 @@ function updateBadQuery(_app, _mode, query) {
     return new Promise((resolve, reject) => {
 
 	request(_app)
-	    .patch(`/update/${_mode}`)
+	    .patch(`/${_mode}`)
 	    .send(query)
 	    .expect(400)
 	    .expect((err) => {
@@ -376,7 +376,7 @@ function remove(_app, _mode, query, lastEntry) {
     return new Promise((resolve, reject) => {
 
 	request(_app)
-	    .delete(`/remove/${_mode}`)
+	    .delete(`/${_mode}`)
 	    .send(query)
 	    .expect(200)
 	    .then((res) => {
@@ -393,7 +393,7 @@ function remove(_app, _mode, query, lastEntry) {
 		 */
 		if (lastEntry) {
 		    request(_app)
-			.get(`/get/${_mode}`)
+			.post(`/query/${_mode}`)
 			.send(query)
 			.expect(200)
 			.then((res) => {
@@ -421,7 +421,7 @@ function removeID(_app, _mode, id) {
     return new Promise((resolve, reject) => {
 
 	request(_app)
-	    .delete(`/removeID/${_mode}/${id}`)
+	    .delete(`/${_mode}/${id}`)
 	    .expect(200)
 	    .then((res) => {
 
@@ -432,7 +432,7 @@ function removeID(_app, _mode, id) {
 
 		/* Reaccess databse by id to ensure the removed id misses */
 		request(_app)
-		    .get(`/getID/${_mode}/${id}`)
+		    .get(`/${_mode}/${id}`)
 		    .expect(200)
 		    .then((res) => {
 
@@ -459,7 +459,7 @@ function removeBadQuery(_app, _mode, query) {
     return new Promise((resolve, reject) => {
 
 	request(_app)
-	    .delete(`/remove/${_mode}`)
+	    .delete(`/${_mode}`)
 	    .send(query)
 	    .expect(400)
 	    .expect((err) => {
@@ -641,7 +641,7 @@ Interface.duplicateAdd = async function(done, json) {
 
     /* Resend the exact same data and generate a Duplicate Key Error. */
     await request(this.app)
-	.post(`/add/${this.mode}`)
+	.post(`/${this.mode}`)
 	.send(json)
 	.expect(400)
 	.then((err) => {
