@@ -40,7 +40,6 @@ var data = {
     {
 	email : "eMart257@aol.com",
 	password : "giveMeAccess",
-	tokens : {access : "Peanut", token : "Butter" },
 	firstName : "Eric",
 	lastName : "Martin",
 	isAdmin : true

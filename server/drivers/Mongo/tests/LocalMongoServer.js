@@ -34,7 +34,7 @@ app.post("/:mode", (req, res) => {
     if ((Mode = initMode(req, res))) {
 	Mode.addNewDocument_ModifyDatabase(req)
 	    .then((doc) => {
-		res.send(doc);
+		    res.send(doc);
 	    })
 	    .catch((err) => {
 		logErrno(err);

@@ -2,6 +2,8 @@ const express = require("express");
 const validator = require("validator");
 const bodyParser = require("body-parser")
 const {ObjectId} = require("mongoose").Types;
+const jwt = require("jsonwebtoken");
+const _ = require("lodash");
 
 var app = express();
 var router = express.Router();
@@ -40,15 +42,17 @@ function isValidID(id) {
 
 module.exports = {
     UTILS : {
-	app: app,
-	router : router,
-	validator : validator,
-	stringify: stringify,
-	isNumber : isNumber,
-	isArray : isArray,
-	isObject: isObject,
-	isFunc: isFunc,
-	isEmptyObject : isEmptyObject,
-	isValidID: isValidID
+	app             : app,
+	router          : router,
+	validator       : validator,
+	jwt             : jwt,
+	_               : _,
+	stringify       : stringify,
+	isNumber        : isNumber,
+	isArray         : isArray,
+	isObject        : isObject,
+	isFunc          : isFunc,
+	isEmptyObject   : isEmptyObject,
+	isValidID       : isValidID
     }
 };

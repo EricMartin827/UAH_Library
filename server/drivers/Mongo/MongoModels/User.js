@@ -15,6 +15,8 @@
 /* Utility Imports */
 const {UTILS} = require("./../TOOLS");
 const {validator} = UTILS;
+const {jwt} = UTILS;
+const {_} = UTILS;
 
 /* Error Imports */
 const {ERRNO} = require("./../TOOLS");
@@ -74,16 +76,18 @@ const UserSchema = new Schema({
 	//select : false -> prevents password from being sent back
     },
 
-    tokens : {
-	access : {
-	    type : String,
-	    required : [true, "All Users Must Have Security Access Tokens"],
-	},
-	token : {
-	    type : String,
-	    required : [true, "All Users Must Have Security Tokens"]
+    tokens : [
+	{
+	    access : {
+		type : String,
+		required : [true, "All Users Must Have Security Access Tokens"],
+	    },
+	    token : {
+		type : String,
+		required : [true, "All Users Must Have Security Tokens"]
+	    }
 	}
-    },
+    ],
 
     /* Public Attributes */
     firstName : {
@@ -106,14 +110,72 @@ const UserSchema = new Schema({
 
 }, {strict : true});
 
+/* Make It Impossible For Clients to Change Admin Properties */
 UserSchema.plugin(Immutable);
+
+
 
 /* Instance methods for invidual Play objects. */
 var instanceMethods = UserSchema.methods;
 
+/**
+ * Instance method for the User Schema/Class. Returns a readable string
+ * displaying the username of this instance of user. The username is
+ * simply the prefix of the user's email. Primarily used for loging user
+ * use on the server.
+ *
+ * @method toString 
+ * @return {Stirng} a simple string representation of this user
+ */
 instanceMethods.toString = function() {
     return `User: "${this.email.substr(0, this.email.indexOf("@"))}"`;
 }
+
+/**
+ * Instance method for the User Schema/Class. Returns a an array containing
+ * the user attributes that the server returns as JSON data to the requesting
+ * client. Primaily used by TestUtils.js to test/validate server behavior.
+ *
+ * @method getAttributes
+ * @return {Array} an array of user client attributes
+ */
+instanceMethods.getAttributes = function() {
+    return ["_id", "email", "firstName", "lastName", "isAdmin"];
+}
+
+/**
+ * Instance method for the User Schema/Class. Returns a secure JSON data
+ * to the requesting client. The JSON data returned will not include passwords,
+ * tokens, or any other user attribute that the client does not need.
+ *
+ * @method toJSON
+ * @return a safe JSON representation of the user instance
+ */
+instanceMethods.toJSON = function() {
+    var userObject = this.toObject();
+    return _.pick(userObject, this.getAttributes());
+}
+
+
+instanceMethods.generateAuthTokens = function() {
+
+    var user = this;
+    var access = "auth";
+    var token = jwt.sign({_id : user._id.toHexString(), access}, "secret").toSting();
+    user.tokens.push({access, token});
+
+    return user.save().then(() => {
+	return token;
+    });
+}
+
+/* Middleware Functions */
+
+UserSchema.post("save", (user) => {
+    console.log("User is ", user);
+    return user;
+})
+
 
 /* Compile the Mongoose Schema into an active Mongoose "User" model and
  * export the model. No new database methods/functions can be added to the
