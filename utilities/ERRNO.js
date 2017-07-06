@@ -40,8 +40,8 @@ function makeErrno(code, msg) {
     return err;
 }
 
-function parseErrno(err) {
-    return null;
+function logMongooseError(err) {
+    console.error(`ERROR --> ${err.name} : ${err._message}`);
 }
 
 function logErrno(err) {
@@ -54,6 +54,7 @@ module.exports = {
 	ERRNO : ERRNO,
 	CUSTOM_ERRNO : CUSTOM_ERRNO,
 	makeErrno : makeErrno,
-	logErrno : logErrno
+	logErrno : logErrno,
+	logMongooseError : logMongooseError
     }
 }

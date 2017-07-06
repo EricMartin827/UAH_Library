@@ -4,9 +4,10 @@ const bodyParser = require("body-parser")
 const {ObjectId} = require("mongoose").Types;
 const jwt = require("jsonwebtoken");
 const _ = require("lodash");
-
 var app = express();
 var router = express.Router();
+
+
 app.use(bodyParser.json());
 
 function stringify(obj) {
@@ -40,6 +41,10 @@ function isValidID(id) {
     return ObjectId.isValid(id);
 }
 
+function isSchema(val) {
+    return val && val.schema && val.schema.obj && isFunc(val);
+}
+
 module.exports = {
     UTILS : {
 	app             : app,
@@ -53,6 +58,7 @@ module.exports = {
 	isObject        : isObject,
 	isFunc          : isFunc,
 	isEmptyObject   : isEmptyObject,
-	isValidID       : isValidID
+	isValidID       : isValidID,
+	isSchema        : isSchema
     }
 };

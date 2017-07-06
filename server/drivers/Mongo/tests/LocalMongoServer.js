@@ -32,14 +32,7 @@ app.post("/:mode", (req, res) => {
 
     var Mode;
     if ((Mode = initMode(req, res))) {
-	Mode.addNewDocument_ModifyDatabase(req)
-	    .then((doc) => {
-		    res.send(doc);
-	    })
-	    .catch((err) => {
-		logErrno(err);
-		res.status(400).send(err);
-	    });
+	Mode.addNewEntry_ModifyDatabase(req, res);
     }
 });
 

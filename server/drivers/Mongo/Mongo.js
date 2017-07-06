@@ -15,6 +15,7 @@
 /* Utilitiy Imports */
 const util = require("util");
 const {UTILS} = require("./TOOLS");
+const {isSchema} = UTILS;
 const {isFunc} = UTILS;
 const {stringify} = UTILS;
 const {isObject} = UTILS;
@@ -33,6 +34,8 @@ const {FAILED_ID_REMOVE} =  CUSTOM_ERRNO;
 const {FAILED_QUERY_REMOVE} =  CUSTOM_ERRNO;
 const {ESINVAL} = CUSTOM_ERRNO;
 const {makeErrno} = NODE_ERRORS;
+const {logErrno} = NODE_ERRORS;
+const {logMongooseError} = NODE_ERRORS;
 
 "use strict"
 /**
@@ -48,7 +51,7 @@ const {makeErrno} = NODE_ERRORS;
  */
 function Mongo(Model) {
 
-    if (!(Model && isFunc(Model) && Model.schema && Model.schema.obj)) {
+    if (!isSchema(Model)) {
 	throw makeErrno(ESINVAL, `Invalid Model:\n${stringify(Model)} ` +
 			`No Schema Object Present`);
     }
@@ -109,12 +112,12 @@ function clean(Model, obj) {
  * @param newEntry {Object} JSON data used to initialize the document
  */
 function initOneDoc(Model, newEntry) {
-
-    if (newEntry._id || newEntry.__v) {
-	throw makeErrno(ECINVAL,
-			`Attempted To Create A Document With Mongo ID`);
-    }
-    strip(Model, newEntry)
+    
+    // if (newEntry._id || newEntry.__v) {
+    // 	throw makeErrno(ECINVAL,
+    // 			`Attempted To Create A Document With Mongo ID`);
+    // }
+    // strip(Model, newEntry)
 
     return new Model(newEntry);
 }
@@ -163,24 +166,22 @@ var Interface = Mongo.prototype;
  * document is already present in the database, method rejects the
  * client's request.
  *
- * @method addNewDocument_ModifyDatabase
+ * @method addNewEntry_ModifyDatabase
  * @param req the client's unprocessed request data
  * @return {JS Promise} a promise to return either added entry or an error
  */
-Interface.addNewDocument_ModifyDatabase = function(req) {
-    return new Promise((resolve, reject) => {
-	try {
-	    initOneDoc(this.model, req.body).save()
-		.then((doc) => {
-		    util.log("Added: ", doc.toString());
-		    resolve(doc);
-		})
-		.catch((err) => {
-		    reject(err);
-		});
-	} catch(err) {
-	    reject(err);
+Interface.addNewEntry_ModifyDatabase = function(req, res) {
+
+    var entry = new this.model(req.body);
+    entry.save().then((doc) => {
+	res.send(doc);
+    }).catch((err) => {
+	if (err.code) {
+	    logErrno(err);
+	} else {
+	    logMongooseError(err);
 	}
+	res.status(400).send(err);
     });
 }
 
