@@ -96,7 +96,6 @@ instanceMethods.getAuthorFormal = function() {
     return `${this.authorLast}, ${this.authorFirst}`;
 }
 
-
 instanceMethods.toString = function() {
     return `Play "${this.title}" By: ${this.authorFirst} ` +
 	`${this.authorLast}`

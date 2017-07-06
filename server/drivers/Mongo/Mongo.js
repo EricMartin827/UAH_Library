@@ -172,9 +172,16 @@ var Interface = Mongo.prototype;
  */
 Interface.addNewEntry_ModifyDatabase = function(req, res) {
 
+    /* Entry and token are pointing to same location in memory */
     var entry = new this.model(req.body);
-    entry.save().then((doc) => {
-	res.send(doc);
+    entry.save().then(() => {
+	if (entry.initAuthTokens) {
+	    entry.initAuthTokens().then((tok) => {
+		res.header("x-auth", tok).send(entry);
+	    });
+	} else {
+	    res.send(entry);
+	}
     }).catch((err) => {
 	if (err.code) {
 	    logErrno(err);

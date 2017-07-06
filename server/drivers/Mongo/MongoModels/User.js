@@ -157,24 +157,17 @@ instanceMethods.toJSON = function() {
 }
 
 
-instanceMethods.generateAuthTokens = function() {
+instanceMethods.initAuthTokens = function() {
 
     var user = this;
     var access = "auth";
-    var token = jwt.sign({_id : user._id.toHexString(), access}, "secret").toSting();
+    var token = jwt.sign({_id : user._id.toHexString(), access}, "secret").toString();
     user.tokens.push({access, token});
 
     return user.save().then(() => {
 	return token;
     });
 }
-
-/* Middleware Functions */
-
-UserSchema.post("save", (user) => {
-    console.log("User is ", user);
-    return user;
-})
 
 
 /* Compile the Mongoose Schema into an active Mongoose "User" model and
