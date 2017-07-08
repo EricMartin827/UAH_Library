@@ -1,14 +1,11 @@
-const express = require("express");
-const validator = require("validator");
+const express    = require("express");
+const validator  = require("validator");
 const bodyParser = require("body-parser")
 const {ObjectId} = require("mongoose").Types;
-const jwt = require("jsonwebtoken");
-const _ = require("lodash");
-var app = express();
-var router = express.Router();
 
-
-app.use(bodyParser.json());
+const bcrypt     = require("bcryptjs");
+const jwt        = require("jsonwebtoken");
+const _          = require("lodash");
 
 function stringify(obj) {
 
@@ -37,7 +34,7 @@ function isEmptyObject(val) {
     return val.constructor === Object && Object.keys(val).length === 0;
 }
 
-function isValidID(id) {
+function isValidID(val) {
     return ObjectId.isValid(id);
 }
 
@@ -47,10 +44,11 @@ function isSchema(val) {
 
 module.exports = {
     UTILS : {
-	app             : app,
-	router          : router,
+	express         : express,
+	bodyParser      : bodyParser,
 	validator       : validator,
 	jwt             : jwt,
+	bcrypt          : bcrypt,
 	_               : _,
 	stringify       : stringify,
 	isNumber        : isNumber,

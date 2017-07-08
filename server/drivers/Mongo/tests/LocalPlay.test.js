@@ -33,59 +33,59 @@ afterEach((done) => {
 
 const PlayTester = new Tester(app, Play);
 
-describe("Simple Play Unit Tests", () => {
+// describe("Simple Play Unit Tests", () => {
 
-    it("Should Create And Query A Play By ID", (done) => {
-	PlayTester.add(DATA.onePlay)
-	    .then(() => done()).catch((err) => done());
-    });
+//     it("Should Create And Query A Play By ID", (done) => {
+// 	PlayTester.add(DATA.onePlay)
+// 	    .then(() => done()).catch((err) => done());
+//     });
 
-    it("Should Not Reinsert A Duplicate Play", (done) => {
-    	PlayTester.duplicateAdd(done, DATA.onePlay);
-    });
+//     it("Should Not Reinsert A Duplicate Play", (done) => {
+//     	PlayTester.duplicateAdd(done, DATA.onePlay);
+//     });
 
-    it("Should Query And Update A Play By ID", (done) => {
-	PlayTester.queryUpdateID(done,DATA.onePlay, {authorLast : "Martin"});
-    });
+//     it("Should Query And Update A Play By ID", (done) => {
+// 	PlayTester.queryUpdateID(done,DATA.onePlay, {authorLast : "Martin"});
+//     });
 
-    it("Should Query And Update A Play By Property", (done) => {
-	PlayTester.queryUpdateProp(done, DATA.onePlay,
-				   {genre : "Drama"}, {genre : "New Age"});
-    });
+//     it("Should Query And Update A Play By Property", (done) => {
+// 	PlayTester.queryUpdateProp(done, DATA.onePlay,
+// 				   {genre : "Drama"}, {genre : "New Age"});
+//     });
 
-    it("Should Query By Property And Update A Play By ID", (done) => {
-	PlayTester.queryProp_UpdateID(done, DATA.onePlay,
-				      {copies : 1}, {copies : 9000});
-    });
+//     it("Should Query By Property And Update A Play By ID", (done) => {
+// 	PlayTester.queryProp_UpdateID(done, DATA.onePlay,
+// 				      {copies : 1}, {copies : 9000});
+//     });
 
-    it("Should Query By Id and Update A Play By Property", (done) => {
-	PlayTester.queryID_UpdateProp(done, DATA.onePlay,
-				      {hasSpectacle : false}, {copies : 9000});
-    });
+//     it("Should Query By Id and Update A Play By Property", (done) => {
+// 	PlayTester.queryID_UpdateProp(done, DATA.onePlay,
+// 				      {hasSpectacle : false}, {copies : 9000});
+//     });
 
-    it("Should Delete Delete A Play By ID ", (done) => {
-	PlayTester.queryDeleteID(done, DATA.onePlay);
-    });
+//     it("Should Delete Delete A Play By ID ", (done) => {
+// 	PlayTester.queryDeleteID(done, DATA.onePlay);
+//     });
 
-    it("Should Delete A Play By Property ", (done) => {
-	PlayTester.queryDeleteProp(done, DATA.onePlay,
-				   {timePeriod : "Not Specified"}, true);
-    });
+//     it("Should Delete A Play By Property ", (done) => {
+// 	PlayTester.queryDeleteProp(done, DATA.onePlay,
+// 				   {timePeriod : "Not Specified"}, true);
+//     });
 
-    it("Should Detect That The Query is Not in Sync With Plays", (done) => {
-	PlayTester.badQuery(done, DATA.oneUser, {Coke : ">Pepsi"});
-    });
+//     it("Should Detect That The Query is Not in Sync With Plays", (done) => {
+// 	PlayTester.badQuery(done, DATA.oneUser, {Coke : ">Pepsi"});
+//     });
 
-    it("Should Not Allow Bad JSON Data to Be Added to the Database", (done) => {
-	PlayTester.badAddition(done, {GOOD : "C", BAD : "C++"});
-    });
-});
+//     it("Should Not Allow Bad JSON Data to Be Added to the Database", (done) => {
+// 	PlayTester.badAddition(done, {GOOD : "C", BAD : "C++"});
+//     });
+// });
 
-describe("Multple Plays Unit Tests", () => {
+// describe("Multple Plays Unit Tests", () => {
 
-    it("Should Create Multiple Plays", (done) => {
-	PlayTester.addMultiple(DATA.fivePlays)
-	    .then(() => done()).catch((err) => done(err));
-    });
-});
+//     it("Should Create Multiple Plays", (done) => {
+// 	PlayTester.addMultiple(DATA.fivePlays)
+// 	    .then(() => done()).catch((err) => done(err));
+//     });
+// });
 

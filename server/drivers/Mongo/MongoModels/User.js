@@ -16,6 +16,7 @@
 const {UTILS} = require("./../TOOLS");
 const {validator} = UTILS;
 const {jwt} = UTILS;
+const {bcrypt} = UTILS;
 const {_} = UTILS;
 
 /* Error Imports */
@@ -73,14 +74,14 @@ const UserSchema = new Schema({
 	minLength : [6, "Password Must Have At Least 6 Characters"],
 	maxLength : 100,
 	trim : true
-	//select : false -> prevents password from being sent back
     },
 
     tokens : [
 	{
 	    access : {
 		type : String,
-		required : [true, "All Users Must Have Security Access Tokens"],
+		enum : ["admin", "user"],
+		required : [true, "All Users Must Have Security Tokens"],
 	    },
 	    token : {
 		type : String,
@@ -106,7 +107,12 @@ const UserSchema = new Schema({
 	trim: true
     },
 
-    isAdmin : {type: Boolean, default: false, immutable : true},
+    access : {
+	type: String,
+	enum : ["admin", "user"],
+	required : true,
+	immutable : true
+    },
 
 }, {strict : true});
 
@@ -115,8 +121,10 @@ UserSchema.plugin(Immutable);
 
 
 
-/* Instance methods for invidual Play objects. */
+/* Alias the instance and static methods of the User Schema */
 var instanceMethods = UserSchema.methods;
+var schemaMethods = UserSchema.statics;
+
 
 /**
  * Instance method for the User Schema/Class. Returns a readable string
@@ -140,7 +148,7 @@ instanceMethods.toString = function() {
  * @return {Array} an array of user client attributes
  */
 instanceMethods.getAttributes = function() {
-    return ["_id", "email", "firstName", "lastName", "isAdmin"];
+    return ["_id", "email", "firstName", "lastName"];
 }
 
 /**
@@ -157,17 +165,93 @@ instanceMethods.toJSON = function() {
 }
 
 
-instanceMethods.initAuthTokens = function() {
+instanceMethods.initAuthTokens = function(access) {
 
     var user = this;
-    var access = "auth";
-    var token = jwt.sign({_id : user._id.toHexString(), access}, "secret").toString();
-    user.tokens.push({access, token});
+    var token = jwt.sign({_id : user._id.toHexString(), access}, "salt").toString();
+
+    if (user.tokens.length) {
+	for (var ii = 0; user.tokens.length; ii++) {
+	    if (user.tokens[ii].access === access) {
+		user.tokens[ii] = {access, token};
+		break;
+	    }
+	}
+    } else {
+	user.tokens.push({access, token});
+    }
 
     return user.save().then(() => {
 	return token;
     });
 }
+
+
+/* Dont' Know if this will work with dual user/admin :) */
+schemaMethods.findByToken = function(token, access) {
+
+    var User = this;
+    var decoded;
+    try {
+	decoded = jwt.verify(token, "salt");
+    } catch (err) {
+	return Promise.reject(err);
+    }
+
+    return User.findOne(
+	{
+	    "_id" : decoded._id, /* User ID*/
+	    "tokens.token" : token,
+	    "tokens.access" :  access,
+	    "access" : access
+	}
+    );
+}
+
+
+schemaMethods.findByCredentials = function (email, password, access) {
+
+    var User = this;
+    return User.findOne({email, access})
+	.then((user) => {
+
+	    if (!user) {
+		return Promise.reject();
+	    }
+
+	    return new Promise((resolve, reject) =>  {
+		bcrypt.compare(password, user.password, (err, res) => {
+		    if (res) {
+			return resolve(user);
+		    }
+		    reject();
+
+		});
+	    });
+	})
+}
+
+
+
+/* Mongoose Middleware */
+
+/* Encrypts the users modified password before storing it in the
+ * database.
+ */
+UserSchema.pre("save", function(next) {
+
+    var user = this;
+    if (user.isModified("password")) {
+	bcrypt.genSalt(10, (err, salt) => {
+	    bcrypt.hash(user.password, salt, (err, hash) => {
+		user.password = hash;
+		next();
+	    })
+	});
+    } else {
+	next();
+    }
+});
 
 
 /* Compile the Mongoose Schema into an active Mongoose "User" model and
