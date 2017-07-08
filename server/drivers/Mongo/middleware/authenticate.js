@@ -1,11 +1,28 @@
 const {User} = require("./../MongoModels");
 
-function authenticate(req, res, next, access) {
 
-    var tokenKey = "x-" + access;
-    var token = req.header(tok_key);
+function authAdmin(req, res, next) {
 
-    User.findByToken(token, access).then((user) => {
+    var token = req.header("x-admin");
+    User.findByToken(token, "admin").then((admin) => {
+
+	if (!admin) {
+	    return Promise.reject();
+	}
+
+	req.user = admin;
+	req.token = token;
+	next();
+
+    }).catch((err) => {
+	res.status(401).send(err);
+    });
+}
+
+function authUser(req, res, next) {
+
+    var token = req.header("x-user");
+    User.findByToken(token, "user").then((user) => {
 
 	if (!user) {
 	    return Promise.reject();
@@ -21,4 +38,9 @@ function authenticate(req, res, next, access) {
 }
 
 
-module.exports = {authenticate};
+module.exports = {
+    authenticate : {
+	authAdmin : authAdmin,
+	authUser  : authUser 
+    }
+};

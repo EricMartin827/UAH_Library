@@ -4,7 +4,10 @@ const {bodyParser} = UTILS;
 const {bcrypt} = UTILS;
 
 const {User} = require("./../MongoModels");
+const {MID_WARE} = require("./../middleware");
 
+const {authenticate} = MID_WARE;
+const {authAdmin} = authenticate;
 
 var admin = express();
 admin.use(bodyParser.json());
@@ -35,6 +38,10 @@ admin.post("/login", (req, res) => {
 	.catch((err) => {
 	    res.status(400).send(err);
 	})
+});
+
+admin.get("/me", authAdmin, (req, res) => {
+    res.send(req.user);
 });
 
 module.exports = {admin};

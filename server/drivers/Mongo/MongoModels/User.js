@@ -197,10 +197,10 @@ schemaMethods.findByToken = function(token, access) {
     } catch (err) {
 	return Promise.reject(err);
     }
-
+    console.log("_id ", decoded._id);
     return User.findOne(
 	{
-	    "_id" : decoded._id, /* User ID*/
+	    "_id" : decoded._id,
 	    "tokens.token" : token,
 	    "tokens.access" :  access,
 	    "access" : access
