@@ -1,19 +1,20 @@
-const express = require("express");
-const bodyParser = require("body-parser");
 
-const {UTILS} = require("./../TOOLS");
-const {TEST_UTILS} = require("./../TOOLS");
-const {CONSTANTS} = require("./../TOOLS");
-const {NODE_ERRORS} = require("./../TOOLS");
+"use strict"
+const {LIBRARY} = require("./LIB");
+const {NODE_LIB} = LIBRARY;
+const {express} = NODE_LIB;
 
-const {printObj} = UTILS;
-const {logErrno} = NODE_ERRORS;
+
+const {CONSTANTS} = require("./LIB");
+
+const {ERROR_LIB} = require("./LIB");
+const {logErrno} = ERROR_LIB;
 
 const {MID_WARE} = require("./../middleware");
 const {initMode} = MID_WARE;
 const {authenticate} = MID_WARE;
 
-"use strict"
+
 
 const {Apps} = require("./../Apps")
 
