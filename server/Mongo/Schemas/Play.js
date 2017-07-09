@@ -12,13 +12,13 @@
 */
 "use strict"
 
-/* Error Imports */
-const {ERRNO} = require("./../TOOLS");
+/* Mongoose Imports */
+const {NODE_LIB} = require("./LIB");
+const {Schema} = NODE_LIB;
+const {Immutable} = NODE_LIB;
 
-/* Monog Database Imports */
+/* Mongo Database Import */
 const {MongoDB} = require("./../MongoDatabase.js");
-const {Schema} = require("./../MongoDatabase.js");
-const {Immutable} = require("./../MongoDatabase.js");
 
 /**
  * A Mongoose Model that defines the major properties of a Play Collection
@@ -51,7 +51,6 @@ var Play; /* This defined at the bottom due to Mongoose API .model() */
  */
 const PlaySchema = new Schema({
 
-    /* Immutable Unique Primary Keys */
     title: {
 	type : String,
 	required: true,
@@ -87,6 +86,7 @@ const PlaySchema = new Schema({
 
 }, {strict : true}); /* Prevents client from adding new attributes */
 
+/* Enable Immutable Properties */
 PlaySchema.plugin(Immutable);
 
 /*  Instance methods for invidual Play objects. */

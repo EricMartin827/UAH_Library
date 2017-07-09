@@ -16,17 +16,19 @@
  */
 "use strict"
 
+const {NODE_LIB} = require("./LIB");
+const {Schema} = NODE_LIB;
+const {Immutable} = NODE_LIB;
+
 /* Error Improts */
-const {ERRNO} = require("./../TOOLS");
+const {ERROR_LIB} = require("./LIB");
 
 /* Mongo Database Imports */
 const {MongoDB} = require("./../MongoDatabase.js");
-const {Schema} = require("./../MongoDatabase.js");
-const {Immutable} = require("./../MongoDatabase.js");
 
 /* Mongo Collection Imports */
 const {User} = require("./User.js");
-const {Play} = require("./PLay.js");
+const {Play} = require("./Play.js");
 
 /**
  * CheckOut is A Mongoose Model that defines the major properties of the

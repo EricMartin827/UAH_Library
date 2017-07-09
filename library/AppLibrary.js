@@ -1,11 +1,15 @@
 const express    = require("express");
 const validator  = require("validator");
 const bodyParser = require("body-parser")
-const {ObjectId} = require("mongoose").Types;
-
+const util       = require("util");
+const mongoose   = require("mongoose");
+const Immutable  = require("mongoose-immutable");
 const bcrypt     = require("bcryptjs");
 const jwt        = require("jsonwebtoken");
 const _          = require("lodash");
+
+
+const {ObjectId} = require("mongoose").Types;
 
 function stringify(obj) {
 
@@ -43,20 +47,31 @@ function isSchema(val) {
 }
 
 module.exports = {
-    UTILS : {
-	express         : express,
-	bodyParser      : bodyParser,
-	validator       : validator,
-	jwt             : jwt,
-	bcrypt          : bcrypt,
-	_               : _,
-	stringify       : stringify,
-	isNumber        : isNumber,
-	isArray         : isArray,
-	isObject        : isObject,
-	isFunc          : isFunc,
-	isEmptyObject   : isEmptyObject,
-	isValidID       : isValidID,
-	isSchema        : isSchema
+
+    LIBRARY : {
+	
+	NODE_LIB : {
+	    bcrypt          : bcrypt,
+	    bodyParser      : bodyParser,
+	    express         : express,
+	    Immutable       : Immutable,
+	    jwt             : jwt,
+	    mongoose        : mongoose,
+	    Schema          : mongoose.Schema,
+	    util            : util,
+	    validator       : validator,
+	    _               : _
+	},
+ 
+	CUSTOM_LIB : {
+	    isArray         : isArray,
+	    isEmptyObject   : isEmptyObject,
+	    isFunc          : isFunc,
+	    isNumber        : isNumber,
+	    isObject        : isObject,
+	    isSchema        : isSchema,
+	    isValidID       : isValidID,
+	    stringify       : stringify,
+	}
     }
 };

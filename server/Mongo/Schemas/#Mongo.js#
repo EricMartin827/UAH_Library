@@ -11,21 +11,30 @@
  * @module Mongo.js
  * @author Eric William Martin
  */
+"use strict"
 
 /* Utilitiy Imports */
-const util = require("util");
-const {UTILS} = require("./TOOLS");
-const {isSchema} = UTILS;
-const {isFunc} = UTILS;
-const {stringify} = UTILS;
-const {isObject} = UTILS;
-const {isValidID} = UTILS;
-const {isEmptyObject} = UTILS;
-const {isNumber} = UTILS;
+const {LIBRARY} = require("./LIB");
+const {NODE_LIB} = LIBRARY;
+const {CUSTOM_LIB} = LIBRARY;
+
+const {util} = NODE_LIB;
+
+const {isSchema} = CUSTOM_LIB;
+const {isFunc} = CUSTOM_LIB;
+const {stringify} = CUSTOM_LIB;
+const {isObject} = CUSTOM_LIB;
+const {isValidID} = CUSTOM_LIB;
+const {isEmptyObject} = CUSTOM_LIB;
+const {isNumber} = CUSTOM_LIB;
 
 /* Error Imports */
-const {NODE_ERRORS} = require("./TOOLS");
-const {CUSTOM_ERRNO} = NODE_ERRORS;
+const {ERROR_LIB} = require("./LIB");
+const {CUSTOM_ERRNO} = ERROR_LIB;
+const {makeErrno} = ERROR_LIB;
+const {logErrno} = ERROR_LIB;
+const {logMongooseError} = ERROR_LIB;
+
 const {NO_CLIENT_REQUEST} = CUSTOM_ERRNO;
 const {ECINVAL} = CUSTOM_ERRNO;
 const {FAILED_ID_UPDATE} = CUSTOM_ERRNO;
@@ -33,11 +42,7 @@ const {FAILED_QUERY_UPDATE} = CUSTOM_ERRNO;
 const {FAILED_ID_REMOVE} =  CUSTOM_ERRNO;
 const {FAILED_QUERY_REMOVE} =  CUSTOM_ERRNO;
 const {ESINVAL} = CUSTOM_ERRNO;
-const {makeErrno} = NODE_ERRORS;
-const {logErrno} = NODE_ERRORS;
-const {logMongooseError} = NODE_ERRORS;
 
-"use strict"
 /**
  * The Mongo object/class is a generic wrapper. It takes a valid
  * Mongoose Model Class and extends the aformentioned model's
@@ -58,99 +63,6 @@ function Mongo(Model) {
     this.model = Model;
 }
 
-/*
- * Private helper function which removes any property in the target object
- * not present in the model's schema prior to the object's use in database
- * operations. It's primary purpose is to ensure that the client browser can
- * never introduce new/unwanted properties within a MongoDB Collections.
- * For example, strip() prevents the client from attaching a property such as
- * {Dog : "Rabies"} onto a collection defining Plays.
- *
- * @param Model a Mongoose Model used to select desired properties
- * @param object client object to be cleaned before database creation
- */
-function strip(Model, object) {
-
-    delete(object["_id"]);
-    delete(object["__v"]);
-    for (var prop in object) {
-	if (!Model.schema.obj.hasOwnProperty(prop)) {
-	    var model_name = Model.collection.collectionName;
-	    console.warn(`Property ${prop} not in ${model_name}`);
-	    delete object[prop];
-	}
-    }
-}
-
-/*
- * Private helper function which works with strip() to perpare a
- * query for accessing and removing data from a MongoDB database.
- *
- * @throws "InvalidCleintInput" error if client data does not requirements
- * @return {Object} an object which can safely access the database
- */
-function clean(Model, obj) {
-
-    if (!obj || !isObject(obj)) {
-	throw makeErrno(ECINVAL,
-		       `Invalid Criteria ${obj} For Query/Mod Database`);
-    }
-    strip(Model, obj);
-    if (isEmptyObject(obj)) {
-	throw makeErrno(ECINVAL,
-			`Client Update Failed To Comply With Model Schema`);
-    }
-    return obj;
-}
-
-/*
- * Private helper function which checks if a client is trying to create
- * an existing document and gnerates a single Mongoose entry which will
- * be saved in the database via the document.save() call.
- *
- * @param Model {Object} the Mongoose Model used to make the document
- * @param newEntry {Object} JSON data used to initialize the document
- */
-function initOneDoc(Model, newEntry) {
-    
-    // if (newEntry._id || newEntry.__v) {
-    // 	throw makeErrno(ECINVAL,
-    // 			`Attempted To Create A Document With Mongo ID`);
-    // }
-    // strip(Model, newEntry)
-
-    return new Model(newEntry);
-}
-
-/*
- * Private helper function which checks if a client is trying to create
- * an existing document and generates multiple Mongoose entries which will
- * be saved to the database via a series of asynchronous document.save()
- * calls.
- *
- * @param Model {Object} the Mongoose Model used to make the documents
- * @param newArray {Array} the array containing entry JSON data
- */
-function initMultDocs(Model, entryArray) {
-
-    if (!Array.isArray(entryArray)) {
-	throw makeErrno(ECINVAL,
-			`Non Array Value Used in Multiple Document Generation`);
-    }
-
-    for (let ii = 0; ii < entryArray.length; ii++) {
-
-	var entry = entryArray[ii];
-	if (entry._id || entry.__v) {
-	    throw makeErrno(ECINVAL,
-			    `Attempted To Create A Document With Mongo ID`);
-	}
-	strip(Model, entry);
-	entryArray[ii] = new Model(entry);
-    }
-
-    return entryArray;
-}
 
 /* The Public Database Interface Used To Communicate With the Database */
 var Interface = Mongo.prototype;
@@ -172,16 +84,9 @@ var Interface = Mongo.prototype;
  */
 Interface.addNewEntry_ModifyDatabase = function(req, res) {
 
-    /* Entry and token are pointing to same location in memory */
     var entry = new this.model(req.body);
     entry.save().then(() => {
-	if (entry.initAuthTokens) {
-	    entry.initAuthTokens().then((tok) => {
-		res.header("x-auth", tok).send(entry);
-	    });
-	} else {
-	    res.send(entry);
-	}
+	res.send(entry)
     }).catch((err) => {
 	if (err.code) {
 	    logErrno(err);

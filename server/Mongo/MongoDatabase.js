@@ -1,12 +1,14 @@
-/* Useful Constants Imports */
-const {CONSTANTS} = require("./TOOLS");
+
+/* Import Mongoose and Constants Libraries */
+const {NODE_LIB} = require("./LIB");
+const {CONSTANTS} = require("./LIB");
+const {mongoose} = NODE_LIB;
 const {NETWORK_EVENTS} = CONSTANTS;
 const {CONFIG} = CONSTANTS;
 const {HOSTS} = CONSTANTS;
 
-/* Mongoose Import And Configuration */
-const mongoose = require("mongoose");
-const mongooseImmutable = require("mongoose-immutable");
+
+/* Enable Mongoose Promises */
 mongoose.Promise = global.Promise;
 
 /* Mongoose will always try to recomnnect */
@@ -44,8 +46,4 @@ process.on("SIGINT", () => {
 });
 
 
-module.exports = {
-    MongoDB : db,
-    Schema : mongoose.Schema,
-    Immutable : mongooseImmutable
-};
+module.exports = {MongoDB : db };

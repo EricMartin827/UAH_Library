@@ -19,28 +19,34 @@
  * @author Eric William Martin
  */
 
-/* NPM Imports */
+/* NPM  Testing Imports */
 const expect = require("expect");
 const request = require("supertest");
-const util = require("util");
+
 
 /* Utility Imports */
-const {UTILS} = require("./AppUtils");
-const {isFunc} = UTILS;
-const {isObject} = UTILS;
-const {stringify} = UTILS;
-const {isValidID} = UTILS;
-const {isArray} = UTILS;
+const {LIBRARY} = require("./AppLibrary.js");
+const {NODE_LIB} = LIBRARY;
+const {CUSTOM_LIB} = LIBRARY;
+const {isFunc} = CUSTOM_LIB;
+const {isObject} = CUSTOM_LIB;
+const {stringify} = CUSTOM_LIB;
+const {isValidID} = CUSTOM_LIB;
+const {isArray} = CUSTOM_LIB;
 
 /* Error Imports */
-const {NODE_ERRORS} = require("./ERRNO.js");
-const {ERRNO} = NODE_ERRORS;
-const {ECINVAL} = NODE_ERRORS;
-const {FAILED_ID_UPDATE} = NODE_ERRORS;
-const {FAILED_QUERY_UPDATE} = NODE_ERRORS;
-const {FAILED_ID_REMOVE} = NODE_ERRORS;
-const {FAILED_QUERY_REMOVE} = NODE_ERRORS;
-const {makeErrno} = NODE_ERRORS;
+const {ERROR_LIB} = require("./ErrorLibrary.js");
+const {ERRNO} = ERROR_LIB;
+const {CUSTOM_ERRNO} = ERROR_LIB;
+const {makeErrno} = ERROR_LIB;
+const {logMongooseError} = ERROR_LIB;
+
+const {ECINVAL} = CUSTOM_ERRNO;
+const {FAILED_ID_UPDATE} = CUSTOM_ERRNO;
+const {FAILED_QUERY_UPDATE} = CUSTOM_ERRNO;
+const {FAILED_ID_REMOVE} = CUSTOM_ERRNO;
+const {FAILED_QUERY_REMOVE} = CUSTOM_ERRNO;
+
 
 "use strict"
 /**

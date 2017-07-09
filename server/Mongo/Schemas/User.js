@@ -13,19 +13,20 @@
 "use strict"
 
 /* Utility Imports */
-const {UTILS} = require("./../TOOLS");
-const {validator} = UTILS;
-const {jwt} = UTILS;
-const {bcrypt} = UTILS;
-const {_} = UTILS;
+const {NODE_LIB} = require("./LIB");
+const {validator} = NODE_LIB;
+const {jwt} = NODE_LIB;
+const {bcrypt} = NODE_LIB;
+const {_} = NODE_LIB;
+const {Immutable} = NODE_LIB;
+const {Schema} = NODE_LIB;
 
 /* Error Imports */
-const {ERRNO} = require("./../TOOLS");
+const {ERROR_LIB} = require("./LIB");
 
 /* Mongo Database Imports */
 const {MongoDB} = require("./../MongoDatabase.js");
-const {Schema} = require("./../MongoDatabase.js");
-const {Immutable} = require("./../MongoDatabase.js");
+
 
 /**
  * A Mongoose Model that defines the major properties of the User Collection
@@ -197,7 +198,6 @@ schemaMethods.findByToken = function(token, access) {
     } catch (err) {
 	return Promise.reject(err);
     }
-    console.log("_id ", decoded._id);
     return User.findOne(
 	{
 	    "_id" : decoded._id,
@@ -230,8 +230,6 @@ schemaMethods.findByCredentials = function (email, password, access) {
 	    });
 	})
 }
-
-
 
 /* Mongoose Middleware */
 

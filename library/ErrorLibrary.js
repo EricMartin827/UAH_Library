@@ -1,12 +1,11 @@
 /**
- * ERRNO.js is an error handling utility. It provides a means
- * for concisely generating and logging errors in the main server
- * code. Errors generated via this module record the types of error,
+ * ErrorLibrayr.js is an error handling library/module. It provides a means
+ * for concisely generating and logging errors in the main server.
+ * Errors generated via this module record the types of errors,
  * a message providing a context for understanding the event that
- * triggered the error, and a logger which saves errors to standad
- * error.
+ * triggered the error, and a logger which saves errors to standard  error.
  *
- * @module ERRNO.js
+ * @module ErrorLibrary.js
  * @author Eric William Martin
  */
 
@@ -16,7 +15,7 @@ const {CUSTOM_ERRNO} = require("./ErrorCodes.js");
 function makeErrno(code, msg) {
 
     /* Throw a deterministic error message that can be
-     * reliably processed to isolate the stack line
+     * reliably parsed to isolate the stack line
      * containing the faulting file and line number.
      */
     var err;
@@ -49,7 +48,7 @@ function logErrno(err) {
 }
 
 module.exports = {
-    NODE_ERRORS :
+    ERROR_LIB :
     {
 	ERRNO : ERRNO,
 	CUSTOM_ERRNO : CUSTOM_ERRNO,

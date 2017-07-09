@@ -1,23 +1,18 @@
 /* Error Imports */
-const {NODE_ERRORS} = require("./../TOOLS");
-const {CUSTOM_ERRNO} = NODE_ERRORS;
-const {NO_CLIENT_REQUEST} = CUSTOM_ERRNO;
-const {ECINVAL} = CUSTOM_ERRNO;
-const {FAILED_QUERY} = CUSTOM_ERRNO;
-const {FAILED_UPDATE} =  CUSTOM_ERRNO;
-const {ESINVAL} = CUSTOM_ERRNO;
-const {makeErrno} = NODE_ERRORS;
+const {ERROR_LIB} = require("./LIB");
+const {makeErrno} = ERROR_LIB;
 
 
-/* Import the Mongo.js Wrapper */
-const {Mongo} = require("./../Mongo.js");
+/* Import the Mongo.js Wrappery */
+const {Mongo} = require("./../Schemas");
 
 /* 
- * Import the Active Mongoose Models. The $ prefix prevents name collsion
+ * Import the Active Mongoose Models. The $ prefix prevents name collision
  * within the the Control.js module.
  */
-const $Play = require("./Play.js").Play;
-const $User = require("./User.js").User;
+const {Schemas} = require("./../Schemas");
+const $Play = Schemas.Play;
+const $User = Schemas.User;
 
 
 /* 
@@ -49,14 +44,16 @@ const Modes = {
     Users : User
 }
 
-function Control(clientArg) {
-    
+
+function initMode(req, res, next) {
     if (!Modes.hasOwnProperty(clientArg)) {
-	throw makeErrno(ECINVAL,
-			`${clientArg} is not a valid database collection`);
+	return res.status(400).send(
+	    makeErrno(`${clientArg} is not a valid database collection`));
     }
-    return Modes[clientArg];
+    res.header("x-mode", Modes[clientArg]);
+    next();
 }
 
-/* Export the Interface */
-module.exports = {Control};
+module.exports = {
+    initMode : initMode
+}

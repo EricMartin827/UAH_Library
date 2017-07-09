@@ -1,5 +1,5 @@
-const {User} = require("./../MongoModels");
-
+const {Schemas} = require("./../Schemas");
+const {User} = Schemas;
 
 function authAdmin(req, res, next) {
 

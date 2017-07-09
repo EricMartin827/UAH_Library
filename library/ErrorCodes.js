@@ -1,28 +1,28 @@
-
 "use strict"
+
 const CUSTOM_ERRNO = {
-    NO_CLIENT_REQUEST   : 200,
-    ECINVAL             : 201,
-    FAILED_ID_UPDATE    : 202,
-    FAILED_QUERY_UPDATE : 203,
-    FAILED_ID_REMOVE    : 204,
-    FAILED_QUERY_REMOVE : 205,
-    MISSING_KEYS        : 206,
-    ESINVAL             : 250
+    NO_CLIENT_REQUEST   : 1500,
+    ECINVAL             : 1501,
+    FAILED_ID_UPDATE    : 1502,
+    FAILED_QUERY_UPDATE : 1503,
+    FAILED_ID_REMOVE    : 1504,
+    FAILED_QUERY_REMOVE : 1505,
+    MISSING_KEYS        : 1506,
+    ESINVAL             : 1550
 };
 
 var ERRNO = {
 
-    /* Custom Erros Added By Developer */
+    /* Custom Errors Added By Developer */
     /*********************************/
-    200 : "MissingClientInput",
-    201 : "InvalidClientInput",
-    202 : "ID_Miss_OnUpdate -> NoModifiableDocument",
-    203 : "Query_Miss_OnUpdate -> NoModifiableDocument",
-    204 : "ID_Miss_OnRemove -> NoRemovableDocument",
-    205 : "Query_Miss_OnRemove -> NoRemovableDocument",
-    206 : "MissingSchemaKeyValues",
-    250 : "InvalidServerArguments",
+    1500 : "MissingClientInput",
+    1501 : "InvalidClientInput",
+    1502 : "ID_Miss_OnUpdate -> NoModifiableDocument",
+    1503 : "Query_Miss_OnUpdate -> NoModifiableDocument",
+    1504 : "ID_Miss_OnRemove -> NoRemovableDocument",
+    1505 : "Query_Miss_OnRemove -> NoRemovableDocument",
+    1506 : "MissingSchemaKeyValues",
+    1550 : "InvalidServerArguments",
     /*********************************/
 
     0 : "OK",

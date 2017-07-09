@@ -1,16 +1,25 @@
-const {UTILS} = require("./../TOOLS");
-const {express} = UTILS;
-const {bodyParser} = UTILS;
-const {bcrypt} = UTILS;
 
-const {User} = require("./../MongoModels");
+const {ERROR_LIB} = require("./LIB");
+
+const {NODE_LIB} = require("./LIB");
+const {express} = NODE_LIB;
+const {bodyParser} = NODE_LIB;
+const {bcrypt} = NODE_LIB;
+
+
+const {Mongo} = require("./../Schemas");
+const {Schemas} = require("./../Schemas");
+const {User} = Schemas;
+
+
 const {MID_WARE} = require("./../middleware");
-
 const {authenticate} = MID_WARE;
 const {authAdmin} = authenticate;
 
 var admin = express();
 admin.use(bodyParser.json());
+
+
 
 admin.post("/", (req, res) => {
     var admin = new User(req.body);
