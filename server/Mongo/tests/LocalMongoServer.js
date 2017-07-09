@@ -18,15 +18,19 @@ const {authenticate} = MID_WARE;
 
 const {Apps} = require("./../Apps")
 
-var {admin} = Apps;
+var {adminApp} = Apps;
+var {userApp} = Apps;
 
-var app = express();
-app.use("/admin", admin);
+var mainApp = express();
+mainApp.use("/admin", adminApp);
+mainApp.use("/", userApp)
 
 
-app.listen(3000, () => {
+mainApp.listen(3000, () => {
     console.log("The App is Listening on Port 3000");
 });
+
+module.exports = {mongoApp : mainApp};
 
 
 // /***********************************************************************/

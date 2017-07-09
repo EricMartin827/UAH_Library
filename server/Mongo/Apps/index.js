@@ -1,7 +1,9 @@
-const {admin} = require("./AdminApp.js");
+const {adminApp} = require("./AdminApp.js");
+const {userApp} = require("./UserApp.js");
 
 module.exports = {
     Apps : {
-	admin : admin
+	adminApp : adminApp,
+	userApp  : userApp
     }
 }

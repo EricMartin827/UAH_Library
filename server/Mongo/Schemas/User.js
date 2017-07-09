@@ -13,13 +13,17 @@
 "use strict"
 
 /* Utility Imports */
-const {NODE_LIB} = require("./LIB");
+const {LIBRARY} = require("./LIB");
+const {NODE_LIB} = LIBRARY;
+const {CUSTOM_LIB} = LIBRARY;
+
 const {validator} = NODE_LIB;
 const {jwt} = NODE_LIB;
 const {bcrypt} = NODE_LIB;
 const {_} = NODE_LIB;
 const {Immutable} = NODE_LIB;
 const {Schema} = NODE_LIB;
+const {printObj} = CUSTOM_LIB;
 
 /* Error Imports */
 const {ERROR_LIB} = require("./LIB");
@@ -81,7 +85,7 @@ const UserSchema = new Schema({
 	{
 	    access : {
 		type : String,
-		enum : ["admin", "user"],
+		enum : ["admin", "user", "newUser"],
 		required : [true, "All Users Must Have Security Tokens"],
 	    },
 	    token : {
@@ -120,12 +124,9 @@ const UserSchema = new Schema({
 /* Make It Impossible For Clients to Change Admin Properties */
 UserSchema.plugin(Immutable);
 
-
-
 /* Alias the instance and static methods of the User Schema */
 var instanceMethods = UserSchema.methods;
 var schemaMethods = UserSchema.statics;
-
 
 /**
  * Instance method for the User Schema/Class. Returns a readable string
@@ -165,8 +166,18 @@ instanceMethods.toJSON = function() {
     return _.pick(userObject, this.getAttributes());
 }
 
+/* Return the registration token if present. */
+instanceMethods.getRegisterToken = function() {
+    var user = this;
+    for (var ii = 0; ii < user.tokens.length; ii++) {
+	if (user.tokens[ii].access === "newUser") {
+	    return user.tokens[ii].token;
+	}
+    }
+    return null;
+}
 
-instanceMethods.initAuthTokens = function(access) {
+instanceMethods.initAuthToken = function(access) {
 
     var user = this;
     var token = jwt.sign({_id : user._id.toHexString(), access}, "salt").toString();
@@ -202,8 +213,7 @@ schemaMethods.findByToken = function(token, access) {
 	{
 	    "_id" : decoded._id,
 	    "tokens.token" : token,
-	    "tokens.access" :  access,
-	    "access" : access
+	    "tokens.access" :  access
 	}
     );
 }
@@ -239,6 +249,7 @@ schemaMethods.findByCredentials = function (email, password, access) {
 UserSchema.pre("save", function(next) {
 
     var user = this;
+
     if (user.isModified("password")) {
 	bcrypt.genSalt(10, (err, salt) => {
 	    bcrypt.hash(user.password, salt, (err, hash) => {
@@ -250,7 +261,6 @@ UserSchema.pre("save", function(next) {
 	next();
     }
 });
-
 
 /* Compile the Mongoose Schema into an active Mongoose "User" model and
  * export the model. No new database methods/functions can be added to the

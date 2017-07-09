@@ -18,6 +18,10 @@ function stringify(obj) {
     }
 }
 
+function printObj(obj) {
+    console.log(stringify(obj));
+}
+
 function isFunc(val) {
     return val.constructor === Function;
 }
@@ -72,6 +76,7 @@ module.exports = {
 	    isSchema        : isSchema,
 	    isValidID       : isValidID,
 	    stringify       : stringify,
+	    printObj        : printObj
 	}
     }
 };
