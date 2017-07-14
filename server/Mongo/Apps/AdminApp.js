@@ -63,6 +63,16 @@ adminApp.post("/login", (req, res) => {
 	})
 });
 
+adminApp.patch("/logout", authAdmin, (req, res) => {
+
+    var admin = req.user;
+    admin.clearToken("admin").then(() => {
+	res.send(admin);
+    }).catch((err) => {
+	res.status(400).send(err);
+    });
+});
+
 /* Add New Students or Admins */
 adminApp.post("/user", authAdmin, (req, res) => {
 
@@ -79,7 +89,9 @@ adminApp.post("/user", authAdmin, (req, res) => {
 
 /* Private Secure Routes */
 adminApp.get("/me", authAdmin, (req, res) => {
-    res.send(req.user);
+
+    var admin = req.user;
+    res.send(admin);
 });
 
 adminApp.get("/:mode/:id", authAdmin, initMode, (req, res) => {

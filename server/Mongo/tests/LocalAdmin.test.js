@@ -76,4 +76,9 @@ describe("Simple Admin Security Tests", () => {
 	    .then(() => done()).catch((err) => done(err));
     });
 
+    it("Should Allow The Admin to Logout and Clear Their Token", (done) => {
+	Admin.logout(DATA.admin).
+	    then(() => done()).catch((err) => done(err));
+    });
+
 });

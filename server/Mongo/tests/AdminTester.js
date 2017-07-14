@@ -84,6 +84,38 @@ Interface.login = function(data) {
     });
 }
 
+Interface.logout = function(data) {
+    
+    var _app = this.app;
+    var _schema = this.schema;
+    var _tok = this.authToken;
+    return new Promise((resolve, reject) => {
+	request(_app)
+	    .patch(`/admin/logout`)
+	    .set("x-admin", `${_tok}`)
+	    .expect(200)
+	    .then((res) => {
+
+		expect(res.clientError).toBe(false);
+		expect(res.serverError).toBe(false);
+		verify(data, res.body, _schema);
+		return res.body;
+	    })
+	    .then((res) => {
+
+		_schema.findOne(res).then((admin) => {
+		    for (var ii = 0; ii < admin.tokens.length; ii++) {
+			var tok = admin.tokens[ii];
+			if (tok && tok.access === "admin") {
+			    return reject("Failed To Clear Admin Token")
+			}
+		    }
+		    resolve();
+		}).catch((err) => reject(err));
+	    })
+    });
+}
+
 Interface.badLogin = function(data) {
 
     var _app = this.app;

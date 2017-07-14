@@ -2,10 +2,10 @@
  * User.js is a module which defines the prototype for a User Collection stored
  * in a MongoDB database.
  *
- * All User Models must have a unique combination of username and password.
- * The unique key property is set up by the InitMongo.js module located in the
- * servers environment. The unique key property is enforced by the database. It
- * is not enforced by this module and the Mongoose Library.
+ * All User Models must have a unique email. The unique key property is set up
+ * by the InitMongo.js module located in the servers environment. The unique key
+ * property is enforced by the database. It is not enforced by this module and
+ * the Mongoose Library.
  *
  * @submodule User.js
  * @author Eric William Martin
@@ -33,10 +33,8 @@ const {EPERM} = CUSTOM_ERRNO;
 const {NO_USER} = CUSTOM_ERRNO;
 const {BAD_WEB_TOKEN} = CUSTOM_ERRNO;
 
-
 /* Mongo Database Imports */
 const {MongoDB} = require("./../MongoDatabase.js");
-
 
 /**
  * A Mongoose Model that defines the major properties of the User Collection
@@ -221,6 +219,34 @@ instanceMethods.initAuthToken = function(access) {
     });
 }
 
+/**
+ * Instance method for the User Schema/Class. Logs the user out of an active
+ * application sesssion by clearing their approriate web token. This will force
+ * the client to login again in order to regain access to critical server
+ * routes. Note that access argument dictates which type of user is logging out.
+ * Method returns the user who logged out of the system..
+ *
+ * @method clearToken
+ * @param access {Enum String} "admin" or "user"
+ * @return {Promise} to return the user who looged out
+ */
+instanceMethods.clearToken = function(access) {
+
+    var user = this;
+    for (var ii = 0; ii < user.tokens.length; ii++) {
+	if (user.tokens[ii].access === access) {
+	    
+	    /* Delete token and enable mongoose to detect the change in 
+	     * the array. Mongoose does not auto-detect changes on 'ALL' data
+	     * types during a save call. Read Mongoose API.
+	     */
+	    delete user.tokens[ii];
+	    user.markModified("tokens");
+	}
+    }
+    return user.save();
+}
+
 /******************************************************************************/
 /**************************** Static Methods **********************************/
 /******************************************************************************/
@@ -236,6 +262,7 @@ instanceMethods.initAuthToken = function(access) {
  *                 in the browser
  */
 schemaMethods.getAttributes = function() {
+
     return publicAttributes;
 }
 
