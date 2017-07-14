@@ -11,8 +11,6 @@ const {makeErrno} = ERROR_LIB;
 const {logErrno} = ERROR_LIB;
 const {logMongooseError} = ERROR_LIB;
 
-const {Tester} = require("./TestLibrary.js");
-
 module.exports = {
 
     /* General Library */
@@ -27,8 +25,5 @@ module.exports = {
     CUSTOM_ERRNO     : CUSTOM_ERRNO,
     makeErrno        : makeErrno,
     logErrno         : logErrno,
-    logMongooseError : logMongooseError,
-
-    /* Testing Library */
-    Tester           : Tester
+    logMongooseError : logMongooseError
 };

@@ -50,6 +50,10 @@ function isSchema(val) {
     return val && val.schema && val.schema.obj && isFunc(val);
 }
 
+function nextChar(c) {
+    return String.fromCharCode(c.charCodeAt(0) + 1);
+}
+
 module.exports = {
 
     LIBRARY : {
@@ -75,6 +79,7 @@ module.exports = {
 	    isObject        : isObject,
 	    isSchema        : isSchema,
 	    isValidID       : isValidID,
+	    nextChar        : nextChar,
 	    stringify       : stringify,
 	    printObj        : printObj
 	}

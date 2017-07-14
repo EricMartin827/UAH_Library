@@ -35,7 +35,7 @@ userApp.post("/login", (req, res) => {
 	    makeErrno(ECINVAL,
 		      `User Failed To Provide Their Email And Password`));
     }
-    
+
     User.findByCredentials(user.email, user.password, "user")
 	.then((user) => {
 	    var token;

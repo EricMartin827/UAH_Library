@@ -22,20 +22,19 @@ function makeErrno(code, msg) {
     try {
 	 throw new Error("");
     } catch (e) {
-	err = e;
+	/* Split the Stack Trace into a 4 element array
+	 * and remove the elements at indexes = 0, 1, and 3.
+	 */
+	var aux = e.stack.split("\n");
+	aux.splice(0, 2);
+	aux.splice(1, 1);
+
+	/* Set the error code and the desired message */
+	var err = {};
+	err.code = code;
+	err.type = ERRNO[code];
+	err.message = `${msg} : ${aux[0].trim()}`;
     }
-
-    /* Split the Stack Trace into a 4 element array
-     * and remove the elements at indexes = 0, 1, and 3.
-     */
-    var aux = err.stack.split("\n");
-    aux.splice(0, 2);
-    aux.splice(1, 1);
-
-    /* Set the error code and the desired message */
-    err.code = code;
-    err.message = `${msg} : ${aux[0].trim()}`;
-
     return err;
 }
 

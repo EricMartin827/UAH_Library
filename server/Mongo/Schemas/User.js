@@ -27,6 +27,12 @@ const {printObj} = CUSTOM_LIB;
 
 /* Error Imports */
 const {ERROR_LIB} = require("./LIB");
+const {CUSTOM_ERRNO} = ERROR_LIB;
+const {makeErrno} = ERROR_LIB;
+const {EPERM} = CUSTOM_ERRNO;
+const {NO_USER} = CUSTOM_ERRNO;
+const {BAD_WEB_TOKEN} = CUSTOM_ERRNO;
+
 
 /* Mongo Database Imports */
 const {MongoDB} = require("./../MongoDatabase.js");
@@ -128,6 +134,9 @@ UserSchema.plugin(Immutable);
 var instanceMethods = UserSchema.methods;
 var schemaMethods = UserSchema.statics;
 
+const publicAttributes = ["_id", "email", "firstName", "lastName"];
+
+
 /**
  * Instance method for the User Schema/Class. Returns a readable string
  * displaying the username of this instance of user. The username is
@@ -163,7 +172,7 @@ instanceMethods.getAttributes = function() {
  */
 instanceMethods.toJSON = function() {
     var userObject = this.toObject();
-    return _.pick(userObject, this.getAttributes());
+    return _.pick(userObject, publicAttributes);
 }
 
 /* Return the registration token if present. */
@@ -175,6 +184,12 @@ instanceMethods.getRegisterToken = function() {
 	}
     }
     return null;
+}
+
+//////////////////////////////////////////////////////////////////////////
+
+schemaMethods.getAttributes = function() {
+    return publicAttributes;
 }
 
 instanceMethods.initAuthToken = function(access) {
@@ -207,7 +222,8 @@ schemaMethods.findByToken = function(token, access) {
     try {
 	decoded = jwt.verify(token, "salt");
     } catch (err) {
-	return Promise.reject(err);
+	return Promise.reject(makeErrno(
+	    BAD_WEB_TOKEN, `Client Provided an Invalid Web Token: ${token}`));
     }
     return User.findOne(
 	{
@@ -226,7 +242,8 @@ schemaMethods.findByCredentials = function (email, password, access) {
 	.then((user) => {
 
 	    if (!user) {
-		return Promise.reject();
+		return Promise.reject(makeErrno(
+		    NO_USER, `User: ${email} with access: ${access} not found`));
 	    }
 
 	    return new Promise((resolve, reject) =>  {
@@ -234,8 +251,9 @@ schemaMethods.findByCredentials = function (email, password, access) {
 		    if (res) {
 			return resolve(user);
 		    }
-		    reject();
-
+		    reject(makeErrno(EPERM,
+				     `Failed to validate password for ` +
+				     `user: ${user.email}`));
 		});
 	    });
 	})

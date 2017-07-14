@@ -46,4 +46,4 @@ process.on("SIGINT", () => {
 });
 
 
-module.exports = {MongoDB : db };
+module.exports = { MongoDB : db };

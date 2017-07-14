@@ -8,6 +8,9 @@ const CUSTOM_ERRNO = {
     FAILED_ID_REMOVE    : 1504,
     FAILED_QUERY_REMOVE : 1505,
     MISSING_KEYS        : 1506,
+    NO_USER             : 1507,
+    EPERM               : 1508,
+    BAD_WEB_TOKEN       : 1509,
     ESINVAL             : 1550
 };
 
@@ -22,6 +25,9 @@ var ERRNO = {
     1504 : "ID_Miss_OnRemove -> NoRemovableDocument",
     1505 : "Query_Miss_OnRemove -> NoRemovableDocument",
     1506 : "MissingSchemaKeyValues",
+    1507 : "UserNotPresent",
+    1508 : "ValidationError",
+    1509 : "JSON_WebToken_Malformed",
     1550 : "InvalidServerArguments",
     /*********************************/
 
