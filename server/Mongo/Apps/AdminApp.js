@@ -30,16 +30,16 @@ const {initMode} = MID_WARE;
 var adminApp = express();
 adminApp.use(bodyParser.json());
 
-
-/* Dummy For Inserting The First Admin */
+/* Dummy Route For Inserting Seeding the Admin */
 adminApp.post("/", (req, res) => {
-    
+
     var admin = new User(req.body);
     admin.save().then(() => {
 	res.send(admin);
     }).catch((err) => {
 	res.status(400).send(err);
     });
+
 });
 
 /* Public Route For Logging In */
@@ -59,7 +59,6 @@ adminApp.post("/login", (req, res) => {
 	    })
 	})
 	.catch((err) => {
-
 	    res.status(401).send(err);
 	})
 });
@@ -82,8 +81,6 @@ adminApp.post("/user", authAdmin, (req, res) => {
 adminApp.get("/me", authAdmin, (req, res) => {
     res.send(req.user);
 });
-
-
 
 adminApp.get("/:mode/:id", authAdmin, initMode, (req, res) => {
 

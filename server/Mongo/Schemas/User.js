@@ -53,14 +53,12 @@ var User; /* This defined at the bottom due to Mongoose API */
  * database.
  *
  * @element UserSchema the Schema for a User Collection
- * @attribute userName a {String} specifying the user's username
+ * @attribute email a {String} specifying the user's email
  * @attribute passWord a {String} specifying the user's password
  * @attribute firstName a {String} specifying the user's first name
  * @attribute lastName a {String} specifying the user's last name
- * @attribute isAdmin a {Boolean} indicating if user had admin privileges
- * @attribute oldPlays an {Array} of previous play _ids the user cheked out
- * @attibute curPlays an {Array}  of current play _ids the user checked out
- *
+ * @attribute tokens an {Array} containing the user's web tokens
+ * @attribute access a {String} indicating if user had admin privileges
  */
 const UserSchema = new Schema({
 
@@ -126,57 +124,58 @@ const UserSchema = new Schema({
     },
 
 }, {strict : true});
+UserSchema.plugin(Immutable); /* Prevent Client From Changing Admin Status */
 
-/* Make It Impossible For Clients to Change Admin Properties */
-UserSchema.plugin(Immutable);
-
-/* Alias the instance and static methods of the User Schema */
+/* Alias the User Schema's instance and static methods for readibility */
 var instanceMethods = UserSchema.methods;
 var schemaMethods = UserSchema.statics;
 
+/* Declare The Fields Client Browser Can View */
 const publicAttributes = ["_id", "email", "firstName", "lastName"];
 
+/******************************************************************************/
+/**************************** Instance Methods ********************************/
+/******************************************************************************/
 
 /**
  * Instance method for the User Schema/Class. Returns a readable string
- * displaying the username of this instance of user. The username is
+ * displaying the username of 'this' instance of user. The username is
  * simply the prefix of the user's email. Primarily used for loging user
  * use on the server.
  *
- * @method toString 
+ * @method toString
  * @return {Stirng} a simple string representation of this user
  */
 instanceMethods.toString = function() {
+
     return `User: "${this.email.substr(0, this.email.indexOf("@"))}"`;
 }
 
 /**
- * Instance method for the User Schema/Class. Returns a an array containing
- * the user attributes that the server returns as JSON data to the requesting
- * client. Primaily used by TestUtils.js to test/validate server behavior.
- *
- * @method getAttributes
- * @return {Array} an array of user client attributes
- */
-instanceMethods.getAttributes = function() {
-    return ["_id", "email", "firstName", "lastName"];
-}
-
-/**
- * Instance method for the User Schema/Class. Returns a secure JSON data
- * to the requesting client. The JSON data returned will not include passwords,
- * tokens, or any other user attribute that the client does not need.
+ * Instance method for the User Schema/Class. Returns secure JSON data
+ * to the requesting client. The JSON data returned will only contian
+ * public attributes that do not compromise the security of the
+ * database.
  *
  * @method toJSON
- * @return a safe JSON representation of the user instance
+ * @return {JSON DATA} a safe JSON representation of the user instance
  */
 instanceMethods.toJSON = function() {
+
     var userObject = this.toObject();
     return _.pick(userObject, publicAttributes);
 }
 
-/* Return the registration token if present. */
+/**
+ * Instance method for the User Schema/Class. Iterates through
+ * 'this' user's tokens and returns a registration token if
+ * present. Otherwise, returns null.
+ *
+ * @method getRegistrationToken
+ * @return {String} 'this' user's registration token
+ */
 instanceMethods.getRegisterToken = function() {
+
     var user = this;
     for (var ii = 0; ii < user.tokens.length; ii++) {
 	if (user.tokens[ii].access === "newUser") {
@@ -186,16 +185,25 @@ instanceMethods.getRegisterToken = function() {
     return null;
 }
 
-//////////////////////////////////////////////////////////////////////////
-
-schemaMethods.getAttributes = function() {
-    return publicAttributes;
-}
-
+/**
+ * Instance method for the User Schema/Class. Generates a web token that
+ * gives the client secure access to the admin, user, and registration
+ * routes. The type of web token generated is dependent on the specified
+ * access. Allowed access modes are "admin", "user", and "newUser". The
+ * "newUser" access is used specifically for generating registration
+ * tokens. Method returns a Promise to return the newly generated token.
+ *
+ * @method initAuthToken
+ * @param access {Enum String} "admin", "user", "newUser"
+ * @return {Promise} to return a new web token
+ */
 instanceMethods.initAuthToken = function(access) {
 
     var user = this;
-    var token = jwt.sign({_id : user._id.toHexString(), access}, "salt").toString();
+    var token = jwt.sign({
+	_id : user._id.toHexString(),
+	access
+    },"salt").toString();
 
     if (user.tokens.length) {
 	for (var ii = 0; user.tokens.length; ii++) {
@@ -213,8 +221,38 @@ instanceMethods.initAuthToken = function(access) {
     });
 }
 
+/******************************************************************************/
+/**************************** Static Methods **********************************/
+/******************************************************************************/
 
-/* Dont' Know if this will work with dual user/admin :) */
+/**
+ * Static method for the User Schema/Class. Returns an array of the public
+ * User attributes that the client can view. Used primarily in test suites
+ * to confirm that the client's data is properly stored in the database by
+ * the server.
+ *
+ * @method getAttributes
+ * @return {Array} a collection of User properties the client can recieve
+ *                 in the browser
+ */
+schemaMethods.getAttributes = function() {
+    return publicAttributes;
+}
+
+/**
+ * Static method for the User Schema/Class. Method decodes the client
+ * supplied web token. Once the web token has been certified to not have
+ * been altered, method queires the database for the user associated with the
+ * token and the proper access credentials. This method is used by express
+ * middleware to make critical server routes private and sequester user
+ * routes from admin routes.
+ *
+ * @method findByToken
+ * @param token the client's supplied web token
+ * @param aceess {Enum String} "admin", "user", "newUser"
+ * @return {Promise} to return the user associated with the specified token
+ *                   and access rights
+ */
 schemaMethods.findByToken = function(token, access) {
 
     var User = this;
@@ -234,7 +272,20 @@ schemaMethods.findByToken = function(token, access) {
     );
 }
 
-
+/**
+ * Static method for the User Schema/Class. Method queies the database for
+ * a user with the specified email and access rights. If the query is
+ * successful, then the user's stored database passowrd is decrypted and
+ * compared with the client supplied password. If successful, the user is
+ *returned to the server.
+ *
+ * @method findByCredential
+ * @param email the client's supplied email
+ * @param password the client's supplied password
+ * @param aceess {Enum String} "admin", "user", "newUser"
+ * @return {Promise} to return the user associated with the specified email
+ *                   and password
+ */
 schemaMethods.findByCredentials = function (email, password, access) {
 
     var User = this;
@@ -243,7 +294,8 @@ schemaMethods.findByCredentials = function (email, password, access) {
 
 	    if (!user) {
 		return Promise.reject(makeErrno(
-		    NO_USER, `User: ${email} with access: ${access} not found`));
+		    NO_USER,
+		    `User: ${email} with access: ${access} not found`));
 	    }
 
 	    return new Promise((resolve, reject) =>  {
@@ -259,15 +311,19 @@ schemaMethods.findByCredentials = function (email, password, access) {
 	})
 }
 
-/* Mongoose Middleware */
+/******************************************************************************/
+/**************************** Mongoose Middelware *****************************/
+/******************************************************************************/
 
-/* Encrypts the users modified password before storing it in the
- * database.
+/*
+ * If the password field of a user document is modified before an attempt is
+ * made to save the user into the database, then hash the newly updated password
+ * and store the user's encrypted password into the database. Never store raw
+ * plain text passwords in a database.
  */
 UserSchema.pre("save", function(next) {
 
     var user = this;
-
     if (user.isModified("password")) {
 	bcrypt.genSalt(10, (err, salt) => {
 	    bcrypt.hash(user.password, salt, (err, hash) => {
