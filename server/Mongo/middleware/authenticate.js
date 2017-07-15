@@ -3,10 +3,26 @@ const {ERROR_LIB} = require("./LIB");
 const {CUSTOM_ERRNO} = ERROR_LIB;
 const {makeErrno} = ERROR_LIB;
 const {ECINVAL} = CUSTOM_ERRNO;
+const {NO_USER} = CUSTOM_ERRNO;
 const {EPERM} = CUSTOM_ERRNO;
+
 
 const {Schemas} = require("./../Schemas");
 const {User} = Schemas;
+
+function authEither(req, res, next) {
+
+    if (req.header("x-admin")) {
+	authAdmin(req, res, next);	
+    }
+
+    if (req.header("x-user")) {
+	authUser(req, res, next);
+    }
+
+    res.status(401).send(makeErrno(
+	ECINVAL, `Client Failed to Send Authentication Token`));
+}
 
 
 function authAdmin(req, res, next) {
@@ -17,16 +33,15 @@ function authAdmin(req, res, next) {
 	    makeErrno(ECINVAL,
 		      `Client Failed to Send Authentication Token`));
     }
-    
+
     User.findByToken(token, "admin").then((admin) => {
 
 	if (!admin) {
 	    return Promise.reject(makeErrno(
-		NO_USER, `Admin With valid Authentication Token Not Found`));
+		NO_USER, `Admin With Valid Authentication Token Not Found`));
 	}
 
-	req.user = admin;
-	req.token = token;
+	req.header["x-admin"] = admin;
 	next();
 
     }).catch((err) => {
@@ -50,8 +65,7 @@ function authUser(req, res, next) {
 		NO_USER, `User With Valid Web Authentication Not Found`));
 	}
 
-	req.user = user;
-	req.token = token;
+	req.header["x-user"] = user;
 	next();
 
     }).catch((err) => {
@@ -84,9 +98,9 @@ function authRegistration(req, res, next) {
     })
 }
 
-
 module.exports = {
     authenticate : {
+	authEither        : authEither,
 	authAdmin         : authAdmin,
 	authUser          : authUser,
 	authRegistration  : authRegistration

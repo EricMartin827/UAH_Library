@@ -2,12 +2,10 @@
  * AdminApp.js is the sub application used by the falculty members of UAH.
  * 
  */
-
 const {ERROR_LIB} = require("./LIB");
 const {makeErrno} = ERROR_LIB;
 const {CUSTOM_ERRNO} = ERROR_LIB;
 const {ECINVAL} = CUSTOM_ERRNO;
-
 
 const {LIBRARY} = require("./LIB");
 const {NODE_LIB} = LIBRARY;
@@ -16,21 +14,23 @@ const {express} = NODE_LIB;
 const {bodyParser} = NODE_LIB;
 const {printObj} = CUSTOM_LIB;
 
-
-const {Mongo} = require("./../Schemas");
 const {Schemas} = require("./../Schemas");
 const {User} = Schemas;
-
 
 const {MID_WARE} = require("./../middleware");
 const {authenticate} = MID_WARE;
 const {authAdmin} = authenticate;
 const {initMode} = MID_WARE;
 
-var adminApp = express();
+const {userRoutes} = require("./UserRoutes.js");
+
+var adminApp = new express.Router();
 adminApp.use(bodyParser.json());
 
-/* Dummy Route For Inserting Seeding the Admin */
+/* 
+ * Dummy route for seeding the database with an admin during unit testing.
+ * This will be removed when application is deployed to public server.
+ */
 adminApp.post("/", (req, res) => {
 
     var admin = new User(req.body);
@@ -42,7 +42,14 @@ adminApp.post("/", (req, res) => {
 
 });
 
-/* Public Route For Logging In */
+
+/******************************************************************************/
+/***************** Admin Login and Personal Routes ****************************/
+/******************************************************************************/
+
+/*
+ * Public Admin Login Route
+ */ 
 adminApp.post("/login", (req, res) => {
 
     var user = req.body;
@@ -51,21 +58,31 @@ adminApp.post("/login", (req, res) => {
 	    makeErrno(ECINVAL,
 		      `Admin Failed To Provide Their Email And Password`));
     }
- 
+
     User.findByCredentials(user.email, user.password, "admin")
 	.then((admin) => {
-	    admin.initAuthToken("admin").then((tok) => {
-		res.header("x-admin", tok).send(admin);
-	    })
+	    var token;
+	    if (token = admin.getRegisterToken()) {
+		res.header("x-regiser", token).send(admin);
+	    } else {
+		admin.initAuthToken("admin").then((tok) => {
+		    res.header("x-admin", tok).send(admin);
+		}).catch((err) => {
+		    res.status(400).send(err);
+		})
+	    }
 	})
 	.catch((err) => {
 	    res.status(401).send(err);
 	})
 });
 
+/*
+ * Private Admin Logout Route
+ */ 
 adminApp.patch("/logout", authAdmin, (req, res) => {
 
-    var admin = req.user;
+    var admin = req.header["x-admin"];
     admin.clearToken("admin").then(() => {
 	res.send(admin);
     }).catch((err) => {
@@ -73,32 +90,18 @@ adminApp.patch("/logout", authAdmin, (req, res) => {
     });
 });
 
-/* Add New Students or Admins */
-adminApp.post("/user", authAdmin, (req, res) => {
 
-    var user = new User(req.body);
-    user.save().then(() => {
-	user.initAuthToken("newUser").then((token) => {
-	    res.send(user);
-	});
-    }).catch((err) => {
-	res.status(400).send(err);
-    })
-
-});
-
-/* Private Secure Routes */
+/*
+ * Private Admin Me Route
+ */
 adminApp.get("/me", authAdmin, (req, res) => {
 
-    var admin = req.user;
+    var admin = req.header["x-admin"];
     res.send(admin);
 });
 
-adminApp.get("/:mode/:id", authAdmin, initMode, (req, res) => {
 
-    var Mode = req.header("x-mode");
-    Mode.findByID_QueryDatabase(req, res);
-    
-});
+/*Mount User Schema Routes*/
+adminApp.use("/user(s)?", userRoutes);
 
 module.exports = {adminApp};

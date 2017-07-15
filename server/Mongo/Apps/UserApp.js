@@ -24,7 +24,7 @@ const {authUser} = authenticate;
 const {authRegistration} = authenticate;
 
 
-var userApp = express();
+var userApp = new express.Router();
 userApp.use(bodyParser.json());
 
 userApp.post("/login", (req, res) => {
@@ -36,7 +36,7 @@ userApp.post("/login", (req, res) => {
 		      `User Failed To Provide Their Email And Password`));
     }
 
-    User.findByCredentials(user.email, user.password, "user")
+    User.findByCredentials(user.email, user.password)
 	.then((user) => {
 	    var token;
 	    if (token = user.getRegisterToken()) {
@@ -52,34 +52,32 @@ userApp.post("/login", (req, res) => {
 	})
 });
 
+// userApp.patch("/register", authRegistration, (req, res) => {
 
-userApp.post("/register", authRegistration, (req, res) => {
+//     /* Raw JOSN Data*/
+//     var newUser = req.body;
 
-    /* Raw JOSN Data*/
-    var newUser = req.body;
-
-    /* Mongoose Document Retrieved From Database */
-    var oldUser = req.oldUser;
-    if (!newUser.password) {
-	return res.status(400).send(
-	    makeErrno(ECINVAL, `User Registration: User Failed Tp Specify ` +
-		     `A New Password`));
-    }
+//     /* Mongoose Document Retrieved From Database */
+//     var oldUser = req.oldUser;
+//     if (!newUser.password) {
+// 	return res.status(400).send(
+// 	    makeErrno(ECINVAL, `User Registration: User Failed Tp Specify ` +
+// 		     `A New Password`));
+//     }
     
-    if (newUser.password === oldUser.password) {
-	return res.status(400).send(
-	    makeErrno(ECINVAL, `User Registration: Failed To Change Password:` +
-		     ` old = ${oldUser.password} : new = ${newUser.password}`));
-    }
+//     if (newUser.password === oldUser.password) {
+// 	return res.status(400).send(
+// 	    makeErrno(ECINVAL, `User Registration: Failed To Change Password:` +
+// 		     ` old = ${oldUser.password} : new = ${newUser.password}`));
+//     }
 
-    oldUser.password = newUser.password;
-    oldUser.save().then((updatedUser) => {
-	res.send(updatedUser);
-    }).catch((err) => {
-	res.status(400).send(err);
-    });
-});
-
+//     oldUser.password = newUser.password;
+//     oldUser.save().then((updatedUser) => {
+// 	res.send(updatedUser);
+//     }).catch((err) => {
+// 	res.status(400).send(err);
+//     });
+// });
 
 module.exports = {userApp};
 

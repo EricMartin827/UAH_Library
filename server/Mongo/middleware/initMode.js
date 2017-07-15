@@ -46,11 +46,13 @@ const Modes = {
 
 
 function initMode(req, res, next) {
-    if (!Modes.hasOwnProperty(clientArg)) {
+
+    var clientParam = req.params.mode;
+    if (!Modes.hasOwnProperty(clientParam)) {
 	return res.status(400).send(
-	    makeErrno(`${clientArg} is not a valid database collection`));
+	    makeErrno(`${clientParam} is not a valid database collection`));
     }
-    res.header("x-mode", Modes[clientArg]);
+    req.header["x-mode"] = Modes[clientParam];
     next();
 }
 

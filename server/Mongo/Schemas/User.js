@@ -176,7 +176,8 @@ instanceMethods.getRegisterToken = function() {
 
     var user = this;
     for (var ii = 0; ii < user.tokens.length; ii++) {
-	if (user.tokens[ii].access === "newUser") {
+	var tok = user.tokens[ii];
+	if (tok && tok.access === "newUser") {
 	    return user.tokens[ii].token;
 	}
     }
@@ -203,17 +204,33 @@ instanceMethods.initAuthToken = function(access) {
 	access
     },"salt").toString();
 
-    if (user.tokens.length) {
-	for (var ii = 0; user.tokens.length; ii++) {
-	    if (user.tokens[ii].access === access) {
-		user.tokens[ii] = {access, token};
-		break;
-	    }
-	}
-    } else {
+    switch (user.tokens.length) {
+    case 0:
 	user.tokens.push({access, token});
+	break;
+    case 1:
+	if (!user.tokens[0] || user.toknes[0].acceess === access) {
+	    user.tokens[0] = {access, token};
+	} else {
+	    user.tokens.push({access, token});
+	}
+	break;
+    case 2:
+	if (user.tokens[0] && user.tokens[0].access === access) {
+	    user.tokens[0] = {access, token};
+	} else if (user.tokens[1] && user.tokens[1].access === access) {
+	    user.tokens[1] = {access, token}
+	} else if (!user.tokens[0]) {
+	    user.tokens[0] = {access, token}
+	} else {
+	    user.tokens[1] = {access, token}
+	}
+	break;
+    default:
+	return Promise.reject(makeErrno(
+	    ESINVAL, `User Tokens Array Compromised. Current State: ` +
+		`${user.tokens}`));
     }
-
     return user.save().then(() => {
 	return token;
     });
@@ -235,7 +252,7 @@ instanceMethods.clearToken = function(access) {
     var user = this;
     for (var ii = 0; ii < user.tokens.length; ii++) {
 	if (user.tokens[ii].access === access) {
-	    
+
 	    /* Delete token and enable mongoose to detect the change in 
 	     * the array. Mongoose does not auto-detect changes on 'ALL' data
 	     * types during a save call. Read Mongoose API.
@@ -316,7 +333,8 @@ schemaMethods.findByToken = function(token, access) {
 schemaMethods.findByCredentials = function (email, password, access) {
 
     var User = this;
-    return User.findOne({email, access})
+    var cred = (access) ? {email, access} : {email};
+    return User.findOne(cred)
 	.then((user) => {
 
 	    if (!user) {

@@ -17,7 +17,7 @@ const {CUSTOM_ERRNO} = ERROR_LIB;
 const {ESINVAL} = CUSTOM_ERRNO;
 
 
-function Constructor(app, schema) {
+function Tester(app, schema) {
 
     if (!isSchema(schema)) {
 	throw makeErrno(ESINVAL, `Invalid Schema:\n${stringify(schema)}`);
@@ -26,8 +26,23 @@ function Constructor(app, schema) {
     this.app = app;
     this.schema = schema;
     this.mode = schema.collection.collectionName;
-    
 }
+
+var Interface = Tester.prototype;
+Interface.setSchema = function(newSchema) {
+
+    if (!isSchema(schema)) {
+	throw makeErrno(ESINVAL, `Invalid Schema:\n${stringify(schema)}`);
+    }
+
+    this.schema = newSchema;
+    this.mode = schema.collection.collectionName;
+}
+
+Interface.setToken = function(tok) {
+    this.authToken = tok;
+}
+
 
 function verify(clientReq, serverRes, schema) {
 
@@ -65,21 +80,8 @@ module.exports = {
     TestLibrary : {
 	expect      : expect,
 	request     : request,
-	Constructor : Constructor,
+	Tester      : Tester,
 	verify      : verify,
 	verifyBatch : verifyBatch
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-

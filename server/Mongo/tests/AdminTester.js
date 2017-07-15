@@ -12,20 +12,17 @@ const {NO_USER} = CUSTOM_ERRNO;
 const {BAD_WEB_TOKEN} = CUSTOM_ERRNO;
 
 const {TestLibrary} = require("./TestLibrary.js");
-const {Constructor} = TestLibrary;
+const {Tester} = TestLibrary;
 const {verify} = TestLibrary;
 const {expect} = TestLibrary;
 const {request} = TestLibrary;
 
 function AdminTester(app, schema) {
-    Constructor.call(this, app, schema)
+    Tester.call(this, app, schema)
 }
-
+AdminTester.prototype = Object.create(Tester.prototype)
+AdminTester.prototype.constructor = AdminTester;
 var Interface = AdminTester.prototype;
-
-Interface.setToken = function(tok) {
-    this.authToken = tok;
-}
 
 /* Populate the database with a 'root' admin to get things started. */
 Interface.seed = function(data) {
@@ -243,16 +240,18 @@ Interface.myPage_AlteredToken = function() {
     });
 }
 
-
 Interface.postOne = function(data) {
 
     var _app = this.app;
     var _mode = this.mode;
+    var _schema = this.schema;
+    var _tok = this.authToken;
     return new Promise((resolve, reject) => {
 
 	/* Create the first entry and confirm json data was saved */
 	request(_app)
 	    .post(`/admin/${_mode}`)
+	    .set("x-admin", `${_tok}`)
 	    .send(data)
 	    .expect(200)
 	    .expect((res, err) => {
@@ -261,32 +260,28 @@ Interface.postOne = function(data) {
 		    return reject(err);
 		}
 
-		var doc = res.body;
 		expect(res.clientError).toBe(false);
 		expect(res.serverError).toBe(false);
-		verify(data, doc);
+		verify(data, res.body, _schema);
 	    })
 	    .then((res) => {
 
-		/* Retrieve data to confirm that server document
-		 * matches the client's json data.
-		 */
-		request(_app)
-		    .get(`admin/${_mode}/${res.body._id}`)
-		    .expect(200)
-		    .then((res) => {
+		_schema.findOne(res.body)
+		    .then((user) => {
 
-			expect(res.clientError).toBe(false);
-			expect(res.serverError).toBe(false);
-			verify(data, res.body);
-			resolve(res.body);
-		    })
+			verify(res, user, _schema);
+			expect(user.tokens.length).toBe(1);
+			expect(user.tokens[0]).toNotBe(null);
+			expect(user.tokens[0]).toNotBe(undefined);
+			expect(user.tokens[0].access).toBe("newUser");
+			resolve(user);
+
+		    }).catch((err) => reject(err));
+		
+	    }).catch((err) => {
+		reject(err)
 	    });
     });
-    
-}
-
-Interface.postDuplicate = function(data) {
     
 }
 

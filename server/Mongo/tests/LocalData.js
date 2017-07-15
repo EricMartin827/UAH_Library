@@ -95,7 +95,7 @@ var data = {
     
     user :
     {
-	email     : "chocolate@bunny",
+	email     : "chocolate@bunny.com",
 	password  : "firstPassword",
 	firstName : "Peter",
 	lastName  : "Rabbit",
@@ -105,7 +105,7 @@ var data = {
     fiveUsers :
     [
 	{
-	    email     : "chocolate@bunny",
+	    email     : "chocolate@bunny.com",
 	    password  : "firstPassword",
 	    firstName : "Peter",
 	    lastName  : "Rabbit",
