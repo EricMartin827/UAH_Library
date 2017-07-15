@@ -4,6 +4,9 @@
  */
 
 const {ERROR_LIB} = require("./LIB");
+const {CUSTOM_ERRNO} = ERROR_LIB;
+const {makeErrno} = ERROR_LIB;
+const {ECINVAL} = CUSTOM_ERRNO;
 
 const {LIBRARY} = require("./LIB");
 const {NODE_LIB} = LIBRARY;
@@ -27,7 +30,7 @@ const {authRegistration} = authenticate;
 var userApp = new express.Router();
 userApp.use(bodyParser.json());
 
-userApp.post("/login", (req, res) => {
+userApp.patch("/login", (req, res) => {
 
     var user = req.body;
     if (!(user.email && user.password)) {
@@ -44,40 +47,31 @@ userApp.post("/login", (req, res) => {
 	    } else {
 		user.initAuthToken("user").then((token) => {
 		    res.header("x-user", token).send(user);
-		});
+		}).catch((err) => {
+		    res.status(400).send(err);
+		})
 	    }
 	})
 	.catch((err) => {
-	    res.status(400).send(err);
+	    res.status(401).send(err);
 	})
 });
 
-// userApp.patch("/register", authRegistration, (req, res) => {
+userApp.patch("/logout", authUser, (req, res) => {
 
-//     /* Raw JOSN Data*/
-//     var newUser = req.body;
+    var user = req.header["x-user"];
+    user.clearToken("user").then(() => {
+	res.send(user);
+    }).catch((err) => {
+	res.status(400).send(err);
+    });
+});
 
-//     /* Mongoose Document Retrieved From Database */
-//     var oldUser = req.oldUser;
-//     if (!newUser.password) {
-// 	return res.status(400).send(
-// 	    makeErrno(ECINVAL, `User Registration: User Failed Tp Specify ` +
-// 		     `A New Password`));
-//     }
-    
-//     if (newUser.password === oldUser.password) {
-// 	return res.status(400).send(
-// 	    makeErrno(ECINVAL, `User Registration: Failed To Change Password:` +
-// 		     ` old = ${oldUser.password} : new = ${newUser.password}`));
-//     }
+userApp.get("/me", authUser, (req, res) => {
 
-//     oldUser.password = newUser.password;
-//     oldUser.save().then((updatedUser) => {
-// 	res.send(updatedUser);
-//     }).catch((err) => {
-// 	res.status(400).send(err);
-//     });
-// });
+    var user = req.header["x-user"];
+    res.send(user);
+});
 
 module.exports = {userApp};
 

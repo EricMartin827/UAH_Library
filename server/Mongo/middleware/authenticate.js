@@ -1,3 +1,9 @@
+/* Import Library */
+const {LIBRARY} = require("./LIB");
+const {NODE_LIB} = LIBRARY;
+const {CUSTOM_LIB} = LIBRARY;
+const {bcrypt} = NODE_LIB;
+
 /* Import Error Libraries */
 const {ERROR_LIB} = require("./LIB");
 const {CUSTOM_ERRNO} = ERROR_LIB;
@@ -76,10 +82,18 @@ function authUser(req, res, next) {
 function authRegistration(req, res, next) {
 
     var token = req.header("x-register");
+    var {password} = req.body;
+
     if (!token) {
 	return res.status(401).send(
-	    makeErrno(ECINVAL,
+	    makeErrno(ECINVAL, `User Registration ` +
 		      `Client Failed to Send Registration Token`));
+    }
+
+    if (!password) {
+	return res.status(401).send(
+	    makeErrno(ECINVAL, `User Registration ` +
+		      `Client Failed to Send Original Password`));
     }
 
     User.findByToken(token, "newUser").then((user) => {
@@ -89,10 +103,16 @@ function authRegistration(req, res, next) {
 		NO_USER, `User With Valid Registration Token Not Found`));
 	}
 
-	req.oldUser = user;
-	req.token = token;
-	next();
-	
+	bcrypt.compare(password, user.password, (err, match) => {
+	    if (match) {
+		return res.status(400).send(makeErrno(
+		    ECINVAL, `Client Failed To Change Password During ` +
+			`Registration`));
+	    }
+	    req.oldUser = user;
+	    next();
+	})
+
     }).catch((err) => {
 	res.status(401).send(err);
     })

@@ -19,34 +19,19 @@ mainApp.use("/admin", adminApp);
 mainApp.use("/", userApp);
 
 /* All Users and Admins Excluding the Root Admin Must Register */
-mainApp.patch("/register", authRegistration, (req, resp) => {
+mainApp.patch("/register", authRegistration, (req, res) => {
 
-    /* Raw JOSN Data*/
-    var newUser = req.body;
-
-    /* Mongoose Document Retrieved From Database */
+    var {password} = req.body;
     var oldUser = req.oldUser;
-    if (!newUser.password) {
-	return res.status(400).send(
-	    makeErrno(ECINVAL, `User Registration: User Failed Tp Specify ` +
-		     `A New Password`));
-    }
-    
-    if (newUser.password === oldUser.password) {
-	return res.status(400).send(
-	    makeErrno(ECINVAL, `User Registration: Failed To Change Password:` +
-		     ` old = ${oldUser.password} : new = ${newUser.password}`));
-    }
 
-    oldUser.password = newUser.password;
-    oldUser.save().then((updatedUser) => {
+    /* Change the password. clearToken() will invkoke a save call. */
+    oldUser.password = password;
+    oldUser.clearToken("newUser").then((updatedUser) => {
 	res.send(updatedUser);
     }).catch((err) => {
 	res.status(400).send(err);
     });
-    
 });
-
 
 
 mainApp.listen(3000, () => {

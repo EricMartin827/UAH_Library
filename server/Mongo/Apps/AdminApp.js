@@ -50,7 +50,7 @@ adminApp.post("/", (req, res) => {
 /*
  * Public Admin Login Route
  */ 
-adminApp.post("/login", (req, res) => {
+adminApp.patch("/login", (req, res) => {
 
     var user = req.body;
     if (!(user.email && user.password)) {

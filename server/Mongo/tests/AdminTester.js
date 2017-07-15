@@ -59,7 +59,7 @@ Interface.login = function(data) {
     var _schema = this.schema;
     return new Promise((resolve, reject) => {
 	request(_app)
-	    .post(`/admin/login`)
+	    .patch(`/admin/login`)
 	    .send(data)
 	    .expect(200)
 	    .end((err, res) => {
@@ -70,13 +70,14 @@ Interface.login = function(data) {
 
 		expect(res.clientError).toBe(false);
 		expect(res.serverError).toBe(false);
-		expect(res.header["x-admin"]).toNotBe(null);
-
-		if (data) {
-		    verify(data, res.body, _schema);
+		verify(data, res.body, _schema);
+		
+		if (res.header["x-admin"]) {
+		    return resolve(res.header["x-admin"]);
+		} else if (res.header["x-register"]) {
+		    return resolve(res.header["x-register"]);
 		}
-
-		resolve(res.header["x-admin"]);
+		reject("Login Failed To Send Back An Admin Or Register Token");
 	    })
     });
 }
@@ -121,7 +122,7 @@ Interface.badLogin = function(data) {
     var _code = (data) ? EPERM : ECINVAL;
     return new Promise((resolve, reject) => {
 	request(_app)
-	    .post(`/admin/login`)
+	    .patch(`/admin/login`)
 	    .send(data)
 	    .expect(_status)
 	    .end((err, res) => {
@@ -134,6 +135,7 @@ Interface.badLogin = function(data) {
 		expect(res.clientError).toBe(true);
 		expect(res.serverError).toBe(false);
 		expect(res.header["x-admin"]).toBe(undefined);
+		expect(res.header["x-register"]).toBe(undefined);
 		expect(err.code).toBe(_code);
 		resolve();
 	    })
@@ -158,9 +160,7 @@ Interface.myPage = function(data) {
 		
 		expect(res.clientError).toBe(false);
 		expect(res.serverError).toBe(false);
-		if (data) {
-		    verify(data, res.body, _schema);
-		}
+		verify(data, res.body, _schema);
 		resolve();
 	    });
     });
@@ -169,7 +169,6 @@ Interface.myPage = function(data) {
 Interface.myPage_NoToken = function() {
 
     var _app = this.app;
-    var _schema = this.schema;
     return new Promise((resolve, reject) => {
 	request(_app)
 	    .get(`/admin/me`)
@@ -192,7 +191,6 @@ Interface.myPage_NoToken = function() {
 Interface.myPage_BadToken = function(badToken) {
 
     var _app = this.app;
-    var _schema = this.schema;
     return new Promise((resolve, reject) => {
 	request(_app)
 	    .get(`/admin/me`)
