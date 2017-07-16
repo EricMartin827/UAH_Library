@@ -81,7 +81,6 @@ Interface.badLogin = function(data) {
     });
 }
 
-
 Interface.logout = function(data) {
     
     var _app = this.app;
@@ -133,6 +132,78 @@ Interface.myPage = function(data) {
 		expect(res.clientError).toBe(false);
 		expect(res.serverError).toBe(false);
 		verify(data, res.body, _schema);
+		resolve();
+	    });
+    });
+}
+
+Interface.myPage_NoToken = function() {
+
+    var _app = this.app;
+    return new Promise((resolve, reject) => {
+	request(_app)
+	    .get(`/me`)
+	    .expect(401)
+	    .end((err, res) => {
+
+		if (err) {
+		    return reject(err);
+		}
+
+		var err = res.body;
+		expect(res.clientError).toBe(true);
+		expect(res.serverError).toBe(false);
+		expect(err.code).toBe(ECINVAL);
+		resolve();
+	    });
+    });
+}
+
+Interface.myPage_BadToken = function(badToken) {
+
+    var _app = this.app;
+    return new Promise((resolve, reject) => {
+	request(_app)
+	    .get(`/me`)
+	    .set("x-user", `${badToken}`)
+	    .expect(401)
+	    .end((err, res) => {
+
+		if (err) {
+		    return reject(err);
+		}
+
+		var err = res.body;
+		expect(res.clientError).toBe(true);
+		expect(res.serverError).toBe(false);
+		expect(err.code).toBe(BAD_WEB_TOKEN);
+		resolve();
+	    });
+    });
+}
+
+
+Interface.myPage_AlteredToken = function() {
+
+    var _app = this.app;
+    var _tok = this.authToken;
+    var c = _tok.charAt(0);
+    _tok = _tok.replace(c, nextChar(c));
+    return new Promise((resolve, reject) => {
+	request(_app)
+	    .get(`/me`)
+	    .set("x-user", `${_tok}`)
+	    .expect(401)
+	    .end((err, res) => {
+
+		if (err) {
+		    return reject(err);
+		}
+
+		var err = res.body;
+		expect(res.clientError).toBe(true);
+		expect(res.serverError).toBe(false);
+		expect(err.code).toBe(BAD_WEB_TOKEN);
 		resolve();
 	    });
     });

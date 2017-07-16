@@ -213,6 +213,20 @@ describe("Simple Admin Post Single Student Security Tests", () => {
 	_User.myPage(DATA.user).then(() => done()).catch((err) => done(err));
     });
 
+    it("Should Not Allow Student To Access Profile Without Token", (done) => {
+	_User.myPage_NoToken().then(() => done()).catch((err) => done(err));
+    });
+
+    it("Should Not Allow Student To Access Profile With Bad Token", (done) => {
+	_User.myPage_BadToken("Th1s T0k3n_wr0n%")
+	    .then(() => done()).catch((err) => done(err));
+    });
+
+    it("Should Not Allow Student To Access Profile With Alt. Token", (done) => {
+	_User.myPage_AlteredToken()
+	    .then(() => done()).catch((err) => done(err));
+    });
+
     it("Should Allow Student To Logout", (done) => {
 	_User.logout(DATA.user).then(() => done()).catch((err) => done(err));
     });

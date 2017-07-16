@@ -5,7 +5,7 @@
     "main": "index.js",
     "scripts": {
 	"local": "nodemon server/Mongo/tests/LocalMongoServer.js --debug-brk",
-	"test": "mocha server/**/**Admin.test.js",
+	"test": "mocha server/**/**.test.js",
 	"test-watch": "nodemon --exec 'npm test'",
 	"test-debug": "mocha server/**/*.test.js --no-timeout --debug-brk",
 	"test-watch-debug": "nodemon --exec 'npm test' --no-timeout --debug-brk"
