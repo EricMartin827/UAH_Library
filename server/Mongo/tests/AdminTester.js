@@ -63,7 +63,7 @@ Interface.login = function(data) {
 	    .send(data)
 	    .expect(200)
 	    .end((err, res) => {
-		
+
 		if (err) {
 		    return reject(err);
 		}

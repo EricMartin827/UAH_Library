@@ -30,7 +30,7 @@ after((done) => {
     User.remove({}).then(() => done());
 });
 
-describe("Simple Admin Security Tests", () => {
+describe("Simple Seed Admin Security Tests", () => {
 
     beforeEach((done) => {
 	User.remove({
@@ -139,11 +139,12 @@ describe("Simple Admin Post Single Student Security Tests", () => {
     });
 
     it("Should Not Allow Unregistered Student General Access", (done) => {
-	done("Not Tested");
-    });
-
-    it("Should Not Allow Unregistered Student Admin Access", (done) => {
-	done("Not Tested");
+	_User.myPage(DATA.user).then(() => done("Should Not Pass"))
+	    .catch((err) => {
+		expect(err.message)
+		    .toBe(`expected 200 "OK", got 401 "Unauthorized"`)
+		done();
+	    });
     });
 
     it("Should Not Allow Student To Register Without a Token", (done) => {
@@ -209,6 +210,17 @@ describe("Simple Admin Post Single Student Security Tests", () => {
 	}).catch((err) => done(err));
     });
 
+    it("Should Not Allow Logged In Student Admin Access", (done) => {
+	_User.badAdminAccess(DATA.user)
+	    .then(() => done()).catch((err) => done(err));
+    });
+
+    it("Should Not Allow Logged In Student Admin Access With Changed Token",
+       (done) => {
+	   _User.attackAdminAccess(DATA.user)
+	       .then(() => done()).catch((err) => done(err));
+       });
+ 
     it("Should Allow Logged In Student To Access Profile", (done) => {
 	_User.myPage(DATA.user).then(() => done()).catch((err) => done(err));
     });
@@ -222,9 +234,10 @@ describe("Simple Admin Post Single Student Security Tests", () => {
 	    .then(() => done()).catch((err) => done(err));
     });
 
-    it("Should Not Allow Student To Access Profile With Alt. Token", (done) => {
-	_User.myPage_AlteredToken()
-	    .then(() => done()).catch((err) => done(err));
+    it("Should Not Allow Student To Access Profile With Altered Token",
+       (done) => {
+	   _User.myPage_AlteredToken()
+	       .then(() => done()).catch((err) => done(err));
     });
 
     it("Should Allow Student To Logout", (done) => {
@@ -239,12 +252,186 @@ describe("Simple Admin Post Single Student Security Tests", () => {
 		done()
 	    });
     });
+});
+
+
+describe("Simple Admin Post Single Admin Security Tests", () => {
+
+    var _newAdmin = new AdminTester(mainApp, User);
     
-    it("Should Not Allow Logged Out Student General Access", (done) => {
-	done("Not Tested");
+    beforeEach((done) => {
+	User.remove(
+	    { $and : [
+		{email : { $ne : DATA.admin.email }},
+		{email : { $ne : DATA.newAdmin.email }}
+	    ]}).then(() => done());
     });
 
-    it("Should Not Allow Logged Out Student Admin Access", (done) => {
-	done("Not Tested");
+    afterEach((done) => {
+	User.remove(
+	    { $and : [
+		{email : { $ne : DATA.admin.email }},
+		{email : { $ne : DATA.newAdmin.email }}
+	    ]}).then(() => done());
     });
+
+    it("Should Allow The Admin To Post A New Admin", (done) => {
+	_Admin.postOne(DATA.newAdmin)
+	    .then(() => done()).catch((err) => done(err));
+    });
+
+    it("Should Not Allow The Admin To Post Same Admin Email Twice", (done) => {
+	_Admin.postOne(DATA.newAdmin).then((res) => done(res)).catch((err) => {
+	    User.find({}).then((currentUsers) => {
+		expect(currentUsers.length).toBe(2);
+		done();
+	    });
+	});
+    });
+
+    it("Should Not Allow Unregistered Admin General Access", (done) => {
+
+	_newAdmin.myPage().then(() => done("Should Not Pass"))
+	    .catch((err) => {
+		expect(err.message)
+		    .toBe(`expected 200 "OK", got 401 "Unauthorized"`)
+		done();
+	    });
+    });
+
+    it("Should Not Allow Admin To Register Without a Token", (done) => {
+    	_newAdmin.register_NoToken(DATA.newAdmin)
+    	    .then(() => done()).catch((err) => done(err));
+    });
+
+    it("Should Not Allow Admin To Register With a Bad Token", (done) => {
+    	_newAdmin.register_BadToken(DATA.newAdmin, "mmmm....Bacon :)")
+    	    .then(() => done()).catch((err) => done(err));
+    });
+
+    it("Should Not Allow Admin To Login With Wrong Password", (done) => {
+    	var email = DATA.newAdmin.email;
+    	var password = "B@c0n_Wr@pped_B#Rg3r";
+    	_newAdmin.badLogin({email, password})
+    	    .then(() => done()).catch((err) => done(err));
+    });
+
+    it("Should Not Allow Admin To Login Without Password Or Email", (done) => {
+    	_newAdmin.badLogin()
+    	    .then(() => done()).catch((err) => done(err));
+    });
+ 
+    it("Should Make Register Token On First Login Attempt", (done) => {
+    	_newAdmin.login(DATA.newAdmin).then((tok => {
+    	    _newAdmin.setToken(tok);
+    	    done();
+    	})).catch((err) => done(err));
+    });
+
+    it("Should Not Allow New Admin To Register With Altered Token", (done) => {
+	_newAdmin.register_AlteredToken(DATA.newAdmin)
+	    .then(() => done()).catch((err) => done(err));
+    });
+ 
+    it("Should Not Allow New Admin To Register With Same Password", (done) => {
+	_newAdmin.register(DATA.newAdmin)
+	    .then(() => done("Password Not Changed"))
+	    .catch((err) => done());
+    });
+
+    it("Should Allow The New Admin To Register As Admin", (done) => {
+	DATA.newAdmin.password = "Mr.M33SIX";
+	_newAdmin.register(DATA.newAdmin)
+	    .then(() => done()).catch((err) => done(err));
+    });
+
+    it("Should Not Allow Wrong Password Login After Registration", (done) => {
+	var email = DATA.newAdmin.email;
+	var password = "B@c0n_Wr@pped_B#Rg3r_c0n_PEANUT_BUTTER";
+	_newAdmin.badLogin({email, password})
+	    .then(() => done()).catch((err) => done(err));
+    });
+
+    it("Should Not Allow No Password Login After Registration", (done) => {
+	_newAdmin.badLogin()
+	    .then(() => done()).catch((err) => done(err));
+    });
+
+    it("Should Allow Registered Admin To Login", (done) => {
+	_newAdmin.login(DATA.newAdmin).then((tok) => {
+	    _newAdmin.setToken(tok);
+	    done()
+	}).catch((err) => done(err));
+    });
+
+    it("Should Allow The New Admin To Access Personal Profile", (done) => {
+	_newAdmin.myPage().then(() => done()).catch((err) => done(err));
+    });
+
+    it("Should Not Allow New Admin Access With No Token", (done) => {
+	_newAdmin.myPage_NoToken().then(() => done()).catch((err) => done(err));
+    });
+
+    it("Should Not Allow New Admin Access With Invalid Token", (done) => {
+	_newAdmin.myPage_BadToken("This token should not work")
+	    .then(() => done()).catch((err) => done(err));
+    });
+
+    it("Should Not Allow New Admin Access With AlteredToken", (done) => {
+	_newAdmin.myPage_AlteredToken()
+	    .then(() => done()).catch((err) => done(err));
+    });
+
+    it("Should Allow New Admin To Post Other Users and Have Admin Access",
+       (done) => {
+	   _newAdmin.postOne(DATA.user)
+	       .then(() => {
+		   User.find({access: "admin"}).then((admins) => {
+		       expect(admins.length).toBe(2);
+		       User.find({"access" : "user"}).then((users) => {
+			   expect(users.length).toBe(1);
+			   done();
+		       });
+		   });
+	       }).catch((err) => done(err));
+       });
+
+    it("Should Allow The New Admin to Logout and Clear Their Token", (done) => {
+	_newAdmin.logout(DATA.newAdmin).
+	    then(() => done()).catch((err) => done(err));
+    });
+
+    it("Should Not Allow The New Admin To Their Personal Page After Logout",
+       (done) => {
+	   _newAdmin.myPage().then(() => {
+	       done("Application Allowed Acces After Logout");
+	   }).catch((err) => {
+	       expect(err.message)
+		   .toBe(`expected 200 "OK", got 401 "Unauthorized"`);
+	       done()
+	});
+    });
+
+    it("Should Allow The Admin To Log Back In", (done) => {
+	_newAdmin.login(DATA.newAdmin)
+	    .then((tok) => {
+		_Admin.setToken(tok);
+		done()
+	    })
+	    .catch((err) => done(err));
+    });
+
+    it("Should Allow New Admin To Post Another User",
+       (done) => {
+	   _newAdmin.postOne(DATA.fiveUsers[2])
+	       .then(() => {
+		   User.find({access: "admin"}).then((admins) => {
+		       expect(admins.length).toBe(2);
+		       User.find({"access" : "user"}).then((users) => {
+			   expect(users.length).toBe(1);
+			   done();
+		       }).catch((err) => done(err));
+		   }).catch((err) => done(err));
+	       }).catch((err) => done(err));
+       });
 });

@@ -209,6 +209,56 @@ Interface.myPage_AlteredToken = function() {
     });
 }
 
+Interface.badAdminAccess = function(data) {
+
+    var _app = this.app;
+    var _tok = this.authToken;
+    return new Promise((resolve, reject) => {
+	request(_app)
+	    .post("/admin/user")
+	    .set("x-user", `${_tok}`)
+	    .send(data)
+	    .expect(401)
+	    .end((err, res) => {
+
+		if (err) {
+		    return reject(err);
+		}
+
+		var err = res.body;
+		expect(res.clientError).toBe(true);
+		expect(res.serverError).toBe(false);
+		expect(err.code).toBe(ECINVAL);
+		resolve();
+	    });
+    });
+}
+
+Interface.attackAdminAccess = function(data) {
+
+    var _app = this.app;
+    var _tok = this.authToken;
+    return new Promise((resolve, reject) => {
+	request(_app)
+	    .post("/admin/user")
+	    .set("x-admin", `${_tok}`)
+	    .send(data)
+	    .expect(401)
+	    .end((err, res) => {
+
+		if (err) {
+		    return reject(err);
+		}
+
+		var err = res.body;
+		expect(res.clientError).toBe(true);
+		expect(res.serverError).toBe(false);
+		expect(err.code).toBe(NO_USER);
+		resolve();
+	    });
+    });
+}
+
 module.exports = {
     UserTester : UserTester
 }

@@ -63,7 +63,7 @@ adminApp.patch("/login", (req, res) => {
 	.then((admin) => {
 	    var token;
 	    if (token = admin.getRegisterToken()) {
-		res.header("x-regiser", token).send(admin);
+		res.header("x-register", token).send(admin);
 	    } else {
 		admin.initAuthToken("admin").then((tok) => {
 		    res.header("x-admin", tok).send(admin);
