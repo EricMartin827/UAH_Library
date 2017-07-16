@@ -23,16 +23,9 @@ const {User} = Schemas;
 var userRoutes = new express.Router();
 userRoutes.use(bodyParser.json());
 
-
-userRoutes.get("/me", authEither, (req, res) => {
-
-    var user = req.header("x-admin");
-    if (user) {
-	return res.send(user);
-    }
-    res.send(req.header["x-user"]);
-})
-
+/*
+ * Private function used to add a single new user to the database.
+ */
 function addUser(data) {
 
     return new Promise((resolve, reject) => {
@@ -45,6 +38,9 @@ function addUser(data) {
     });
 }
 
+/*
+ * Private function used to add multiple new users to the database.
+ */
 async function addMultipleUsers(data) {
 
     for (let ii = 0; ii < data.length; ii++) {
@@ -52,6 +48,15 @@ async function addMultipleUsers(data) {
     }
     return data;
 }
+
+userRoutes.get("/me", authEither, (req, res) => {
+
+    var user = req.header("x-admin");
+    if (user) {
+	return res.send(user);
+    }
+    res.send(req.header["x-user"]);
+})
 
 userRoutes.post("/", authAdmin, (req, res) => {
 
