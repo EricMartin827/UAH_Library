@@ -307,13 +307,31 @@ schemaMethods.findByToken = function(token, access) {
 	return Promise.reject(makeErrno(
 	    BAD_WEB_TOKEN, `Client Provided an Invalid Web Token: ${token}`));
     }
+
     return User.findOne(
-	{
-	    "_id" : decoded._id,
-	    "tokens.token" : token,
-	    "tokens.access" :  access
-	}
+    	{
+    	    "_id" : decoded._id,
+    	    "tokens.token" : token,
+    	    "tokens.access" :  access
+    	}
     );
+
+    // return User.findOne({_id : decoded._id}).then((tar) => {
+    // 	console.log("Target = ", tar);
+    // 	var query = {
+    // 	    "_id" : decoded._id,
+    // 	    "tokens.token" : token,
+    // 	    "tokens.access" :  access
+    // 	};
+    // 	console.log("Query -->");
+    // 	printObj(query);
+    // 	return User.findOne(query);
+    // 	    // {
+    // 	    // 	"_id" : decoded._id,
+    // 	    // 	"tokens.token" : token,
+    // 	    // 	"tokens.access" :  access
+    // 	    // });
+    // });
 }
 
 /**

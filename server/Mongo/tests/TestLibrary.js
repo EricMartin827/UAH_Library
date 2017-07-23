@@ -18,6 +18,7 @@ const {CUSTOM_ERRNO} = ERROR_LIB;
 const {ESINVAL} = CUSTOM_ERRNO;
 const {ECINVAL} = CUSTOM_ERRNO;
 const {BAD_WEB_TOKEN} = CUSTOM_ERRNO;
+const {makeErrno} = ERROR_LIB;
 
 function Tester(app, schema) {
 
@@ -108,7 +109,6 @@ Interface.register_NoToken = function(data) {
 
 Interface.register_BadToken = function(data, badToken) {
 
-    console.log()
     var _app = this.app;
     return new Promise((resolve, reject) => {
 	request(_app)
@@ -169,32 +169,28 @@ function verify(clientReq, serverRes, schema) {
 
 function verifyBatch(clientReq, serverRes, schema) {
 
-    if (!(isArray(clientReq) && isArray(serverRes))) {
-	return Promise.reject(makeErrno(
-	    ESINVAL,
-	    `Non-Array Values Sent to Batch Comparision: ` +
-		`client: ${clientReq} / serverRes: ${severRes}`));
-    }
-
-    if (!(clientReq.length !== serverRes)) {
-	return Promise.reject(makeErrno(
-	    ESINVAL,
-	    `Server Failed To Complete Process All Cleint Elements: ` +
-		`clientLength=${clientRes.length} \ ` +
-		`sserverLength=${serverRes.length}`));
-    }
-
+    expect(clientReq.length).toBe(serverRes.length);
     for (var ii = 0; ii < clientReq.length; ii++) {
-	verify(clientRes[ii], serverRes[ii], schema);
+	verify(clientReq[ii], serverRes[ii], schema);
     }
 }
 
+function hasToken(tokens, access) {
+
+    for (var ii = 0; ii < tokens.length; ii++) {
+	if (tokens[ii].access === access) {
+	    return true;
+	}
+    }
+    return false;
+}
 module.exports = {
     TestLibrary : {
 	expect      : expect,
 	request     : request,
 	Tester      : Tester,
 	verify      : verify,
-	verifyBatch : verifyBatch
+	verifyBatch : verifyBatch,
+	hasToken    : hasToken
     }
 }

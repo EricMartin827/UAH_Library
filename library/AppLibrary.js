@@ -6,6 +6,7 @@ const mongoose   = require("mongoose");
 const Immutable  = require("mongoose-immutable");
 const bcrypt     = require("bcryptjs");
 const jwt        = require("jsonwebtoken");
+const qString    = require("query-string");
 const _          = require("lodash");
 
 
@@ -18,12 +19,60 @@ function stringify(obj) {
     }
 }
 
+function isJSONstring(str) {
+
+    try {
+	JSON.parse(str);
+    } catch (err) {
+	return false;
+    }
+    return true;
+}
+
+/*
+ * Potential Security Violation If the User sends a dick string. Consider
+ * using a wapper to count the nestings.
+ */
+function toObject(str) {
+    var val = str;
+    if (isJSONstring(str)) {
+	val = JSON.parse(str);
+	for (var prop in val) {
+	    val[prop] = toObject(val[prop]);
+	}
+    }
+    return val;
+}
+
+function toJSON(val) {
+    if (isObject(val)) {
+	for (var prop in val) {
+	    val[prop] = toJSON(val[prop])
+	}
+	return JSON.stringify(val);
+    }
+    return val
+}
+
+function toQuery(obj) {
+    if (isObject(obj)) {
+	for (var prop in obj) {
+	    obj[prop] = toJSON(obj[prop])
+	}
+	return qString.stringify(obj);
+    }
+}
+
 function printObj(obj) {
     console.log(stringify(obj));
 }
 
 function isFunc(val) {
     return val.constructor === Function;
+}
+
+function isString(val) {
+    return val.constructor === String;
 }
 
 function isNumber(val) {
@@ -68,6 +117,7 @@ module.exports = {
 	    Schema          : mongoose.Schema,
 	    util            : util,
 	    validator       : validator,
+	    qString         : qString,
 	    _               : _
 	},
  
@@ -81,7 +131,9 @@ module.exports = {
 	    isValidID       : isValidID,
 	    nextChar        : nextChar,
 	    stringify       : stringify,
-	    printObj        : printObj
+	    printObj        : printObj,
+	    toObject        : toObject,
+	    toQuery         : toQuery
 	}
     }
 };

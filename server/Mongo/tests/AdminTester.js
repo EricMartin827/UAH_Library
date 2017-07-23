@@ -14,8 +14,10 @@ const {BAD_WEB_TOKEN} = CUSTOM_ERRNO;
 const {TestLibrary} = require("./TestLibrary.js");
 const {Tester} = TestLibrary;
 const {verify} = TestLibrary;
+const {verifyBatch} = TestLibrary;
 const {expect} = TestLibrary;
 const {request} = TestLibrary;
+const {hasToken} = TestLibrary;
 
 function AdminTester(app, schema) {
     Tester.call(this, app, schema)
@@ -71,13 +73,28 @@ Interface.login = function(data) {
 		expect(res.clientError).toBe(false);
 		expect(res.serverError).toBe(false);
 		verify(data, res.body, _schema);
-		
+
 		if (res.header["x-admin"]) {
-		    return resolve(res.header["x-admin"]);
+		    
+		    _schema.findOne({email : data.email}).then((target) => {
+			
+			expect(hasToken(target.tokens, "admin")).toBe(true);
+			return resolve(res.header["x-admin"]);
+			
+		    }).catch((err) => reject(err));
+		    
 		} else if (res.header["x-register"]) {
-		    return resolve(res.header["x-register"]);
+		    
+		    _schema.findOne({email : data.email}).then((target) => {
+
+			expect(hasToken(target.tokens, "newUser")).toBe(true);
+			return resolve(res.header["x-register"]);
+			
+		    }).catch((err) => reject(err));
+		    
+		} else {
+		    reject("Login Failed To Send Back Token");
 		}
-		reject("Login Failed To Send Back An Admin Or Register Token");
 	    })
     });
 }
@@ -284,7 +301,39 @@ Interface.postOne = function(data) {
 }
 
 Interface.postMany = function(data) {
-    
+
+    var _app = this.app;
+    var _mode = this.mode;
+    var _schema = this.schema;
+    var _tok = this.authToken;
+    return new Promise((resolve, reject) => {
+
+	request(_app)
+	    .post(`/admin/${_mode}`)
+	    .set("x-admin", `${_tok}`)
+	    .send(data)
+	    .expect(200)
+	    .expect((res, err) => {
+
+		if (err) {
+		    return reject(err);
+		}
+
+		expect(res.clientError).toBe(false);
+		expect(res.serverError).toBe(false);
+		expect(res.body.length).toBe(data.length);
+		verifyBatch(data, res.body, _schema)
+		
+	    }).then((res) => {
+
+		_schema.find({"tokens.access" : "newUser"}).then((users) => {
+
+		    verifyBatch(res.body, users, _schema);
+		    resolve(users);
+
+		}).catch((err) => reject(err));
+	    }).catch((err) => reject(err));
+    });
 }
 
 module.exports = {

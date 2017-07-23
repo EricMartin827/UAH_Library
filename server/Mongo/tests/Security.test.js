@@ -13,24 +13,22 @@ const {Schemas} = require("./../Schemas");
 const {Play} = Schemas;
 const {User} = Schemas;
 
-var loginCredentials;
 const _Admin = new AdminTester(mainApp, User);
 const _User = new UserTester(mainApp, User);
 
-before((done) => {
-    _Admin.seed(DATA.admin).then((res) => {
-	loginCredentials = res;
-	done();
-    }).catch((err) => {
-	done(err)
-    });
-});
-
-after((done) => {
-    User.remove({}).then(() => done());
-});
 
 describe("Simple Seed Admin Security Tests", () => {
+
+    var loginCredentials;
+    before((done) => {
+	console.log("Security Before");
+    	_Admin.seed(DATA.admin).then((res) => {
+    	    loginCredentials = res;
+    	    done();
+    	}).catch((err) => {
+    	    done(err)
+    	});
+    });
 
     beforeEach((done) => {
 	User.remove({
@@ -42,6 +40,10 @@ describe("Simple Seed Admin Security Tests", () => {
 	User.remove({
 	    email : { $ne : DATA.admin.email}
 	}).then(() => done());
+    });
+
+    after((done) => {
+	User.remove({}).then(() => done());
     });
 
     it("Should Allow the Admin to Login", (done) => {
@@ -109,6 +111,17 @@ describe("Simple Seed Admin Security Tests", () => {
 
 describe("Simple Admin Post Single Student Security Tests", () => {
 
+    before((done) => {
+	_Admin.seed(DATA.admin).then((credentials) => {
+	    _Admin.login(credentials).then((tok) => {
+		_Admin.setToken(tok);
+		done();
+	    })
+	}).catch((err) => {
+	    done(err)
+	});
+    });
+
     beforeEach((done) => {
 	User.remove(
 	    { $and : [
@@ -123,6 +136,10 @@ describe("Simple Admin Post Single Student Security Tests", () => {
 		{email : { $ne : DATA.admin.email }},
 		{email : { $ne : DATA.user.email }}
 	    ]}).then(() => done());
+    });
+
+    after((done) => {
+	User.remove({}).then(() => done());
     });
 
     it("Should Allow The Admin To Post A New Student User", (done) => {
@@ -258,6 +275,17 @@ describe("Simple Admin Post Single Student Security Tests", () => {
 describe("Simple Admin Post Single Admin Security Tests", () => {
 
     var _newAdmin = new AdminTester(mainApp, User);
+
+    before((done) => {
+	_Admin.seed(DATA.admin).then((credentials) => {
+	    _Admin.login(credentials).then((tok) => {
+		_Admin.setToken(tok);
+		done();
+	    })
+	}).catch((err) => {
+	    done(err)
+	});
+    });
     
     beforeEach((done) => {
 	User.remove(
@@ -273,6 +301,10 @@ describe("Simple Admin Post Single Admin Security Tests", () => {
 		{email : { $ne : DATA.admin.email }},
 		{email : { $ne : DATA.newAdmin.email }}
 	    ]}).then(() => done());
+    });
+
+    after((done) => {
+	User.remove({}).then(() => done());
     });
 
     it("Should Allow The Admin To Post A New Admin", (done) => {
@@ -415,7 +447,7 @@ describe("Simple Admin Post Single Admin Security Tests", () => {
     it("Should Allow The Admin To Log Back In", (done) => {
 	_newAdmin.login(DATA.newAdmin)
 	    .then((tok) => {
-		_Admin.setToken(tok);
+		_newAdmin.setToken(tok);
 		done()
 	    })
 	    .catch((err) => done(err));
