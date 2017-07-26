@@ -1,11 +1,11 @@
-const {adminApp} = require("./AdminApp.js");
-const {userApp} = require("./UserApp.js");
-const {mainApp} = require("./MainApp.js");
+const {adminRoutes} = require("./AdminRoutes.js");
+const {userRoutes} = require("./UserRoutes.js");
+const {playRoutes} = requre("./PlayRoutes.js");
 
 module.exports = {
-    Apps : {
-	adminApp : adminApp,
-	userApp  : userApp
-    },
-    mainApp : mainApp
+    ROUTES : {
+	Admin : adminRoutes,
+	User  : userRoutes,
+	Play  : playRoutes
+    }
 }

@@ -4,7 +4,6 @@ const {NODE_LIB} = LIBRARY;
 const {express} = NODE_LIB;
 
 const {MIDDLEWARE} = require("./Middleware");
-const {authenticate} = MIDDLEWARE;
 const {authRegistration} = authenticate;
 
 const {ROUTES} = require("./Routes");
