@@ -17,23 +17,36 @@ var loginCredentials;
 const _Admin = new AdminTester(mainApp, User);
 const _User = new UserTester(mainApp, User);
 
-// before((done) => {
-//     _Admin.seed(DATA.admin).then((res) => {
-// 	loginCredentials = res;
-// 	done();
-//     }).catch((err) => {
-// 	done(err)
-//     });
-// });
-
-// after((done) => {
-//     User.remove({}).then(() => done());
-// });
 
 describe("User Query Tests", () => {
 
+    var admins;
+    var users;
+    before((done) => {
+	_Admin.seed(DATA.admin).then((credentials) => {
+	    _Admin.login(credentials).then((tok) => {
+		_Admin.setToken(tok);
+		_Admin.postMany(DATA.fiveAdmins).then((res) => {
+		    admins = res;
+		    _Admin.postMany(DATA.fiveUsers).then((res) => {
+			users = res;
+			done();
+		    }).catch((err) => done(err));
+		}).catch((err) => done(err));
+	    }).catch((err) => done(err));
+	}).catch((err) => done(err));
+    });
+
+    after((done) => {
+	User.remove({}).then(() => {
+	    Play.remove({})
+		.then(() => done())
+		.catch((err) => done(err));
+	}).catch((err) => done(err));
+    })
+
     it("Should Fetch All Users", (done) => {
-	done("Not Tested");
+	done("Not Implemented Yet");
     });
 
 });

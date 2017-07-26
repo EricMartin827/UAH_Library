@@ -62,3 +62,44 @@ describe("User Addtion Tests", () => {
     });
 
 });
+
+describe("Play Addition Tests", () => {
+
+    /* Add the Admin Seed and Switch From User to Play Mode */
+    before((done) => {
+	_Admin.seed(DATA.admin).then((credentials) => {
+	    _Admin.login(credentials).then((tok) => {
+		_Admin.setToken(tok);
+		_Admin.setSchema(Play);
+		done();
+	    })
+	}).catch((err) => {
+	    done(err)
+	});
+    });
+
+    beforeEach((done) => {
+	Play.remove({}).then(() => done()).catch((err) => done(err));
+    });
+    
+    afterEach((done) => {
+	Play.remove({}).then(() => done()).catch((err) => done(err));
+    });
+
+    /* Remove the Seed Admin */
+    after((done) => {
+	User.remove({}).then(() => done()).catch((err) => done(err));
+    });
+
+    it("Should Allow Admin To Post A Single Play", (done) => {
+	_Admin.postOne(DATA.onePlay)
+	    .then(() => done()).catch((err) => done(err));
+    });
+
+    it("Should Allow Admin To Post Multple Plays", (done) => {
+	_Admin.postMany(DATA.fivePlays)
+	    .then(() => done()).catch((err) => done(err));
+    });
+
+});
+

@@ -91,6 +91,23 @@ PlaySchema.plugin(Immutable);
 
 /*  Instance methods for invidual Play objects. */
 var instanceMethods = PlaySchema.methods;
+var schemaMethods = PlaySchema.statics;
+
+/* Declare The Fields Client Browser Can View */
+const publicAttributes = ["_id",
+			  "title",
+			  "authorFirst",
+			  "authorLast",
+			  "genre",
+			  "timePeriod",
+			  "hasSpectacle",
+			  "actorCount",
+			  "costumeCount",
+			  "copies"];
+
+/******************************************************************************/
+/**************************** Instance Methods ********************************/
+/******************************************************************************/
 
 instanceMethods.getAuthorFormal = function() {
     return `${this.authorLast}, ${this.authorFirst}`;
@@ -99,6 +116,25 @@ instanceMethods.getAuthorFormal = function() {
 instanceMethods.toString = function() {
     return `Play "${this.title}" By: ${this.authorFirst} ` +
 	`${this.authorLast}`
+}
+
+/******************************************************************************/
+/**************************** Static Methods **********************************/
+/******************************************************************************/
+
+/**
+ * Static method for the Play Schema/Class. Returns an array of the public
+ * Play attributes that the client can view. Used primarily in test suites
+ * to confirm that the client's data is properly stored in the database by
+ * the server.
+ *
+ * @method getAttributes
+ * @return {Array} a collection of Play properties the client can recieve
+ *                 in the browser
+ */
+schemaMethods.getAttributes = function() {
+
+    return publicAttributes;
 }
 
 /* Compile the Mongoose Schema into an active Mongoose "Play" model and

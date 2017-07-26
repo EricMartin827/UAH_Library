@@ -21,7 +21,6 @@ describe("Simple Seed Admin Security Tests", () => {
 
     var loginCredentials;
     before((done) => {
-	console.log("Security Before");
     	_Admin.seed(DATA.admin).then((res) => {
     	    loginCredentials = res;
     	    done();

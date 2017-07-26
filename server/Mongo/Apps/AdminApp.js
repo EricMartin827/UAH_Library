@@ -23,6 +23,7 @@ const {authAdmin} = authenticate;
 const {initMode} = MID_WARE;
 
 const {userRoutes} = require("./UserRoutes.js");
+const {playRoutes} = require("./PlayRoutes.js");
 
 var adminApp = new express.Router();
 adminApp.use(bodyParser.json());
@@ -103,5 +104,6 @@ adminApp.get("/me", authAdmin, (req, res) => {
 
 /*Mount User Schema Routes*/
 adminApp.use("/user(s)?", userRoutes);
+adminApp.use("/play(s)?", playRoutes);
 
 module.exports = {adminApp};

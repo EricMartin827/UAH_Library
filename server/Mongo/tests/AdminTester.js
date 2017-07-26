@@ -282,14 +282,16 @@ Interface.postOne = function(data) {
 	    .then((res) => {
 
 		_schema.findOne(res.body)
-		    .then((user) => {
+		    .then((ret) => {
 
-			verify(res, user, _schema);
-			expect(user.tokens.length).toBe(1);
-			expect(user.tokens[0]).toNotBe(null);
-			expect(user.tokens[0]).toNotBe(undefined);
-			expect(user.tokens[0].access).toBe("newUser");
-			resolve(user);
+			verify(res, ret, _schema);
+			if (_mode === "users") {
+			    expect(ret.tokens.length).toBe(1);
+			    expect(ret.tokens[0]).toNotBe(null);
+			    expect(ret.tokens[0]).toNotBe(undefined);
+			    expect(ret.tokens[0].access).toBe("newUser");
+			}
+			resolve(ret);
 
 		    }).catch((err) => reject(err));
 		
@@ -326,16 +328,36 @@ Interface.postMany = function(data) {
 		
 	    }).then((res) => {
 
-		_schema.find({"tokens.access" : "newUser"}).then((users) => {
-
-		    verifyBatch(res.body, users, _schema);
-		    resolve(users);
-
+		var query = (_mode === "users") ? {"tokens.access" : "newUser"} : {};
+		_schema.find(query).then((q_res) => {
+		    expect(q_res.length).toBeGreaterThanOrEqualTo(res.body.length);
+		    if (res.body.length > q_res.length) {
+			for (var ii = 0; ii < q.res.length; ii++) {
+			    expect(q-res.find(res.body[ii])).toNotBe(undefined);
+			}
+		    } else {
+			verifyBatch(res.body, q_res, _schema);
+		    }
+		    resolve(res.body);
 		}).catch((err) => reject(err));
 	    }).catch((err) => reject(err));
     });
 }
 
+// Interface.getById = function(id, data) {
+
+//     var _app = this.app;
+//     var _mode = this.mode;
+//     var _schema = this.schema;
+
+//     return new Promise((resolve, reject) => {
+
+// 	request(_app)
+// 	    .get(`/admin/${_mode}/:${id}`)
+// 	    .
+// 	.
+//     });
+// }
 module.exports = {
     AdminTester : AdminTester
 }

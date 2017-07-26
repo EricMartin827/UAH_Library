@@ -32,14 +32,15 @@ function Tester(app, schema) {
 }
 
 var Interface = Tester.prototype;
+
 Interface.setSchema = function(newSchema) {
 
-    if (!isSchema(schema)) {
+    if (!isSchema(newSchema)) {
 	throw makeErrno(ESINVAL, `Invalid Schema:\n${stringify(schema)}`);
     }
 
     this.schema = newSchema;
-    this.mode = schema.collection.collectionName;
+    this.mode = newSchema.collection.collectionName;
 }
 
 Interface.setToken = function(tok) {
@@ -169,7 +170,6 @@ function verify(clientReq, serverRes, schema) {
 
 function verifyBatch(clientReq, serverRes, schema) {
 
-    expect(clientReq.length).toBe(serverRes.length);
     for (var ii = 0; ii < clientReq.length; ii++) {
 	verify(clientReq[ii], serverRes[ii], schema);
     }

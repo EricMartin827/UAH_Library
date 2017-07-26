@@ -5,8 +5,9 @@
     "main": "index.js",
     "scripts": {
 	"local": "nodemon server/Mongo/tests/LocalMongoServer.js --debug-brk",
-	"test-add-entries": "mocha server/Mongo/tests/AddingEntries.test.js",
-	"test-add-entries-watch": "nodemon --exec 'npm test-add-entries'",
+	"test-additions": "mocha server/**/AddingEntries.test.js",
+	"test-queries": "mocha server/**/Queries.test.js",
+	"test-security": "mocha server/**/Security.test.js",
 	"test": "mocha server/**/**.test.js",
 	"test-watch": "nodemon --exec 'npm test'",
 	"test-debug": "mocha server/**/*.test.js --no-timeout --debug-brk",
