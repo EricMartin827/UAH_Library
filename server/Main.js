@@ -3,23 +3,20 @@ const {LIBRARY} = require("./LIB");
 const {NODE_LIB} = LIBRARY;
 const {express} = NODE_LIB;
 
-const {MID_WARE} = require("./../middleware");
+const {MID_WARE} = require("./Middleware");
 const {authenticate} = MID_WARE;
 const {authRegistration} = authenticate;
 
-const {adminApp} = require("./AdminApp.js");
-const {userApp} = require("./UserApp.js");
 
+/* Create the main application */
+var main = express();
 
-/* Create */
-var mainApp = express();
-
-/* Mount Sub Applications Applicattions */
-mainApp.use("/admin", adminApp);
-mainApp.use("/", userApp);
+/* Mount The Routes for the main application */
+main.use("/admin", adminApp);
+main.use("/", userApp);
 
 /* All Users and Admins Excluding the Root Admin Must Register */
-mainApp.patch("/register", authRegistration, (req, res) => {
+main.patch("/register", authRegistration, (req, res) => {
 
     var {password} = req.body;
     var oldUser = req.oldUser;
@@ -34,10 +31,10 @@ mainApp.patch("/register", authRegistration, (req, res) => {
 });
 
 
-mainApp.listen(3000, () => {
+main.listen(3000, () => {
     console.log("The App is Listening on Port 3000");
 });
 
 module.exports = {
-    mainApp : mainApp
+    main : mainApp
 };
