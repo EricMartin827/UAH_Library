@@ -4,13 +4,13 @@
     "description": "A software tracking tool for the UAH Drama Department.",
     "main": "index.js",
     "scripts": {
-	"local": "nodemon server/Mongo/tests/LocalMongoServer.js --debug-brk",
-	"test-additions": "mocha server/**/AddingEntries.test.js",
-	"test-queries": "mocha server/**/Queries.test.js",
-	"test-security": "mocha server/**/Security.test.js",
-	"test": "mocha server/**/**.test.js",
+	"server": "nodemon server/Main.js --debug-brk",
+	"test-additions": "mocha server/Testing/AddingEntries.test.js",
+	"test-queries": "mocha server/Testing/Queries.test.js",
+	"test-security": "mocha server/Testing/Security.test.js",
+	"test": "mocha server/Testing/*.test.js",
 	"test-watch": "nodemon --exec 'npm test'",
-	"test-debug": "mocha server/**/*.test.js --no-timeout --debug-brk",
+	"test-debug": "mocha server/Testing/*.test.js --no-timeout --debug-brk",
 	"test-watch-debug": "nodemon --exec 'npm test' --no-timeout --debug-brk"
     },
     "repository": {
