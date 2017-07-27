@@ -17,22 +17,19 @@ const {printObj} = CUSTOM_LIB;
 const {Schemas} = require("./../Schemas");
 const {User} = Schemas;
 
-const {MID_WARE} = require("./../middleware");
-const {authenticate} = MID_WARE;
+const {MIDDLEWARE} = require("./../Middleware");
+const {authenticate} = MIDDLEWARE;
 const {authAdmin} = authenticate;
-const {initMode} = MID_WARE;
 
-const {userRoutes} = require("./UserRoutes.js");
-const {playRoutes} = require("./PlayRoutes.js");
 
-var adminApp = new express.Router();
-adminApp.use(bodyParser.json());
+var adminRoutes = new express.Router();
+adminRoutes.use(bodyParser.json());
 
 /* 
  * Dummy route for seeding the database with an admin during unit testing.
  * This will be removed when application is deployed to public server.
  */
-adminApp.post("/", (req, res) => {
+adminRoutes.post("/", (req, res) => {
 
     var admin = new User(req.body);
     admin.save().then(() => {
@@ -45,13 +42,13 @@ adminApp.post("/", (req, res) => {
 
 
 /******************************************************************************/
-/***************** Admin Login and Personal Routes ****************************/
+/*********************** Admin Login/Logout/Me Routes *************************/
 /******************************************************************************/
 
 /*
  * Public Admin Login Route
  */ 
-adminApp.patch("/login", (req, res) => {
+adminRoutes.patch("/login", (req, res) => {
 
     var user = req.body;
     if (!(user.email && user.password)) {
@@ -81,7 +78,7 @@ adminApp.patch("/login", (req, res) => {
 /*
  * Private Admin Logout Route
  */ 
-adminApp.patch("/logout", authAdmin, (req, res) => {
+adminRoutes.patch("/logout", authAdmin, (req, res) => {
 
     var admin = req.header["x-admin"];
     admin.clearToken("admin").then(() => {
@@ -95,15 +92,10 @@ adminApp.patch("/logout", authAdmin, (req, res) => {
 /*
  * Private Admin Me Route
  */
-adminApp.get("/me", authAdmin, (req, res) => {
+adminRoutes.get("/me", authAdmin, (req, res) => {
 
     var admin = req.header["x-admin"];
     res.send(admin);
 });
 
-
-/*Mount User Schema Routes*/
-adminApp.use("/user(s)?", userRoutes);
-adminApp.use("/play(s)?", playRoutes);
-
-module.exports = {adminApp};
+module.exports = {adminRoutes};
