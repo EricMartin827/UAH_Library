@@ -154,8 +154,7 @@ userRoutes.post("/", authAdmin, (req, res) => {
 	    res.send(newUser);
 	}).catch((err) => {
 	    res.status(400).send(err);
-	})
-
+	});
     }
 })
 
