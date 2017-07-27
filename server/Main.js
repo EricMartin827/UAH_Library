@@ -1,5 +1,5 @@
 "use strict"
-const {LIBRARY} = require("./LIB");
+const {LIBRARY} = require("./library");
 const {NODE_LIB} = LIBRARY;
 const {express} = NODE_LIB;
 

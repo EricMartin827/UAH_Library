@@ -16,15 +16,15 @@
  */
 "use strict"
 
-const {NODE_LIB} = require("./LIB");
+const {NODE_LIB} = require("./../library");
 const {Schema} = NODE_LIB;
 const {Immutable} = NODE_LIB;
 
 /* Error Improts */
-const {ERROR_LIB} = require("./LIB");
+const {ERROR_LIB} = require("./../library");
 
 /* Mongo Database Imports */
-const {MongoDB} = require("./../MongoDatabase.js");
+const {MongoDB} = require("./MongoDatabase.js");
 
 /* Mongo Collection Imports */
 const {User} = require("./User.js");

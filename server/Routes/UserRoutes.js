@@ -1,11 +1,11 @@
 "use strict"
 
-const {ERROR_LIB} = require("./LIB");
+const {ERROR_LIB} = require("./../library");
 const {makeErrno} = ERROR_LIB;
 const {CUSTOM_ERRNO} = ERROR_LIB;
 const {ECINVAL} = CUSTOM_ERRNO;
 
-const {LIBRARY} = require("./LIB");
+const {LIBRARY} = require("./../library");
 const {NODE_LIB} = LIBRARY;
 const {CUSTOM_LIB} = LIBRARY;
 const {express} = NODE_LIB;

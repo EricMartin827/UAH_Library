@@ -13,12 +13,12 @@
 "use strict"
 
 /* Mongoose Imports */
-const {NODE_LIB} = require("./LIB");
+const {NODE_LIB} = require("./../library");
 const {Schema} = NODE_LIB;
 const {Immutable} = NODE_LIB;
 
 /* Mongo Database Import */
-const {MongoDB} = require("./../MongoDatabase.js");
+const {MongoDB} = require("./MongoDatabase.js");
 
 /**
  * A Mongoose Model that defines the major properties of a Play Collection
