@@ -12,7 +12,7 @@ const {express} = NODE_LIB;
 const {bodyParser} = NODE_LIB;
 const {isArray} = CUSTOM_LIB;
 
-const {MID_WARE} = require("./../middleware");
+const {MID_WARE} = require("./../Middleware");
 const {authenticate} = MID_WARE;
 const {authEither} = authenticate;
 const {authAdmin} = authenticate;
