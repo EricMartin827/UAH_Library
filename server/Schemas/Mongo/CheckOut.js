@@ -91,5 +91,3 @@ CheckOutSchema.pre("validate", true, (done) => {
 
 
 CheckOutSchema.plugin(Immutable);
-
-

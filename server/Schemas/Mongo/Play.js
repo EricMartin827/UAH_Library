@@ -142,4 +142,6 @@ schemaMethods.getAttributes = function() {
  * Play Class after this point.
  */
 Play = MongoDB.model("Play", PlaySchema);
-module.exports = {Play};
+module.exports = {
+    Play : Play
+};

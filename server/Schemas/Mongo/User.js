@@ -404,4 +404,6 @@ UserSchema.pre("save", function(next) {
  * User Class after this point.
  */
 User = MongoDB.model("User", UserSchema);
-module.exports = {User};
+module.exports = {
+    User : User
+};
