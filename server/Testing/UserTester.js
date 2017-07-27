@@ -1,9 +1,9 @@
 "use strict"
-const {LIBRARY} = require("./LIB");
+const {LIBRARY} = require("./../library");
 const {CUSTOM_LIB} = LIBRARY;
 const {nextChar} = CUSTOM_LIB;
 
-const {ERROR_LIB} = require("./LIB");
+const {ERROR_LIB} = require("./../library");
 const {CUSTOM_ERRNO} = ERROR_LIB;
 const {makeErrono} = ERROR_LIB;
 const {logErrno} = ERROR_LIB;

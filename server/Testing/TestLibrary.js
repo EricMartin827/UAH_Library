@@ -3,7 +3,7 @@ const expect = require("expect");
 const request = require("supertest");
 
 /* Library Impoorts */
-const {LIBRARY} = require("./LIB");
+const {LIBRARY} = require("./../library");
 const {CUSTOM_LIB} = LIBRARY;
 const {NODE_LIB} = LIBRARY;
 const {isArray} = CUSTOM_LIB;
@@ -13,7 +13,7 @@ const {nextChar} = CUSTOM_LIB;
 const {_} = NODE_LIB;
 
 /* Error Imports */
-const {ERROR_LIB} = require("./LIB");
+const {ERROR_LIB} = require("./../library");
 const {CUSTOM_ERRNO} = ERROR_LIB;
 const {ESINVAL} = CUSTOM_ERRNO;
 const {ECINVAL} = CUSTOM_ERRNO;
