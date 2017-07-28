@@ -1,25 +1,26 @@
 "use strict"
 
-const {ERROR_LIB} = require("./../library");
-const {makeErrno} = ERROR_LIB;
+const {ERROR_LIB}    = require("./../library");
+const {makeErrno}    = ERROR_LIB;
 const {CUSTOM_ERRNO} = ERROR_LIB;
-const {ECINVAL} = CUSTOM_ERRNO;
+const {ECINVAL}      = CUSTOM_ERRNO;
 
-const {LIBRARY} = require("./../library");
-const {NODE_LIB} = LIBRARY;
-const {CUSTOM_LIB} = LIBRARY;
-const {express} = NODE_LIB;
-const {bodyParser} = NODE_LIB;
-const {isArray} = CUSTOM_LIB;
+const {LIBRARY}      = require("./../library");
+const {NODE_LIB}     = LIBRARY;
+const {CUSTOM_LIB}   = LIBRARY;
+const {express}      = NODE_LIB;
+const {bodyParser}   = NODE_LIB;
+const {isArray}      = CUSTOM_LIB;
 
-const {MID_WARE} = require("./../Middleware");
-const {authenticate} = MID_WARE;
-const {authEither} = authenticate;
-const {authAdmin} = authenticate;
-const {parseQueries} = MID_WARE;
+const {MIDDLEWARE}   = require("./../Middleware");
+const {authenticate} = MIDDLEWARE;
+const {parseQueries} = MIDDLEWARE;
+const {authEither}   = authenticate;
+const {authAdmin}    = authenticate;
+const {authUser}     = authenticate;
 
-const {Schemas} = require("./../Schemas");
-const {User} = Schemas;
+const {Schemas}      = require("./../Schemas");
+const {User}         = Schemas;
 
 var userRoutes = new express.Router();
 userRoutes.use(bodyParser.json());
@@ -58,7 +59,7 @@ async function addMultipleUsers(data) {
 /*********************** User Login/Logout/Me Routes **************************/
 /******************************************************************************/
 
-userApp.patch("/login", (req, res) => {
+userRoutes.patch("/login", (req, res) => {
 
     var user = req.body;
     if (!(user.email && user.password)) {
@@ -85,7 +86,7 @@ userApp.patch("/login", (req, res) => {
 	});
 });
 
-userApp.patch("/logout", authUser, (req, res) => {
+userRoutes.patch("/logout", authUser, (req, res) => {
 
     var user = req.header["x-user"];
     user.clearToken("user").then(() => {
@@ -95,7 +96,7 @@ userApp.patch("/logout", authUser, (req, res) => {
     });
 });
 
-userApp.get("/me", authUser, (req, res) => {
+userRoutes.get("/me", authUser, (req, res) => {
 
     var user = req.header["x-user"];
     res.send(user);

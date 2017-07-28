@@ -6,7 +6,7 @@ const {toObject} = CUSTOM_LIB;
 const {qString} = NODE_LIB;
 
 /* Import Error Libraries */
-const {ERROR_LIB} = require("./library");
+const {ERROR_LIB} = require("./../library");
 const {CUSTOM_ERRNO} = ERROR_LIB;
 const {makeErrno} = ERROR_LIB;
 

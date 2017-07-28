@@ -5,6 +5,7 @@
     "main": "index.js",
     "scripts": {
 	"server": "nodemon server/Main.js --debug-brk",
+	"server-debug": "nodemoe server.js --no-timeout --debug-brk",
 	"test-additions": "mocha server/Testing/AddingEntries.test.js",
 	"test-queries": "mocha server/Testing/Queries.test.js",
 	"test-security": "mocha server/Testing/Security.test.js",

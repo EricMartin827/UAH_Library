@@ -1,17 +1,17 @@
 "use strict"
-const {LIBRARY} = require("./library");
-const {NODE_LIB} = LIBRARY;
-const {express} = NODE_LIB;
 
-const {MIDDLEWARE} = require("./Middleware");
-const {authRegistration} = authenticate;
+const {LIBRARY}          = require("./library");
+const {NODE_LIB}         = LIBRARY;
+const {express}          = NODE_LIB;
 
-const {ROUTES} = require("./Routes");
+const {MIDDLEWARE}       = require("./Middleware");
+const {authRegistration} = MIDDLEWARE;
+const {ROUTES}           = require("./Routes");
 
-/* Create the main application */
+/* Create the Main Application */
 var main = express();
 
-/* Mount The Routes for the main application */
+/* Mount The Routes onto the Main Application Server */
 main.use("/admin", ROUTES.Admin);
 main.use("/user(s)?", ROUTES.User);
 main.use("/play(s)?", ROUTES.Play);
@@ -37,5 +37,5 @@ main.listen(3000, () => {
 });
 
 module.exports = {
-    main : mainApp
+    main : main
 };

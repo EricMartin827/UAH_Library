@@ -1,22 +1,22 @@
 "use strict"
 
-const {ERROR_LIB} = require("./../library");
-const {makeErrno} = ERROR_LIB;
+const {ERROR_LIB}    = require("./../library");
+const {makeErrno}    = ERROR_LIB;
 const {CUSTOM_ERRNO} = ERROR_LIB;
-const {ECINVAL} = CUSTOM_ERRNO;
+const {ECINVAL}      = CUSTOM_ERRNO;
 
-const {LIBRARY} = require("./../library");
-const {NODE_LIB} = LIBRARY;
-const {CUSTOM_LIB} = LIBRARY;
-const {express} = NODE_LIB;
-const {bodyParser} = NODE_LIB;
-const {isArray} = CUSTOM_LIB;
+const {LIBRARY}      = require("./../library");
+const {NODE_LIB}     = LIBRARY;
+const {CUSTOM_LIB}   = LIBRARY;
+const {express}      = NODE_LIB;
+const {bodyParser}   = NODE_LIB;
+const {isArray}      = CUSTOM_LIB;
 
-const {MID_WARE} = require("./../Middleware");
-const {authenticate} = MID_WARE;
-const {authEither} = authenticate;
-const {authAdmin} = authenticate;
-const {parseQueries} = MID_WARE;
+const {MIDDLEWARE}   = require("./../Middleware");
+const {authenticate} = MIDDLEWARE;
+const {authEither}   = authenticate;
+const {authAdmin}    = authenticate;
+const {parseQueries} = MIDDLEWARE;
 
 const {Schemas} = require("./../Schemas");
 const {Play} = Schemas;

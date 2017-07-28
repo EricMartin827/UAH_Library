@@ -1,11 +1,10 @@
 /* Import Mongoose and Constants Libraries */
-const {NODE_LIB} = require("./LIB");
-const {CONSTANTS} = require("./LIB");
+const {NODE_LIB} = require("./../library");
+const {CONSTANTS} = require("./../library");
 const {mongoose} = NODE_LIB;
 const {NETWORK_EVENTS} = CONSTANTS;
 const {CONFIG} = CONSTANTS;
 const {HOSTS} = CONSTANTS;
-
 
 /* Enable Mongoose Promises */
 mongoose.Promise = global.Promise;

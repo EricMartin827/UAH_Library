@@ -1,6 +1,6 @@
 const {adminRoutes} = require("./AdminRoutes.js");
-const {userRoutes} = require("./UserRoutes.js");
-const {playRoutes} = requre("./PlayRoutes.js");
+const {userRoutes}  = require("./UserRoutes.js");
+const {playRoutes}  = require("./PlayRoutes.js");
 
 module.exports = {
     ROUTES : {
