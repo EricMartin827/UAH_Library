@@ -1,26 +1,25 @@
 /**
  * AdminApp.js is the sub application used by the falculty members of UAH.
- * 
  */
-const {ERROR_LIB} = require("./../library");
-const {makeErrno} = ERROR_LIB;
+
+const {LIBRARY}      = require("./../library");
+const {NODE_LIB}     = LIBRARY;
+const {CUSTOM_LIB}   = LIBRARY;
+const {express}      = NODE_LIB;
+const {bodyParser}   = NODE_LIB;
+const {printObj}     = CUSTOM_LIB;
+
+const {ERROR_LIB}    = require("./../library");
+const {makeErrno}    = ERROR_LIB;
 const {CUSTOM_ERRNO} = ERROR_LIB;
-const {ECINVAL} = CUSTOM_ERRNO;
+const {ECINVAL}      = CUSTOM_ERRNO;
 
-const {LIBRARY} = require("./../library");
-const {NODE_LIB} = LIBRARY;
-const {CUSTOM_LIB} = LIBRARY;
-const {express} = NODE_LIB;
-const {bodyParser} = NODE_LIB;
-const {printObj} = CUSTOM_LIB;
+const {Schemas}      = require("./../Schemas");
+const {User}         = Schemas;
 
-const {Schemas} = require("./../Schemas");
-const {User} = Schemas;
-
-const {MIDDLEWARE} = require("./../Middleware");
+const {MIDDLEWARE}   = require("./../Middleware");
 const {authenticate} = MIDDLEWARE;
-const {authAdmin} = authenticate;
-
+const {authAdmin}    = authenticate;
 
 var adminRoutes = new express.Router();
 adminRoutes.use(bodyParser.json());
@@ -37,9 +36,7 @@ adminRoutes.post("/", (req, res) => {
     }).catch((err) => {
 	res.status(400).send(err);
     });
-
 });
-
 
 /******************************************************************************/
 /*********************** Admin Login/Logout/Me Routes *************************/

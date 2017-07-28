@@ -1,24 +1,24 @@
 /* NPM Testing Imports*/
-const expect = require("expect");
-const request = require("supertest");
+const expect          = require("expect");
+const request         = require("supertest");
 
 /* Library Impoorts */
-const {LIBRARY} = require("./../library");
-const {CUSTOM_LIB} = LIBRARY;
-const {NODE_LIB} = LIBRARY;
-const {isArray} = CUSTOM_LIB;
-const {isSchema} = CUSTOM_LIB;
-const {stringify} = CUSTOM_LIB;
-const {nextChar} = CUSTOM_LIB;
-const {_} = NODE_LIB;
+const {LIBRARY}       = require("./../library");
+const {CUSTOM_LIB}    = LIBRARY;
+const {NODE_LIB}      = LIBRARY;
+const {isArray}       = CUSTOM_LIB;
+const {isSchema}      = CUSTOM_LIB;
+const {stringify}     = CUSTOM_LIB;
+const {nextChar}      = CUSTOM_LIB;
+const {_}             = NODE_LIB;
 
 /* Error Imports */
-const {ERROR_LIB} = require("./../library");
-const {CUSTOM_ERRNO} = ERROR_LIB;
-const {ESINVAL} = CUSTOM_ERRNO;
-const {ECINVAL} = CUSTOM_ERRNO;
+const {ERROR_LIB}     = require("./../library");
+const {CUSTOM_ERRNO}  = ERROR_LIB;
+const {ESINVAL}       = CUSTOM_ERRNO;
+const {ECINVAL}       = CUSTOM_ERRNO;
 const {BAD_WEB_TOKEN} = CUSTOM_ERRNO;
-const {makeErrno} = ERROR_LIB;
+const {makeErrno}     = ERROR_LIB;
 
 function Tester(app, schema) {
 

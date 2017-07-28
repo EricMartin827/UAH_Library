@@ -103,6 +103,10 @@ function nextChar(c) {
     return String.fromCharCode(c.charCodeAt(0) + 1);
 }
 
+function isNotDefined(val) {
+    return !val || (val === "null") || (val === "undefined");
+}
+
 module.exports = {
 
     LIBRARY : {
@@ -133,7 +137,8 @@ module.exports = {
 	    stringify       : stringify,
 	    printObj        : printObj,
 	    toObject        : toObject,
-	    toQuery         : toQuery
+	    toQuery         : toQuery,
+	    isNotDefined    : isNotDefined
 	}
     }
 };

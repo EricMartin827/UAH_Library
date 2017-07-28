@@ -1,23 +1,23 @@
 "use strict"
-const {LIBRARY} = require("./../library");
-const {CUSTOM_LIB} = LIBRARY;
-const {nextChar} = CUSTOM_LIB;
+const {LIBRARY}       = require("./../library");
+const {CUSTOM_LIB}    = LIBRARY;
+const {nextChar}      = CUSTOM_LIB;
 
-const {ERROR_LIB} = require("./../library");
-const {CUSTOM_ERRNO} = ERROR_LIB;
-const {logErrno} = ERROR_LIB;
-const {ECINVAL} = CUSTOM_ERRNO;
-const {EPERM} = CUSTOM_ERRNO;
-const {NO_USER} = CUSTOM_ERRNO;
+const {ERROR_LIB}     = require("./../library");
+const {CUSTOM_ERRNO}  = ERROR_LIB;
+const {logErrno}      = ERROR_LIB;
+const {ECINVAL}       = CUSTOM_ERRNO;
+const {EPERM}         = CUSTOM_ERRNO;
+const {NO_USER}       = CUSTOM_ERRNO;
 const {BAD_WEB_TOKEN} = CUSTOM_ERRNO;
 
-const {TestLibrary} = require("./TestLibrary.js");
-const {Tester} = TestLibrary;
-const {verify} = TestLibrary;
-const {verifyBatch} = TestLibrary;
-const {expect} = TestLibrary;
-const {request} = TestLibrary;
-const {hasToken} = TestLibrary;
+const {TestLibrary}   = require("./TestLibrary.js");
+const {Tester}        = TestLibrary;
+const {verify}        = TestLibrary;
+const {verifyBatch}   = TestLibrary;
+const {expect}        = TestLibrary;
+const {request}       = TestLibrary;
+const {hasToken}      = TestLibrary;
 
 function AdminTester(app, schema) {
     Tester.call(this, app, schema)
@@ -265,7 +265,7 @@ Interface.postOne = function(data) {
 
 	/* Create the first entry and confirm json data was saved */
 	request(_app)
-	    .post(`/admin/${_mode}`)
+	    .post(`/${_mode}`)
 	    .set("x-admin", `${_tok}`)
 	    .send(data)
 	    .expect(200)
@@ -311,7 +311,7 @@ Interface.postMany = function(data) {
     return new Promise((resolve, reject) => {
 
 	request(_app)
-	    .post(`/admin/${_mode}`)
+	    .post(`/${_mode}`)
 	    .set("x-admin", `${_tok}`)
 	    .send(data)
 	    .expect(200)
@@ -344,20 +344,6 @@ Interface.postMany = function(data) {
     });
 }
 
-// Interface.getById = function(id, data) {
-
-//     var _app = this.app;
-//     var _mode = this.mode;
-//     var _schema = this.schema;
-
-//     return new Promise((resolve, reject) => {
-
-// 	request(_app)
-// 	    .get(`/admin/${_mode}/:${id}`)
-// 	    .
-// 	.
-//     });
-// }
 module.exports = {
     AdminTester : AdminTester
 }

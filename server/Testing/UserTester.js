@@ -28,10 +28,11 @@ var Interface = UserTester.prototype;
 Interface.login = function(data) {
 
     var _app = this.app;
+    var _mode = this.mode;
     var _schema = this.schema;
     return new Promise((resolve, reject) => {
 	request(_app)
-	    .patch(`/login`)
+	    .patch(`/${_mode}/login`)
 	    .send(data)
 	    .expect(200)
 	    .end((err, res) => {
@@ -57,11 +58,12 @@ Interface.login = function(data) {
 Interface.badLogin = function(data) {
 
     var _app = this.app;
+    var _mode = this.mode;
     var _status = (data) ? 401 : 400;
     var _code = (data) ? EPERM : ECINVAL;
     return new Promise((resolve, reject) => {
 	request(_app)
-	    .patch(`/login`)
+	    .patch(`/${_mode}/login`)
 	    .send(data)
 	    .expect(_status)
 	    .end((err, res) => {
@@ -84,11 +86,12 @@ Interface.badLogin = function(data) {
 Interface.logout = function(data) {
     
     var _app = this.app;
+    var _mode = this.mode;
     var _schema = this.schema;
     var _tok = this.authToken;
     return new Promise((resolve, reject) => {
 	request(_app)
-	    .patch(`/logout`)
+	    .patch(`/${_mode}/logout`)
 	    .set("x-user", `${_tok}`)
 	    .expect(200)
 	    .then((res) => {
@@ -116,11 +119,12 @@ Interface.logout = function(data) {
 Interface.myPage = function(data) {
 
     var _app = this.app;
+    var _mode = this.mode;
     var _schema = this.schema;
     var _tok = this.authToken;
     return new Promise((resolve, reject) => {
 	request(_app)
-	    .get(`/me`)
+	    .get(`/${_mode}/me`)
 	    .set("x-user", `${_tok}`)
 	    .expect(200)
 	    .end((err, res) => {
@@ -140,9 +144,10 @@ Interface.myPage = function(data) {
 Interface.myPage_NoToken = function() {
 
     var _app = this.app;
+    var _mode = this.mode;
     return new Promise((resolve, reject) => {
 	request(_app)
-	    .get(`/me`)
+	    .get(`/${_mode}/me`)
 	    .expect(401)
 	    .end((err, res) => {
 
@@ -162,9 +167,10 @@ Interface.myPage_NoToken = function() {
 Interface.myPage_BadToken = function(badToken) {
 
     var _app = this.app;
+    var _mode = this.mode;
     return new Promise((resolve, reject) => {
 	request(_app)
-	    .get(`/me`)
+	    .get(`/${_mode}/me`)
 	    .set("x-user", `${badToken}`)
 	    .expect(401)
 	    .end((err, res) => {
@@ -186,12 +192,13 @@ Interface.myPage_BadToken = function(badToken) {
 Interface.myPage_AlteredToken = function() {
 
     var _app = this.app;
+    var _mode = this.mode;
     var _tok = this.authToken;
     var c = _tok.charAt(0);
     _tok = _tok.replace(c, nextChar(c));
     return new Promise((resolve, reject) => {
 	request(_app)
-	    .get(`/me`)
+	    .get(`/${_mode}/me`)
 	    .set("x-user", `${_tok}`)
 	    .expect(401)
 	    .end((err, res) => {
@@ -212,12 +219,12 @@ Interface.myPage_AlteredToken = function() {
 Interface.badAdminAccess = function(data) {
 
     var _app = this.app;
+    var _mode = this.mode;
     var _tok = this.authToken;
     return new Promise((resolve, reject) => {
 	request(_app)
-	    .post("/admin/user")
+	    .get("/admin/me")
 	    .set("x-user", `${_tok}`)
-	    .send(data)
 	    .expect(401)
 	    .end((err, res) => {
 
@@ -237,12 +244,12 @@ Interface.badAdminAccess = function(data) {
 Interface.attackAdminAccess = function(data) {
 
     var _app = this.app;
+    var _mode = this.mode;
     var _tok = this.authToken;
     return new Promise((resolve, reject) => {
 	request(_app)
-	    .post("/admin/user")
+	    .get("/admin/me")
 	    .set("x-admin", `${_tok}`)
-	    .send(data)
 	    .expect(401)
 	    .end((err, res) => {
 

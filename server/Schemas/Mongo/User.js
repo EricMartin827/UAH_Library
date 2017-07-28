@@ -12,29 +12,28 @@
  */
 "use strict"
 
-/* Utility Imports */
-const {LIBRARY} = require("./../library");
-const {NODE_LIB} = LIBRARY;
-const {CUSTOM_LIB} = LIBRARY;
-
-const {validator} = NODE_LIB;
-const {jwt} = NODE_LIB;
-const {bcrypt} = NODE_LIB;
-const {_} = NODE_LIB;
-const {Immutable} = NODE_LIB;
-const {Schema} = NODE_LIB;
-const {printObj} = CUSTOM_LIB;
+/* Library Imports */
+const {LIBRARY}       = require("./../library");
+const {NODE_LIB}      = LIBRARY;
+const {CUSTOM_LIB}    = LIBRARY;
+const {validator}     = NODE_LIB;
+const {jwt}           = NODE_LIB;
+const {bcrypt}        = NODE_LIB;
+const {_}             = NODE_LIB;
+const {Immutable}     = NODE_LIB;
+const {Schema}        = NODE_LIB;
+const {printObj}      = CUSTOM_LIB;
 
 /* Error Imports */
-const {ERROR_LIB} = require("./../library");
-const {CUSTOM_ERRNO} = ERROR_LIB;
-const {makeErrno} = ERROR_LIB;
-const {EPERM} = CUSTOM_ERRNO;
-const {NO_USER} = CUSTOM_ERRNO;
+const {ERROR_LIB}     = require("./../library");
+const {CUSTOM_ERRNO}  = ERROR_LIB;
+const {makeErrno}     = ERROR_LIB;
+const {EPERM}         = CUSTOM_ERRNO;
+const {NO_USER}       = CUSTOM_ERRNO;
 const {BAD_WEB_TOKEN} = CUSTOM_ERRNO;
 
 /* Mongo Database Imports */
-const {MongoDB} = require("./MongoDatabase.js");
+const {MongoDB}       = require("./MongoDatabase.js");
 
 /**
  * A Mongoose Model that defines the major properties of the User Collection

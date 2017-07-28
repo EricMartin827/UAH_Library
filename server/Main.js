@@ -3,13 +3,16 @@
 const {LIBRARY}          = require("./library");
 const {NODE_LIB}         = LIBRARY;
 const {express}          = NODE_LIB;
+const {bodyParser}       = NODE_LIB;
 
 const {MIDDLEWARE}       = require("./Middleware");
 const {authRegistration} = MIDDLEWARE;
+
 const {ROUTES}           = require("./Routes");
 
 /* Create the Main Application */
 var main = express();
+main.use(bodyParser.json());
 
 /* Mount The Routes onto the Main Application Server */
 main.use("/admin", ROUTES.Admin);
@@ -30,7 +33,6 @@ main.patch("/register", authRegistration, (req, res) => {
 	res.status(400).send(err);
     });
 });
-
 
 main.listen(3000, () => {
     console.log("The Main Application is Listening on Port 3000");

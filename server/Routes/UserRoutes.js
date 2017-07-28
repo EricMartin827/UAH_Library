@@ -32,6 +32,16 @@ userRoutes.use(bodyParser.json());
 /*
  * Adds a single new user to the database.
  */
+
+function echo(req, res) {
+    
+    var user;
+    if ((user = req.header("x-admin"))) {
+	return res.send(user);
+    }
+    res.send(req.header["x-user"]);
+}
+
 function addUser(data) {
 
     return new Promise((resolve, reject) => {
@@ -96,11 +106,6 @@ userRoutes.patch("/logout", authUser, (req, res) => {
     });
 });
 
-userRoutes.get("/me", authUser, (req, res) => {
-
-    var user = req.header["x-user"];
-    res.send(user);
-});
 
 /******************************************************************************/
 /************************* Get Routes For Users *******************************/
@@ -118,21 +123,16 @@ userRoutes.get("/", authEither, parseQueries, (req, res) => {
 
 userRoutes.get("/:id", authEither, (req, res) => {
 
-    var id = req.params.id;
-    User.findById(id).then((user) => {
-	res.send(user);
-    }).catch((err) => {
-	res.status(400).send(err);
-    });
-});
-
-userRoutes.get("/me", authEither, (req, res) => {
-
-    var user = req.header("x-admin");
-    if (user) {
-	return res.send(user);
+    var id;
+    if ((id = req.params.id) === "me") {
+	echo(req, res);
+    } else {
+	User.findById(id).then((user) => {
+	    res.send(user);
+	}).catch((err) => {
+	    res.status(400).send(err);
+	});
     }
-    res.send(req.header["x-user"]);
 });
 
 /******************************************************************************/

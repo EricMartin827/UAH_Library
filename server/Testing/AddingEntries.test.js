@@ -1,21 +1,21 @@
 "use strict"
 
+const {main}        = require("./../Main.js");
+
 const {TestLibrary} = require("./TestLibrary.js");
-const {ERRNO} = TestLibrary;
-const {expect} = TestLibrary;
+const {ERRNO}       = TestLibrary;
+const {expect}      = TestLibrary;
 
 const {AdminTester} = require("./AdminTester.js");
-const {UserTester} = require("./UserTester.js");
-const {DATA} = require("./LocalData.js");
+const {UserTester}  = require("./UserTester.js");
+const {DATA}        = require("./LocalData.js");
 
-const {mainApp} = require("./LocalMongoServer.js");
-const {Schemas} = require("./../Schemas");
-const {Play} = Schemas;
-const {User} = Schemas;
+const {Schemas}     = require("./../Schemas");
+const {Play}        = Schemas;
+const {User}        = Schemas;
 
-const _Admin = new AdminTester(mainApp, User);
-const _User = new UserTester(mainApp, User);
-
+const _Admin = new AdminTester(main, User);
+const _User = new UserTester(main, User);
 
 describe("User Addtion Tests", () => {
 
