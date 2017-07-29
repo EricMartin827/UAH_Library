@@ -113,7 +113,7 @@ userRoutes.patch("/logout", authUser, (req, res) => {
 
 userRoutes.get("/", authEither, parseQueries, (req, res) => {
 
-    query = req.header["x-query"];
+    var query = req.header["x-query"];
     User.find(query).then((matches) => {
 	res.send(matches);
     }).catch((err) => {

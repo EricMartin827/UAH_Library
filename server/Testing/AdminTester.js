@@ -2,6 +2,7 @@
 const {LIBRARY}       = require("./../library");
 const {CUSTOM_LIB}    = LIBRARY;
 const {nextChar}      = CUSTOM_LIB;
+const {toQuery}       = CUSTOM_LIB;
 
 const {ERROR_LIB}     = require("./../library");
 const {CUSTOM_ERRNO}  = ERROR_LIB;
@@ -341,6 +342,30 @@ Interface.postMany = function(data) {
 		    resolve(res.body);
 		}).catch((err) => reject(err));
 	    }).catch((err) => reject(err));
+    });
+}
+
+Interface.get = function(query) {
+
+    var _app = this.app;
+    var _mode = this.mode;
+    var _tok = this.authToken;
+    var _query = (query) ? toQuery(query) : "";
+    return new Promise((resolve, reject) => {
+	request(_app)
+	    .get(`/${_mode}?${_query}`)
+	    .set("x-admin", `${_tok}`)
+	    .expect(200)
+	    .end((err, res) => {
+
+		if (err) {
+		    return reject(err);
+		}
+
+		expect(res.clientError).toBe(false);
+		expect(res.serverError).toBe(false);
+		resolve(res.body);
+	    })
     });
 }
 

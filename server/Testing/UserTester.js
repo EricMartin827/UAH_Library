@@ -267,6 +267,30 @@ Interface.attackAdminAccess = function(data) {
     });
 }
 
+Interface.get = function(query) {
+
+    var _app = this.app;
+    var _mode = this.mode;
+    var _tok = this.authToken;
+    var _query = (query) ? toQuery(query) : "";
+    return new Promise((resolve, reject) => {
+	request(_app)
+	    .get(`/${_mode}?${_query}`)
+	    .set("x-use", `${_tok}`)
+	    .expect(200)
+	    .end((err, res) => {
+
+		if (err) {
+		    return reject(err);
+		}
+
+		expect(res.clientError).toBe(false);
+		expect(res.serverError).toBe(false);
+		resolve(res.body);
+	    })
+    });
+}
+
 module.exports = {
     UserTester : UserTester
 }

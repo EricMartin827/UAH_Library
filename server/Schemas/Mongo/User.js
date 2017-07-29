@@ -344,23 +344,6 @@ schemaMethods.findByToken = function(token, access) {
     	    "tokens.access" :  access
     	}
     );
-
-    // return User.findOne({_id : decoded._id}).then((tar) => {
-    // 	console.log("Target = ", tar);
-    // 	var query = {
-    // 	    "_id" : decoded._id,
-    // 	    "tokens.token" : token,
-    // 	    "tokens.access" :  access
-    // 	};
-    // 	console.log("Query -->");
-    // 	printObj(query);
-    // 	return User.findOne(query);
-    // 	    // {
-    // 	    // 	"_id" : decoded._id,
-    // 	    // 	"tokens.token" : token,
-    // 	    // 	"tokens.access" :  access
-    // 	    // });
-    // });
 }
 
 /**

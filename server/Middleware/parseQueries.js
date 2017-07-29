@@ -12,8 +12,9 @@ const {makeErrno} = ERROR_LIB;
 
 
 function parseQueries(req, res, next) {
+
     var query;
-    if ((query = qString.extract(req.origianlUrl))) {
+    if ((query = qString.extract(req.originalUrl))) {
 	query = qString.parse(query);
 	for (var prop in query) {
 	    query[prop] = toObject(query[prop]);
@@ -21,6 +22,7 @@ function parseQueries(req, res, next) {
     } else {
 	query = {};
     }
+
     req.header["x-query"] = query;
     next();
 }

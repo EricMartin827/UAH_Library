@@ -51,13 +51,11 @@ describe("User Query Tests", () => {
 	regAdmin.login(
 	    {email : admins[0].email, password : admins[0].password})
 	    .then((tok) => {
-		console.log("Tok = ", tok);
 		regAdmin.setToken(tok);
 
 		regAdmin.register(
 		    {email : admins[0].email, password : "Mr. M33SIX"})
 		    .then((tok) => {
-			console.log("Tok = ", tok);
 			regAdmin.setToken(tok);
 
 			regAdmin.get({access : "user"}).then((res) => {
@@ -70,7 +68,6 @@ describe("User Query Tests", () => {
     });
 
     it("Should Allow Student to Fetch All Users", (done) => {
-	done("Not Implemented Yet");
+	done("Not Tested");
     });
-
 });
