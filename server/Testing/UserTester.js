@@ -89,6 +89,7 @@ Interface.logout = function(data) {
     var _mode = this.mode;
     var _schema = this.schema;
     var _tok = this.authToken;
+
     return new Promise((resolve, reject) => {
 	request(_app)
 	    .patch(`/${_mode}/logout`)
@@ -112,7 +113,7 @@ Interface.logout = function(data) {
 		    }
 		    resolve();
 		}).catch((err) => reject(err));
-	    })
+	    }).catch((err) => reject(err));
     });
 }
 

@@ -202,10 +202,17 @@ describe("Simple Admin Post Single Student Security Tests", () => {
 	    .catch((err) => done());
     });
 
-    it("Should Allow The New Student To Register As Student", (done) => {
-	DATA.user.password = "R1ck@ndM0rty";
-	_User.register(DATA.user).then(() => done()).catch((err) => done(err))
-    });
+    it("Should Allow The New Student To Register As Student and Logout",
+       (done) => {
+	   DATA.user.password = "R1ck@ndM0rty";
+	   _User.register(DATA.user).then((tok) => {
+	       
+	       _User.setToken(tok);
+	       _User.logout(DATA.user)
+		   .then(() => done()).catch((err) => done(err));
+
+	   }).catch((err) => done(err))
+       });
 
     it("Should Not Allow Wrong Password Login After Registration", (done) => {
 	var email = DATA.user.email;
@@ -325,7 +332,7 @@ describe("Simple Admin Post Single Admin Security Tests", () => {
 	_newAdmin.myPage().then(() => done("Should Not Pass"))
 	    .catch((err) => {
 		expect(err.message)
-		    .toBe(`expected 200 "OK", got 401 "Unauthorized"`)
+		    .toBe(`expected 200 "OK", got 401 "Unauthorized"`);
 		done();
 	    });
     });
@@ -370,10 +377,16 @@ describe("Simple Admin Post Single Admin Security Tests", () => {
 	    .catch((err) => done());
     });
 
-    it("Should Allow The New Admin To Register As Admin", (done) => {
+    it("Should Allow The New Admin To Register As Admin And Logout", (done) => {
 	DATA.newAdmin.password = "Mr.M33SIX";
 	_newAdmin.register(DATA.newAdmin)
-	    .then(() => done()).catch((err) => done(err));
+	    .then((tok) => {
+
+		_newAdmin.setToken(tok);
+		_newAdmin.logout(DATA.newAdmin)
+		    .then(() => done()).catch((err) => done(err));
+
+	    }).catch((err) => done(err));
     });
 
     it("Should Not Allow Wrong Password Login After Registration", (done) => {

@@ -128,7 +128,7 @@ var instanceMethods = UserSchema.methods;
 var schemaMethods = UserSchema.statics;
 
 /* Declare The Fields Client Browser Can View */
-const publicAttributes = ["_id", "email", "firstName", "lastName"];
+const publicAttributes = ["_id", "email", "firstName", "lastName", "access"];
 
 /******************************************************************************/
 /**************************** Instance Methods ********************************/
@@ -258,9 +258,39 @@ instanceMethods.clearToken = function(access) {
 	     */
 	    delete user.tokens[ii];
 	    user.markModified("tokens");
+	    return user.save();
 	}
     }
-    return user.save();
+}
+
+/**
+ * Instance method for the User Schema/Class. Swaps out the a user's active
+ * token for a new token. Primarily used to generate a new token for new user's
+ * registering into the system. Method returns the newly generated token.
+ *
+ * @method swapToken
+ * @param oldAccess {Enum String} the token to replace [admin, user, newUser]
+ * @param newAccess {Enum String} the new token [admin, user, "newUser]
+ * @return {Promise} to return the newly generated token
+ */
+instanceMethods.swapToken = function(oldAccess, newAccess) {
+
+    var user = this;
+    for (var ii = 0; ii < user.tokens.length; ii++) {
+	if (user.tokens[ii].access === oldAccess) {
+
+
+	    var newToken = jwt.sign({
+		_id : user._id.toHexString(),
+		newAccess
+	    }, "salt").toString();
+	    user.tokens[ii] = {access : newAccess, token : newToken};
+	    user.markModified("tokens"); /* Enables Mongoose to auto-detect */
+	    return user.save().then(() => {
+		return newToken;
+	    });
+	}
+    }
 }
 
 /******************************************************************************/

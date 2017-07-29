@@ -10,6 +10,7 @@ const {isArray}       = CUSTOM_LIB;
 const {isSchema}      = CUSTOM_LIB;
 const {stringify}     = CUSTOM_LIB;
 const {nextChar}      = CUSTOM_LIB;
+const {toQuery}       = CUSTOM_LIB;
 const {_}             = NODE_LIB;
 
 /* Error Imports */
@@ -66,18 +67,23 @@ Interface.register = function(data) {
 
 		expect(res.clientError).toBe(false);
 		expect(res.serverError).toBe(false);
-		verify(data, res.body, _schema);
+		expect(res.body).toNotBe(null);
+		expect(res.body.token).toNotBe(null);
 
-	    }).then(() => {
+	    }).then((res) => {
 
 		var email = data.email;
 		var password = data.password;
+		var tok = res.body.token;
+
 		_schema.findOne({email}).then((user) => {
 
 		    expect(user).toNotBe(null);
 		    expect(user.tokens.length).toBe(1);
-		    expect(user.tokens[0]).toBe(null);
-		    resolve();
+		    expect(user.tokens[0]).toNotBe(null);
+		    expect(user.tokens[0].access).toBe(user.access);
+		    verify(user, data, _schema);
+		    resolve(tok);
 
 		}).catch((err) => reject(err));
 
@@ -159,6 +165,30 @@ Interface.register_AlteredToken = function(data) {
     });
 }
 
+Interface.get = function(query) {
+
+    var _app = this.app;
+    var _mode = this.mode;
+    var _tok = this.authToken;
+    var _query = (query) ? ( "?" + toQuery(query)) : "";
+    console.log(`/${_mode}/${_query}`);
+    return new Promise((resolve, reject) => {
+	request(_app)
+	    .get(`/${_mode}/${_query}`)
+	    .expect(200)
+	    .end((err, res) => {
+
+		if (err) {
+		    return reject(err);
+		}
+
+		expect(res.clientError).toBe(false);
+		expect(res.serverError).toBe(false);
+		resolve(res.body);
+	    })
+    });
+}
+
 function verify(clientReq, serverRes, schema) {
 
     var attributes = _.pick(clientReq, schema.getAttributes());
@@ -184,6 +214,7 @@ function hasToken(tokens, access) {
     }
     return false;
 }
+
 module.exports = {
     TestLibrary : {
 	expect      : expect,

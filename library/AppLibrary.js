@@ -1,3 +1,5 @@
+"use strict"
+
 const express    = require("express");
 const validator  = require("validator");
 const bodyParser = require("body-parser")
@@ -8,7 +10,6 @@ const bcrypt     = require("bcryptjs");
 const jwt        = require("jsonwebtoken");
 const qString    = require("query-string");
 const _          = require("lodash");
-
 
 const {ObjectId} = require("mongoose").Types;
 

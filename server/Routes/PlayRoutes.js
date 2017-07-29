@@ -76,7 +76,6 @@ playRoutes.post("/", authAdmin, (req, res) => {
 	addPlays(req.body).then((plays) => {
 	    res.send(plays);
 	}).catch((err) => {
-	    console.log(err);
 	    res.status(400).send(err);
 	});
 

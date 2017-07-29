@@ -1,3 +1,5 @@
+"use strict"
+
 /* Import Library */
 const {LIBRARY}      = require("./../library");
 const {NODE_LIB}     = LIBRARY;
@@ -85,6 +87,7 @@ function authRegistration(req, res, next) {
 	    makeErrno(ECINVAL, `User Registration ` +
 		      `Client Failed to Send Registration Token`));
     }
+
     if (!req.body) {
 	return res.status(401).send(
 	    makeErrno(ECINVAL, `User Registration ` +
