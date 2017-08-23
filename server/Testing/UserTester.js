@@ -2,6 +2,7 @@
 const {LIBRARY} = require("./../library");
 const {CUSTOM_LIB} = LIBRARY;
 const {nextChar} = CUSTOM_LIB;
+const {toQuery} = CUSTOM_LIB;
 
 const {ERROR_LIB} = require("./../library");
 const {CUSTOM_ERRNO} = ERROR_LIB;
@@ -276,7 +277,7 @@ Interface.get = function(query) {
     return new Promise((resolve, reject) => {
 	request(_app)
 	    .get(`/${_mode}?${_query}`)
-	    .set("x-use", `${_tok}`)
+	    .set("x-user", `${_tok}`)
 	    .expect(200)
 	    .end((err, res) => {
 

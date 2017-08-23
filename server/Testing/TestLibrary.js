@@ -73,7 +73,6 @@ Interface.register = function(data) {
 	    }).then((res) => {
 
 		var email = data.email;
-		var password = data.password;
 		var tok = res.body.token;
 
 		_schema.findOne({email}).then((user) => {
@@ -82,7 +81,7 @@ Interface.register = function(data) {
 		    expect(user.tokens.length).toBe(1);
 		    expect(user.tokens[0]).toNotBe(null);
 		    expect(user.tokens[0].access).toBe(user.access);
-		    verify(user, data, _schema);
+		    verify(data, user, _schema);
 		    resolve(tok);
 
 		}).catch((err) => reject(err));
@@ -168,14 +167,15 @@ Interface.register_AlteredToken = function(data) {
 function verify(clientReq, serverRes, schema) {
 
     var attributes = _.pick(clientReq, schema.getAttributes());
-    for (var ii = 0; ii < attributes.length; ii++) {
-	var prop = attributes[ii];
+    for (var prop in attributes) {
 	expect(clientReq[prop]).toEqual(serverRes[prop]);
     }
 }
 
 function verifyBatch(clientReq, serverRes, schema) {
 
+    expect(isArray(clientReq)).toBe(true);
+    expect(isArray(serverRes)).toBe(true);
     for (var ii = 0; ii < clientReq.length; ii++) {
 	verify(clientReq[ii], serverRes[ii], schema);
     }

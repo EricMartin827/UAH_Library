@@ -326,21 +326,8 @@ Interface.postMany = function(data) {
 		expect(res.serverError).toBe(false);
 		expect(res.body.length).toBe(data.length);
 		verifyBatch(data, res.body, _schema)
-		
-	    }).then((res) => {
+		resolve(res.body);
 
-		var query = (_mode === "users") ? {"tokens.access" : "newUser"} : {};
-		_schema.find(query).then((q_res) => {
-		    expect(q_res.length).toBeGreaterThanOrEqualTo(res.body.length);
-		    if (res.body.length > q_res.length) {
-			for (var ii = 0; ii < q.res.length; ii++) {
-			    expect(q-res.find(res.body[ii])).toNotBe(undefined);
-			}
-		    } else {
-			verifyBatch(res.body, q_res, _schema);
-		    }
-		    resolve(res.body);
-		}).catch((err) => reject(err));
 	    }).catch((err) => reject(err));
     });
 }

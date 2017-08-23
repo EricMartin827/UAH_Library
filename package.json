@@ -5,13 +5,14 @@
     "main": "index.js",
     "scripts": {
 	"server": "nodemon server/Main.js --debug-brk",
-	"server-debug": "nodemoe server.js --no-timeout --debug-brk",
+	"server-debug": "nodemon server.js --no-timeout --debug-brk",
 	"test-additions": "mocha server/Testing/AddingEntries.test.js",
 	"test-queries": "mocha server/Testing/Queries.test.js",
 	"test-security": "mocha server/Testing/Security.test.js",
 	"test": "mocha server/Testing/*.test.js",
 	"test-watch": "nodemon --exec 'npm test'",
 	"test-debug": "mocha server/Testing/*.test.js --no-timeout --debug-brk",
+	"test-debug-query": "mocha server/Testing/Queries.test.js --no-timeout --debug-brk",
 	"test-watch-debug": "nodemon --exec 'npm test' --no-timeout --debug-brk"
     },
     "repository": {
