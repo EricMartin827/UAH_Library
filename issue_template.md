@@ -1,7 +1,6 @@
 ## Need
 
 ```gherkin
-As a [role]
 I want [feature]
 So that [benefit]
 ```
@@ -12,11 +11,11 @@ Depends on #123 #345.
 
 ```gherkin
 Scenario: [title]
-Given [context]
-  And [some more context]
-When  [event]
-Then  [outcome]
-  And [another outcome]
+   Given: [context]
+     And: [some more context]
+    When: [event]
+    Then: [outcome]
+     And: [another outcome]
 ```
 
 ## Solution
