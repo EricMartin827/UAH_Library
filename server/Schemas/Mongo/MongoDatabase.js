@@ -1,25 +1,16 @@
-/*
-* Mongoose will always try to reconnect.
-*/
+/* Import Mongoose and Constants Libraries */
+const {NODE_LIB} = require("./../library");
+const {CONSTANTS} = require("./../library");
+const {mongoose} = NODE_LIB;
+const {NETWORK_EVENTS} = CONSTANTS;
+const {CONFIG} = CONSTANTS;
+const {HOSTS} = CONSTANTS;
 
-// Need to change all modules to be accessed at some index diretory
-// at the top of the project. You don't want a lot of paths names
-// to write.
-const {NETWORK_EVENTS} = require("../../utilities/CONSTANTS");
-const {CONFIG) = require("../../utilities/CONSTANTS");
-
-const {mongoose} = require("mongoose");
+/* Enable Mongoose Promises */
 mongoose.Promise = global.Promise;
 
-// db = mongoose.createConnection(
-//     "mongodb://emartin31:C_Pr0gramm3r0@ds161001.mlab.com:61001/testing"
-//     , CONFIG.CONN_OPTS
-// );
-
-db = mongoose.createConnection(
-    "mongodb://emartin31:gent00@104.236.67.49:27017/uah_library",
-    CONFIG.CONN_OPTS
-);
+/* Mongoose will always try to recomnnect */
+db = mongoose.createConnection(HOSTS.LOCAL, CONFIG.CONN_OPTS);
 
 db.on(NETWORK_EVENTS.OPEN, () =>
       console.log("Connection Is Open"));
@@ -52,17 +43,5 @@ process.on("SIGINT", () => {
     });
 });
 
-module.exports = {
-    DATABASE: db
-};
 
-
-
-
-
-
-
-
-
-
-
+module.exports = { MongoDB : db };
