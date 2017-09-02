@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "webpack",
+    "start": "node ./node_modules/webpack-dev-server/bin/webpack-dev-server.js",  
     "server": "nodemon server/Main.js --debug-brk",
     "server-debug": "nodemon server.js --no-timeout --debug-brk",
     "test-additions": "mocha server/Testing/AddingEntries.test.js",
