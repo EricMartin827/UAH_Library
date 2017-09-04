@@ -19,7 +19,7 @@
  * @final
  * @type {Object}
  */
-NETWORK_EVENTS = {
+const NETWORK_EVENTS = {
     OPEN: "open",
     CONNECTED: "connected",
     CONNECTING: "connecting",
@@ -30,18 +30,9 @@ NETWORK_EVENTS = {
     ERROR: "error"
 };
 
-/**
- * Constants used to indetify and access different databases used for
- * the development and production of the UAH_Library.
- *
- * @property HOSTS
- * @final
- * type {Object}
- */
-HOSTS = {
-    LOCAL  : "mongodb://localhost:27017/UAH_LIBRARY",
-    HEROKU : process.env.MONGODB_URI
-}
+const HOST = process.env.MONGODB_URI || "mongodb://localhost:27017/UAH_LIBRARY";
+
+
 
 /**
  * Constants used for defining the API.
@@ -50,7 +41,7 @@ HOSTS = {
  * @final
  * @type {Object}
  */
-API = {
+const API = {
 
 }
 
@@ -63,7 +54,7 @@ API = {
  * @final
  * @type {Object}
  */
-CONFIG = {
+const CONFIG = {
 
     /**
      * Configuration object used to configure the
@@ -84,7 +75,7 @@ CONFIG = {
 module.exports = {
     CONSTANTS :
     {
-	HOSTS,
+	HOST,
 	NETWORK_EVENTS,
 	API,
 	CONFIG

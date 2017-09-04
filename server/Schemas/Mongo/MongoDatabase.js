@@ -49,8 +49,7 @@ InitMongoDB(HOST).then(() => {
 	    process.exit(0);
 	});
     });
-
-}).catch(err => process.abort(err));
+}).catch((err) => process.abort(err));
 
 module.exports = {
     MongoDB : db
