@@ -8,6 +8,7 @@ import React from "react";
 import { BrowserRouter, Route } from "react-router-dom";
 
 /* Application Routes */
+import Intro from "./components/Intro.js"
 import Login from "./components/Login.js";
 import Plays from "./components/Plays.js";
 
@@ -15,6 +16,7 @@ const Routes = () => {
     return (
         <BrowserRouter>
             <div>
+                <Route path="/" component={Intro}></Route>
                 <Route path="/login" component={Login}></Route>
                 <Route path="/plays" component={Plays}></Route>
             </div>

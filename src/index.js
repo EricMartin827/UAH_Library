@@ -10,12 +10,12 @@ import Routes from "./Router.js";
 import reducers from "./reducers";
 
 const MainApp = () => {
-        const store = applyMiddleware(promise)(createStore);
-        return (
-            <Provider store={store(reducers)}>
-                <Routes />
-            </Provider>
-        );
+    const store = applyMiddleware(promise)(createStore);
+    return (
+        <Provider store={store(reducers)}>
+            <Routes />
+        </Provider>
+    );
 };
 
 ReactDOM.render(

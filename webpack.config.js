@@ -11,24 +11,23 @@ module.exports = {
      * appends the build directory to the absolute path __dirname.
      */
     output : {
-	path : path.join(__dirname, "build"),
-	filename : "bundle.js"
+        path : path.join(__dirname, "build"),
+        publicPath : "./build",
+        filename : "bundle.js"
     },
 
     module : {
-
-	rules : [
-	    {
-		use : "babel-loader",
-		test : /\.jsx?$/,
-		exclude : /node_modules/
-	    }
-	]
+        rules : [
+            {
+                use : "babel-loader",
+                test : /\.jsx?$/,
+                exclude : /node_modules/
+            }
+        ]
     },
 
     devServer : {
-	historyApiFallback : true,
-	contentBase: "./"
+        historyApiFallback : true,
+        contentBase: "./"
     }
 }
-
