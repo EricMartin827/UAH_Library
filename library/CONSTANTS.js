@@ -39,7 +39,8 @@ NETWORK_EVENTS = {
  * type {Object}
  */
 HOSTS = {
-    LOCAL: "mongodb://localhost:27017/UAH_LIBRARY"
+    LOCAL  : "mongodb://localhost:27017/UAH_LIBRARY",
+    HEROKU : process.env.MONGODB_URI
 }
 
 /**

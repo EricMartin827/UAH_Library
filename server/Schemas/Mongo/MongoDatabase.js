@@ -10,7 +10,9 @@ const {HOSTS} = CONSTANTS;
 mongoose.Promise = global.Promise;
 
 /* Mongoose will always try to recomnnect */
-db = mongoose.createConnection(HOSTS.LOCAL, CONFIG.CONN_OPTS);
+db = mongoose.createConnection(HOSTS.HEROKU || HOSTS.LOCAL , CONFIG.CONN_OPTS);
+
+console.log("Heroku Connection is : ", HOSTS.HEROKU);
 
 db.on(NETWORK_EVENTS.OPEN, () =>
       console.log("Connection Is Open"));
