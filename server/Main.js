@@ -21,8 +21,9 @@ var main = express();
 main.use(bodyParser.json());
 
 /* Mount The Routes onto the Main Application Server */
-main.use("/admin", ROUTES.Admin);
+main.use("/admin(s)?", ROUTES.Admin);
 main.use("/user(s)?", ROUTES.User);
+main.use("/api", ROUTES.API);
 main.use("/play(s)?", ROUTES.Play);
 
 /* All Users and Admins Excluding the Root Admin Must Register */
