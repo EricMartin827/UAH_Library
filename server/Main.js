@@ -24,7 +24,6 @@ main.use(bodyParser.json());
 main.use("/admin(s)?", ROUTES.Admin);
 main.use("/user(s)?", ROUTES.User);
 main.use("/api", ROUTES.API);
-main.use("/play(s)?", ROUTES.Play);
 
 /* All Users and Admins Excluding the Root Admin Must Register */
 main.patch("/register", authRegistration, (req, res) => {
