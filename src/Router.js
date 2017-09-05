@@ -16,9 +16,9 @@ const Routes = () => {
     return (
         <BrowserRouter>
             <div>
-                <Route path="/" component={Intro}></Route>
                 <Route path="/login" component={Login}></Route>
                 <Route path="/plays" component={Plays}></Route>
+                <Route path="/" component={Intro}></Route>
             </div>
         </BrowserRouter>
     );
