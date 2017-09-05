@@ -1,8 +1,9 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { Link } from "react-router-dom";
 import _ from "lodash";
 
-import fetchUsers from "./../actions";
+import { fetchUsers } from "./../actions";
 
 class Users extends Component {
 
@@ -16,6 +17,11 @@ class Users extends Component {
     render() {
         return (
             <div>
+                <div className="text-xs-right">
+                    <Link className="btn btn-primary" to="/newuser">
+                        Add New User
+                    </Link>
+                </div>
                 <h3>Current Users</h3>
                 <ul className="list-group">
                     {this.renderUsers()}
