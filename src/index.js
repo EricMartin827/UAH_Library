@@ -5,6 +5,9 @@ import { Provider } from "react-redux";
 import { createStore, applyMiddleware } from "redux";
 import promise from "redux-promise";
 
+/* CSS Imports */
+import "./../style/style.css"
+
 /* Client Applciation Imports */
 import Routes from "./Router.js";
 import reducers from "./reducers";
