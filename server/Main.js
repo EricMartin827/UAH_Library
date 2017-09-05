@@ -10,6 +10,8 @@ const {authRegistration} = MIDDLEWARE;
 
 const {ROUTES}           = require("./Routes");
 
+const cors               = require("cors");
+
 /* If the server is running at remote location (Heroku), use
  * the environment's port number. Otherwise, the application
  * is running locally and give it the default of 3000.
@@ -18,6 +20,7 @@ const port = process.env.PORT || 3000;
 
 /* Create the Main Application */
 var main = express();
+main.use(cors());
 main.use(bodyParser.json());
 
 /* Mount The Routes onto the Main Application Server */
