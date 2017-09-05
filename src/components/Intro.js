@@ -4,7 +4,11 @@ export default class Intro extends Component {
 
     render() {
         return (
-                <div>Intro Page Goes Here</div>
+                <div>
+                    <button className="btn btn-primary">
+                        Test Button
+                    </ button>
+                </div>
         );
     }
 }
