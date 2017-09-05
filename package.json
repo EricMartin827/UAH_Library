@@ -8,8 +8,9 @@
   "description": "A software tracking tool for the UAH Drama Department.",
   "main": "index.js",
   "scripts": {
-    "build": "webpack",
-    "client": "webpack && webpack-dev-server",
+    "clean": "rimraf build",
+    "build": "npm run clean && webpack",
+    "client": "webpack-dev-server",
     "start": "node ./server/Main.js",
     "server": "nodemon server/Main.js --debug-brk",
     "server-debug": "nodemon server.js --no-timeout --debug-brk",
@@ -62,6 +63,7 @@
     "html-webpack-plugin": "^2.30.1",
     "mocha": "^3.4.2",
     "nodemon": "^1.11.0",
+    "rimraf": "^2.6.1",
     "supertest": "^3.0.0",
     "webpack": "^3.5.5",
     "webpack-dev-server": "^2.7.1"

@@ -9,6 +9,7 @@ import promise from "redux-promise";
 import Routes from "./Router.js";
 import reducers from "./reducers";
 
+console.log("Eric Is Dedicated");
 const MainApp = () => {
     const store = applyMiddleware(promise)(createStore);
     return (
