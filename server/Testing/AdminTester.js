@@ -23,6 +23,7 @@ const {hasToken}      = TestLibrary;
 function AdminTester(app, schema) {
     Tester.call(this, app, schema)
 }
+
 AdminTester.prototype = Object.create(Tester.prototype)
 AdminTester.prototype.constructor = AdminTester;
 var Interface = AdminTester.prototype;
@@ -266,7 +267,7 @@ Interface.postOne = function(data) {
 
 	/* Create the first entry and confirm json data was saved */
 	request(_app)
-	    .post(`/${_mode}`)
+	    .post(`/api/${_mode}/new`) /*Change Made Here*/
 	    .set("x-admin", `${_tok}`)
 	    .send(data)
 	    .expect(200)
@@ -312,7 +313,7 @@ Interface.postMany = function(data) {
     return new Promise((resolve, reject) => {
 
 	request(_app)
-	    .post(`/${_mode}`)
+	    .post(`/api/${_mode}/new`)
 	    .set("x-admin", `${_tok}`)
 	    .send(data)
 	    .expect(200)
@@ -340,7 +341,7 @@ Interface.get = function(query) {
     var _query = (query) ? toQuery(query) : "";
     return new Promise((resolve, reject) => {
 	request(_app)
-	    .get(`/${_mode}?${_query}`)
+	    .get(`/api/${_mode}?${_query}`)
 	    .set("x-admin", `${_tok}`)
 	    .expect(200)
 	    .end((err, res) => {

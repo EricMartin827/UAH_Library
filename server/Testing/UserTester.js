@@ -276,7 +276,7 @@ Interface.get = function(query) {
     var _query = (query) ? toQuery(query) : "";
     return new Promise((resolve, reject) => {
 	request(_app)
-	    .get(`/${_mode}?${_query}`)
+	    .get(`/api/${_mode}?${_query}`)
 	    .set("x-user", `${_tok}`)
 	    .expect(200)
 	    .end((err, res) => {

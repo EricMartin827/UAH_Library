@@ -1,31 +1,31 @@
 "use strict"
 
-const {ERROR_LIB}    = require("./../library");
+const {ERROR_LIB}    = require("./../../library");
 const {makeErrno}    = ERROR_LIB;
 const {CUSTOM_ERRNO} = ERROR_LIB;
 const {ECINVAL}      = CUSTOM_ERRNO;
 
-const {LIBRARY}      = require("./../library");
+const {LIBRARY}      = require("./../../library");
 const {NODE_LIB}     = LIBRARY;
 const {CUSTOM_LIB}   = LIBRARY;
 const {express}      = NODE_LIB;
 const {bodyParser}   = NODE_LIB;
 const {isArray}      = CUSTOM_LIB;
 
-const {MIDDLEWARE}   = require("./../Middleware");
+const {MIDDLEWARE}   = require("./../../Middleware");
 const {authenticate} = MIDDLEWARE;
 const {authEither}   = authenticate;
 const {authAdmin}    = authenticate;
 const {parseQueries} = MIDDLEWARE;
 
-const {Schemas} = require("./../Schemas");
+const {Schemas} = require("./../../Schemas");
 const {Play} = Schemas;
 
-var playRoutes = new express.Router();
-playRoutes.use(bodyParser.json());
+var playAPI = new express.Router();
+playAPI.use(bodyParser.json());
 
 /******************************************************************************/
-/******************** Private Functions For Play Routes ***********************/
+/******************** Private Helpers for Play API ****************************/
 /******************************************************************************/
 
 /*
@@ -41,10 +41,10 @@ async function addPlays(data) {
 }
 
 /******************************************************************************/
-/************************* Get Routes For Plays *******************************/
+/********************* Get Requests for Play API ******************************/
 /******************************************************************************/
 
-playRoutes.get("/", parseQueries , (req, res) => {
+playAPI.get("/", parseQueries , (req, res) => {
 
     query = req.header["x-query"];
     Play.find(query).then((matches) => {
@@ -54,7 +54,7 @@ playRoutes.get("/", parseQueries , (req, res) => {
     });
 });
 
-playRoutes.get("/:id", (req, res) => {
+playAPI.get("/:id", (req, res) => {
 
     var id = req.params.id;
     Play.findById(id).then((play) => {
@@ -69,7 +69,7 @@ playRoutes.get("/:id", (req, res) => {
 /******************************************************************************/
 
 
-playRoutes.post("/", authAdmin, (req, res) => {
+playAPI.post("/new", authAdmin, (req, res) => {
 
     if (isArray(req.body)) {
 
@@ -90,4 +90,4 @@ playRoutes.post("/", authAdmin, (req, res) => {
     }
 });
 
-module.exports = {playRoutes};
+module.exports = { playAPI };

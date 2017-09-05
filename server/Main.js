@@ -10,14 +10,20 @@ const {authRegistration} = MIDDLEWARE;
 
 const {ROUTES}           = require("./Routes");
 
+/* If the server is running at remote location (Heroku), use
+ * the environment's port number. Otherwise, the application
+ * is running locally and give it the default of 3000.
+ */
+const port = process.env.PORT || 3000;
+
 /* Create the Main Application */
 var main = express();
 main.use(bodyParser.json());
 
 /* Mount The Routes onto the Main Application Server */
-main.use("/admin", ROUTES.Admin);
+main.use("/admin(s)?", ROUTES.Admin);
 main.use("/user(s)?", ROUTES.User);
-main.use("/play(s)?", ROUTES.Play);
+main.use("/api", ROUTES.API);
 
 /* All Users and Admins Excluding the Root Admin Must Register */
 main.patch("/register", authRegistration, (req, res) => {
@@ -34,8 +40,8 @@ main.patch("/register", authRegistration, (req, res) => {
     });
 });
 
-main.listen(3000, () => {
-    console.log("The Main Application is Listening on Port 3000");
+main.listen(port, () => {
+    console.log(`The Server is Listening on Port ${port}`);
 });
 
 module.exports = {

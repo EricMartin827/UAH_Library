@@ -87,7 +87,7 @@ adminRoutes.patch("/logout", authAdmin, (req, res) => {
 
 
 /*
- * Private Admin Me Route
+ * Echos the currently logged in admin for this seesion.
  */
 adminRoutes.get("/me", authAdmin, (req, res) => {
 
