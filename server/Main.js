@@ -22,7 +22,9 @@ var main = express();
 
 /*Enable Pre-flight On All Routes */
 main.options("*", cors());
-main.use(cors());
+main.use(cors({
+    exposedHeaders : ["x-admin", "x-user", "x-register"]
+}));
 
 main.use(bodyParser.json());
 
