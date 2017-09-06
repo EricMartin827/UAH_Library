@@ -45,7 +45,7 @@ adminRoutes.post("/", (req, res) => {
 /*
  * Public Admin Login Route
  */ 
-adminRoutes.post("/login", (req, res) => {
+adminRoutes.patch("/login", (req, res) => {
 
     var user = req.body;
     if (!(user.email && user.password)) {
