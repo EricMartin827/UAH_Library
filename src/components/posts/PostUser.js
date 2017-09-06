@@ -1,10 +1,20 @@
+/* NPM Imports */
 import React, { Component } from "react";
 import { Field, reduxForm } from "redux-form";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
+
+/* Local Imports */
 import { addUsers } from "./../../actions";
+import { renderField } from "./../../renderers";
 
 class PostUser extends Component {
+
+    onSubmit(values) {
+        this.props.addUsers(values, () => {
+            this.props.history.push("/users");
+        });
+    }
 
     render() {
 
@@ -12,7 +22,7 @@ class PostUser extends Component {
         const { handleSubmit } = this.props;
 
         return (
-            <form onSubmit={handleSubmit(submit.bind(this))}>
+            <form onSubmit={handleSubmit(this.onSubmit.bind(this))}>
                 <Field label="Email" type="text" name="email"
                     component={renderField} />
                 <Field label="Password" type="text" name="password"
@@ -30,27 +40,6 @@ class PostUser extends Component {
     }
 }
 
-function submit(values) {
-
-    this.props.addUsers(values, () => {
-        this.props.history.push("/users");
-    });
-}
-
-function renderField(field) {
-    const { meta : { touched, error } } = field;
-    const className = `form-group ${(touched && error) ? "has-danger" : ""}`;
-    return (
-        <div className={className}>
-            <label>{field.label}</label>
-            <input className="form-control" type={field.type}
-                {...field.input} />
-            <div className="text-help">
-                {touched ? error : ""}
-            </div>
-        </div>
-    );
-}
 
 /* Will Improve This: Will Need To Add Query To Database */
 function validate(values) {
@@ -79,7 +68,7 @@ function validate(values) {
 
 export default reduxForm({
     validate : validate,
-    form : "PostNewUser" /* This String Must Be Unique to Not Share State !! */
+    form : "PostNewUser"
 })(
     connect(null, { addUsers })(PostUser)
 );
