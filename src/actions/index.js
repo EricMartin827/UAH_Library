@@ -16,10 +16,11 @@ export function fetchUsers() {
     console.log(config);
     const request = axios.get(`${URL}/api/users`, config);
 
-        return {
-	           type : GET_USERS,
-               payload : request
-           };
+        console.log("Request is: ", request);
+    return {
+           type : GET_USERS,
+           payload : request
+       };
 }
 
 export function addUsers(users, callback) {
@@ -33,7 +34,7 @@ export function addUsers(users, callback) {
     return {
         type : POST_USERS,
         payload : request
-    }
+    };
 }
 
 
@@ -43,10 +44,23 @@ export function loginUser(credentials, callback) {
     credentials.access = "admin";
     const { access } = credentials;
     const request = axios.patch(`${URL}/${access}/login`, credentials, config)
-        .then(() => callback());
+        .then((res) => {
+            callback()
+            // const data = res.data;
+            // const headers = res.headers;
+            // console.log("Response Data: ", data);
+            // console.log("Response Header: ", headers);
+            console.log("Server Response: ", res);
+            return {
+                type : LOGIN_USER,
+                payload : res
+            }
+        }).catch((err) => console.log(err));
 
+    console.log("Returning");
+    //return { type : null };
     return {
         type : LOGIN_USER,
         payload : request
-    };
+     }
 }

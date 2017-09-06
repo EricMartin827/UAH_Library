@@ -1,13 +1,18 @@
+/* NPM Imports */
 import _ from "lodash";
-import { USER_LOGIN } from "./../actions";
 
-export default function(state = {}, action ) {
+/* Local Imports */
+import { LOGIN_USER } from "./../actions";
+
+export default function(state = {}, action) {
 
     switch (action.type) {
-        case USER_LOGIN:
-            console.log("Reducer Payload: ", action.payload);
-            console.log("Reducer Data: ", action.payload.data);
-            return action.payload.data;
+        case LOGIN_USER:
+            // const { data : { headers, data }}= action.payload.payload;
+            // console.log("Payload: ", action.payload.payload);
+            // console.log("Login Reducer Action Data: ", data);
+            // console.log("Login Reducer Action Header: ", headers)
+            return action.payload;
         default:
             return state;
     }

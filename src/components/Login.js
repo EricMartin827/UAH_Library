@@ -11,7 +11,7 @@ import { renderField } from "./../renderers";
 class Login extends Component {
 
     onSubmit(values) {
-            console.log("Login Submit Values: ", values);
+            console.log("Login onSubmit Values: ", values);
             this.props.loginUser(values, () => {
                 this.props.history.push("/plays");
             })
@@ -49,7 +49,6 @@ function validate(values) {
     if (!values.password) {
         errors.password = "Enter A Password";
     }
-    console.log("Login Values = ", values);
     return errors;
 }
 
