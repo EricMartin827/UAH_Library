@@ -17,10 +17,13 @@ const cors               = require("cors");
  * is running locally and give it the default of 3000.
  */
 const port = process.env.PORT || 3000;
-
 /* Create the Main Application */
 var main = express();
+
+/*Enable Pre-flight On All Routes */
+main.options("*", cors());
 main.use(cors());
+
 main.use(bodyParser.json());
 
 /* Mount The Routes onto the Main Application Server */
