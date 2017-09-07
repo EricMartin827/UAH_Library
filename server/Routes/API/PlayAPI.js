@@ -44,9 +44,9 @@ async function addPlays(data) {
 /********************* Get Requests for Play API ******************************/
 /******************************************************************************/
 
-playAPI.get("/", parseQueries , (req, res) => {
+playAPI.get("/", authEither , parseQueries , (req, res) => {
 
-    query = req.header["x-query"];
+    var query = req.header["x-query"];
     Play.find(query).then((matches) => {
 	res.send(matches);
     }).catch((err) => {
