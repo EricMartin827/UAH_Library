@@ -11,8 +11,11 @@ export default function(state = {}, action) {
             console.log("CurrentUserReducerLogin: ", action.payload.payload);
             return action.payload.payload;
         case REGISTER_USER:
-            console.log("CurrentUserReducerRegister", action.payload);
-            return state;
+            const newState = Object.assign(state)
+            console.log("Register User Payload: ", action.payload.payload);
+            newState.token = action.payload.payload.token;
+            console.log("CurrentUserReducerRegister", newState);
+            return newState;
         default:
             return state;
     }
