@@ -1,0 +1,2 @@
+class PlayListItem extends Compoent {
+}
