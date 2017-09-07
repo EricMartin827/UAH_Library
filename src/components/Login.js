@@ -11,10 +11,9 @@ import { renderField } from "./../renderers";
 class Login extends Component {
 
     onSubmit(values) {
-            console.log("Login onSubmit Values: ", values);
-            this.props.loginUser(values, () => {
-                this.props.history.push("/plays");
-            })
+        this.props.loginUser(values,
+            () => this.props.history.push("/register"),
+            () => this.props.history.push("/plays"));
     }
 
     render() {

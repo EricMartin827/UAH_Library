@@ -12,6 +12,7 @@ import Intro from "./components/Intro.js";
 import Login from "./components/Login.js";
 import Plays from "./components/Plays.js";
 import Users from "./components/Users.js";
+import Register from "./components/Register.js";
 import PostUser from "./components/posts/PostUser.js";
 
 /*
@@ -27,6 +28,7 @@ const Routes = () => {
                     <Route path="/user(s)?" component={Users} />
                     <Route path="/play(s)?" component={Plays} />
                     <Route path="/login" component={Login} />
+                    <Route path="/register" component={Register} />
                     <Route path="/" component={Intro} />
                 </ Switch>
             </div>

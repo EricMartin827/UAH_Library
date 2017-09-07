@@ -38,27 +38,37 @@ export function addUsers(users, callback) {
 }
 
 
-export function loginUser(credentials, callback) {
+export function loginUser(credentials, gotoRegister, gotoPlays) {
 
     /*Little Hack To Get Going -> Must get this from form ??? */
     credentials.access = "admin";
     const { access } = credentials;
     const request = axios.patch(`${URL}/${access}/login`, credentials, config)
         .then((res) => {
-            callback()
-            // const data = res.data;
-            // const headers = res.headers;
-            // console.log("Response Data: ", data);
-            // console.log("Response Header: ", headers);
             console.log("Server Response: ", res);
+            var { data , headers } = res;
+            var action = { type : LOGIN_USER, payload : data }
+            if (headers["x-register"]) {
+                data.token = headers["x-register"];
+                gotoRegister();
+            } else {
+
+                if (headers["x-admin"]) {
+                    data.token = headers["x-admin"];
+                } else {
+                    data.token = headers["x-user"];
+                }
+                gotoPlays();
+            }
+            console.log("Returning", data);
             return {
                 type : LOGIN_USER,
-                payload : res
+                payload : data
             }
+
         }).catch((err) => console.log(err));
 
-    console.log("Returning");
-    //return { type : null };
+    console.log("Returning Post Request");
     return {
         type : LOGIN_USER,
         payload : request
