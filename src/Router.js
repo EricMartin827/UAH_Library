@@ -1,4 +1,5 @@
 import React from "react";
+import {Switch} from 'react-router-dom'
 
 /*
  * BrowserRouter tells react router to look at the entire URL
@@ -16,9 +17,11 @@ const Routes = () => {
     return (
         <BrowserRouter>
             <div>
-                <Route path="/login" component={Login}></Route>
-                <Route path="/plays" component={Plays}></Route>
-                <Route path="/" component={Intro}></Route>
+                <Switch>
+                    <Route path="/login" component={Login}></Route>
+                    <Route path="/plays" component={Plays}></Route>
+                    <Route path="/" component={Intro}></Route>
+                </Switch>
             </div>
         </BrowserRouter>
     );

@@ -1,2 +1,4 @@
-class PlayListItem extends Compoent {
+import {Component} from 'react';
+class PlayListItem extends Component {
+    
 }

@@ -6,14 +6,15 @@ import { connect } from 'react-redux'
 class Plays extends Component {
 
     componentDidMount() {
-        console.log(this.props);
         this.props.fetchPlays();
     }
     renderPlays() {
         console.log("rendering plays");
+        console.log(this.props.plays)
         _.map(this.props.plays, play => {
+            console.log(play.title);
             return (
-                <li key={play.id}>
+                <li key={play._id}>
                 {play.title}
                 </li>
             );
@@ -23,7 +24,7 @@ class Plays extends Component {
         return (
             <div>
                 <h3>This is the Plays page</h3>
-                <ul>
+                <ul className='list-group'>
                     {this.renderPlays()}
                 </ul>
             </div>
