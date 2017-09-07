@@ -42,8 +42,7 @@ main.patch("/register", authRegistration, (req, res) => {
     /* Change the password. clearToken() will invkoke a save call. */
     oldUser.password = password;
     oldUser.swapToken("newUser", oldUser.access).then((tok) => {
-	res.header["x-token"] = tok;
-	res.send({token : tok});
+	res.header("x-token", tok).send({token : tok});
     }).catch((err) => {
 	res.status(400).send(err);
     });
