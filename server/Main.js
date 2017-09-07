@@ -23,7 +23,7 @@ var main = express();
 /*Enable Pre-flight On All Routes */
 main.options("*", cors());
 main.use(cors({
-    exposedHeaders : ["x-admin", "x-user", "x-register", "x-token"]
+    exposedHeaders : ["x-admin", "x-user", "x-register"]
 }));
 
 main.use(bodyParser.json());
@@ -36,13 +36,14 @@ main.use("/api", ROUTES.API);
 /* All Users and Admins Excluding the Root Admin Must Register */
 main.patch("/register", authRegistration, (req, res) => {
 
-    var {password} = req.body;
+    var { password } = req.body;
     var oldUser = req.oldUser;
-
+    var tok_header = (oldUser.access === "admin") ? "x-admin" : "x-user";
+    
     /* Change the password. clearToken() will invkoke a save call. */
     oldUser.password = password;
     oldUser.swapToken("newUser", oldUser.access).then((tok) => {
-	res.header("x-token", tok).send({token : tok});
+	res.header(tok_header, tok).send({token : tok, access : oldUser.access});
     }).catch((err) => {
 	res.status(400).send(err);
     });
