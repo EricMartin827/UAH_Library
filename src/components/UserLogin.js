@@ -8,9 +8,10 @@ import { connect } from "react-redux";
 import { loginUser } from "./../actions";
 import { renderField } from "./../renderers";
 
-class Login extends Component {
+class UserLogin extends Component {
 
     onSubmit(values) {
+        values.access = "user";
         this.props.loginUser(values,
             () => this.props.history.push("/register"),
             () => this.props.history.push("/plays"));
