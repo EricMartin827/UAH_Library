@@ -14,9 +14,16 @@ class Plays extends Component {
         return _.map(this.props.plays, play => {
             console.log(play.title);
             return (
-                <li key={play._id}>
-                {play.title}
-                </li>
+                <tr key={play._id}>
+                    <td>{play.title}</td>
+                    <td>{play.genre}</td>
+                    <td>{play.actorCount}</td>
+                    <td>{play.authorLast}, {play.authorFirst}</td>
+                    <td>{play.timePeriod}</td>
+                    <td>{play.costumeCount}</td>
+                    <td>{play.hasSpectacle + ""}</td>
+                    <td>{play.copies}</td>
+                </tr>
             );
         });
     }
@@ -24,9 +31,21 @@ class Plays extends Component {
         return (
             <div>
                 <h3>This is the Plays page</h3>
-                <ul className='list-group'>
+                <table className='list-group'>
+                    <tbody>
+                    <tr>
+                        <td>Title</td>
+                        <td>Genre</td>
+                        <td>Actor Count</td>
+                        <td>Author</td>
+                        <td>Time Period</td>
+                        <td>Costume Count</td>
+                        <td>Spectacle?</td>
+                        <td>Copies</td>
+                    </tr>
                     {this.renderPlays()}
-                </ul>
+                    </tbody>
+                </table>
             </div>
         );
     }
