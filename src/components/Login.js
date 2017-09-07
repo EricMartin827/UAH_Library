@@ -48,6 +48,7 @@ function validate(values) {
     if (!values.password) {
         errors.password = "Enter A Password";
     }
+
     return errors;
 }
 
