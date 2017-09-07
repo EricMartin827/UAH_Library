@@ -34,7 +34,7 @@ main.use("/user(s)?", ROUTES.User);
 main.use("/api", ROUTES.API);
 
 /* All Users and Admins Excluding the Root Admin Must Register */
-main.patch("/register", authRegistration, (req, res) => {
+main.post("/register", authRegistration, (req, res) => {
 
     var { password } = req.body;
     var oldUser = req.oldUser;

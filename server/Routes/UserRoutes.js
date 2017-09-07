@@ -32,7 +32,7 @@ userRoutes.use(bodyParser.json());
 /*
  * Allows A Reguler User To Login
  */
-userRoutes.patch("/login", (req, res) => {
+userRoutes.post("/login", (req, res) => {
 
     var user = req.body;
     if (!(user.email && user.password)) {
@@ -62,7 +62,7 @@ userRoutes.patch("/login", (req, res) => {
 /*
  * Allows a Regular User To Logout.
  */
-userRoutes.patch("/logout", authUser, (req, res) => {
+userRoutes.post("/logout", authUser, (req, res) => {
 
     var user = req.header["x-user"];
     user.clearToken("user").then(() => {
