@@ -11,7 +11,7 @@ class Plays extends Component {
     renderPlays() {
         console.log("rendering plays");
         console.log(this.props.plays)
-        _.map(this.props.plays, play => {
+        return _.map(this.props.plays, play => {
             console.log(play.title);
             return (
                 <li key={play._id}>
