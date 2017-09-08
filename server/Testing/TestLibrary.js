@@ -55,7 +55,7 @@ Interface.register = function(data) {
     var _tok = this.authToken;
     return new Promise((resolve, reject) => {
 	request(_app)
-	    .patch("/register")
+	    .post("/register")
 	    .set("x-register", `${_tok}`)
 	    .send(data)
 	    .expect(200)
@@ -95,7 +95,7 @@ Interface.register_NoToken = function(data) {
     var _app = this.app;
     return new Promise((resolve, reject) => {
 	request(_app)
-	    .patch("/register")
+	    .post("/register")
 	    .send(data)
 	    .expect(401)
 	    .end((err, res) => {
@@ -118,7 +118,7 @@ Interface.register_BadToken = function(data, badToken) {
     var _app = this.app;
     return new Promise((resolve, reject) => {
 	request(_app)
-	    .patch(`/register`)
+	    .post(`/register`)
 	    .set("x-register", `${badToken}`)
 	    .send(data)
 	    .expect(401)
@@ -145,7 +145,7 @@ Interface.register_AlteredToken = function(data) {
     _tok = _tok.replace(c, nextChar(c));
     return new Promise((resolve, reject) => {
 	request(_app)
-	    .patch(`/register`)
+	    .post(`/register`)
 	    .set("x-register", `${_tok}`)
 	    .send(data)
 	    .expect(401)

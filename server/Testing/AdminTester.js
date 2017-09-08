@@ -63,7 +63,7 @@ Interface.login = function(data) {
     var _schema = this.schema;
     return new Promise((resolve, reject) => {
 	request(_app)
-	    .patch(`/admin/login`)
+	    .post(`/admin/login`)
 	    .send(data)
 	    .expect(200)
 	    .end((err, res) => {
@@ -108,7 +108,7 @@ Interface.logout = function(data) {
     var _tok = this.authToken;
     return new Promise((resolve, reject) => {
 	request(_app)
-	    .patch(`/admin/logout`)
+	    .post(`/admin/logout`)
 	    .set("x-admin", `${_tok}`)
 	    .expect(200)
 	    .then((res) => {
@@ -141,7 +141,7 @@ Interface.badLogin = function(data) {
     var _code = (data) ? EPERM : ECINVAL;
     return new Promise((resolve, reject) => {
 	request(_app)
-	    .patch(`/admin/login`)
+	    .post(`/admin/login`)
 	    .send(data)
 	    .expect(_status)
 	    .end((err, res) => {

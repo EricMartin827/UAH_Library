@@ -208,7 +208,7 @@ instanceMethods.initAuthToken = function(access) {
 	user.tokens.push({access, token});
 	break;
     case 1:
-	if (!user.tokens[0] || user.toknes[0].acceess === access) {
+	if (!user.tokens[0] || user.tokens[0].access === access) {
 	    user.tokens[0] = {access, token};
 	} else {
 	    user.tokens.push({access, token});
