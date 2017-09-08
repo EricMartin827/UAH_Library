@@ -7,18 +7,21 @@ import { fetchUsers } from "./../actions";
 
 class Users extends Component {
 
-    /* After React has rendered the component, fetch users from
-     * the database.
-     */
     componentDidMount() {
         this.props.fetchUsers();
     }
 
     render() {
+        const { users } = this.props;
+
+        if (!users) {
+            return (<div>Loading User Content...</div>);
+        }
+
         return (
             <div>
                 <div className="text-xs-right">
-                    <Link className="btn btn-primary" to="/newuser">
+                    <Link className="btn btn-primary" to="/user/new">
                         Add New User
                     </Link>
                 </div>

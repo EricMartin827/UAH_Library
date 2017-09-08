@@ -8,6 +8,7 @@ export const POST_USERS = "post_users";
 export const LOGIN_USER = "login_user";
 export const REGISTER_USER = "register_user";
 export const FETCH_PLAYS = "fetch_plays";
+export const FETCH_PLAY_DETAILS = "fetch_play_detail"
 
 var config = {
     headers : {"x-admin" : ADMIN_TOK}
@@ -80,8 +81,6 @@ export function loginUser(credentials, gotoRegister, gotoPlays) {
 export function registerUser(newPassword, token, gotoPlays) {
 
     const config = { headers : { "x-register" : token } }
-    console.log("You did send : ", {newPassword});
-    console.log("You now send : ", {password : newPassword})
     const request = axios.post(`${URL}/register`, { password : newPassword }, config)
         .then((res) => {
 
@@ -103,7 +102,6 @@ export function registerUser(newPassword, token, gotoPlays) {
 
         }).catch((err) => console.log(err));
 
-    console.log("Returning Register Request: ", request);
     return {
         type : REGISTER_USER,
         payload : request
@@ -121,7 +119,7 @@ export function fetchPlays() {
 export function fetchPlayDetails(id) {
     const request = axios.get(`${URL}/api/plays/${id}`, config);
     return {
-        type : FETCH_PLAYS,
+        type : FETCH_PLAY_DETAILS,
         payload: request
     }
 }

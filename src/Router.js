@@ -14,25 +14,26 @@ import Plays from "./components/Plays.js";
 import Users from "./components/Users.js";
 import Register from "./components/Register.js";
 import PostUser from "./components/posts/PostUser.js";
-import Play_Details from "./components/Play_Details.js";
+import PlayDetails from "./components/PlayDetails.js";
 
 
 /*
  * BUG: Webpack-dev-server and React Router seem to fail on nested
  * urls. Will try to fix. /newuser to /user/new ;)
  */
+
 const Routes = () => {
     return (
         <BrowserRouter>
             <div>
                 <Switch>
-                    <Route path="/newuser" component={PostUser} />
+                    <Route path="/user(s)?/new" component={PostUser} />
                     <Route path="/user(s)?" component={Users} />
+                    <Route path="/play(s)?/:id" component={PlayDetails} />
                     <Route path="/play(s)?" component={Plays} />
                     <Route path="/adminlogin" component={AdminLogin} />
                     <Route path="/userlogin" component={UserLogin} />
                     <Route path="/register" component={Register} />
-	                <Route path="/play_details" component={Play_Details}></Route>
                     <Route path="/" component={Intro} />
                 </ Switch>
             </div>

@@ -1,7 +1,6 @@
-import _ from "lodash";
 import React, { Component } from "react";
 import { connect } from "react-redux"
-
+import _ from "lodash";
 
 import { fetchPlays } from "./../actions";
 
@@ -13,6 +12,7 @@ class Plays extends Component {
 
     renderPlays() {
         return _.map(this.props.plays, play => {
+            console.log(play);
             return (
                 <tr key={play._id}>
                     <td>{play.title}</td>
