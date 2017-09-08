@@ -12,6 +12,7 @@ import { BrowserRouter, Route } from "react-router-dom";
 import Intro from "./components/Intro.js"
 import Login from "./components/Login.js";
 import Plays from "./components/Plays.js";
+import Play_Details from "./components/Play_Details.js";
 
 const Routes = () => {
     return (
@@ -20,6 +21,7 @@ const Routes = () => {
                 <Switch>
                     <Route path="/login" component={Login}></Route>
                     <Route path="/plays" component={Plays}></Route>
+                    <Route path="/play_details" component={Play_Details}></Route>
                     <Route path="/" component={Intro}></Route>
                 </Switch>
             </div>

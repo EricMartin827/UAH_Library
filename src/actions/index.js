@@ -16,3 +16,11 @@ export default function fetchPlays() {
         payload: request
     }
 }
+
+export function fetchPlayDetails(id) {
+    const request = axios.get(`${URL}/api/plays/${id}`, config);
+    return {
+	    type : FETCH_PLAYS,
+        payload: request
+    }
+}
