@@ -7,6 +7,7 @@ export const GET_USERS = "get_users";
 export const POST_USERS = "post_users";
 export const LOGIN_USER = "login_user";
 export const REGISTER_USER = "register_user";
+export const FETCH_PLAYS = "fetch_plays";
 
 var config = {
     headers : {"x-admin" : ADMIN_TOK}
@@ -107,4 +108,20 @@ export function registerUser(newPassword, token, gotoPlays) {
         type : REGISTER_USER,
         payload : request
      }
+}
+
+export function fetchPlays() {
+    const request = axios.get(`${URL}/api/plays`, config);
+    return {
+        type : FETCH_PLAYS,
+        payload: request
+    }
+}
+
+export function fetchPlayDetails(id) {
+    const request = axios.get(`${URL}/api/plays/${id}`, config);
+    return {
+        type : FETCH_PLAYS,
+        payload: request
+    }
 }

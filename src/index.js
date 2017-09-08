@@ -12,8 +12,9 @@ import "./../style/style.css"
 import Routes from "./Router.js";
 import reducers from "./reducers";
 
+const  store = applyMiddleware(promise)(createStore);
+
 const MainApp = () => {
-    const store = applyMiddleware(promise)(createStore);
     return (
         <Provider store={store(reducers)}>
             <Routes />

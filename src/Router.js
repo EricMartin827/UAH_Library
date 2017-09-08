@@ -1,5 +1,4 @@
 import React from "react";
-
 /*
  * BrowserRouter tells react router to look at the entire URL
  * when determining which component to displace in the HTML
@@ -15,6 +14,8 @@ import Plays from "./components/Plays.js";
 import Users from "./components/Users.js";
 import Register from "./components/Register.js";
 import PostUser from "./components/posts/PostUser.js";
+import Play_Details from "./components/Play_Details.js";
+
 
 /*
  * BUG: Webpack-dev-server and React Router seem to fail on nested
@@ -31,6 +32,7 @@ const Routes = () => {
                     <Route path="/adminlogin" component={AdminLogin} />
                     <Route path="/userlogin" component={UserLogin} />
                     <Route path="/register" component={Register} />
+	                <Route path="/play_details" component={Play_Details}></Route>
                     <Route path="/" component={Intro} />
                 </ Switch>
             </div>
