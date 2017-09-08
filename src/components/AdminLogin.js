@@ -11,7 +11,6 @@ import { renderField } from "./../renderers";
 class AdminLogin extends Component {
 
     onSubmit(values) {
-        const = values;
         values.access = "admin";
         this.props.loginUser(values,
             () => this.props.history.push("/register"),
@@ -59,5 +58,5 @@ export default reduxForm({
     validate : validate,
     form : "LoginUser"
 })(
-    connect(null, { loginUser })(Login)
+    connect(null, { loginUser })(AdminLogin)
 );

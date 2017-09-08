@@ -9,7 +9,8 @@ import { BrowserRouter, Route, Switch } from "react-router-dom";
 
 /* Application Routes */
 import Intro from "./components/Intro.js";
-import Login from "./components/Login.js";
+import AdminLogin from "./components/AdminLogin.js";
+import UserLogin from "./components/UserLogin.js";
 import Plays from "./components/Plays.js";
 import Users from "./components/Users.js";
 import Register from "./components/Register.js";
@@ -27,7 +28,8 @@ const Routes = () => {
                     <Route path="/newuser" component={PostUser} />
                     <Route path="/user(s)?" component={Users} />
                     <Route path="/play(s)?" component={Plays} />
-                    <Route path="/login" component={Login} />
+                    <Route path="/adminlogin" component={AdminLogin} />
+                    <Route path="/userlogin" component={UserLogin} />
                     <Route path="/register" component={Register} />
                     <Route path="/" component={Intro} />
                 </ Switch>

@@ -58,5 +58,5 @@ export default reduxForm({
     validate : validate,
     form : "LoginUser"
 })(
-    connect(null, { loginUser })(Login)
+    connect(null, { loginUser })(UserLogin)
 );

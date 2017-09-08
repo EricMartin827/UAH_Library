@@ -43,7 +43,6 @@ class Users extends Component {
 }
 
 
-
 function mapStateToProps(state) {
     return {users: state.users};
 }

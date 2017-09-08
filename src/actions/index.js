@@ -39,10 +39,9 @@ export function addUsers(users, callback) {
 
 export function loginUser(credentials, gotoRegister, gotoPlays) {
 
-    /*Little Hack To Get Going -> Must get this from form ??? */
     const { access } = credentials;
     console.log("LoginUser Access: ", access);
-    const request = axios.patch(`${URL}/${access}/login`, credentials, config)
+    const request = axios.post(`${URL}/${access}/login`, credentials)
         .then((res) => {
 
             console.log("Server Login Response: ", res);
@@ -57,8 +56,10 @@ export function loginUser(credentials, gotoRegister, gotoPlays) {
                 } else {
                     data.token = headers["x-user"];
                 }
+
                 gotoPlays();
             }
+
             console.log("Returning Login Data", data);
             return {
                 type : LOGIN_USER,
@@ -78,9 +79,9 @@ export function loginUser(credentials, gotoRegister, gotoPlays) {
 export function registerUser(newPassword, token, gotoPlays) {
 
     const config = { headers : { "x-register" : token } }
-    console.log("You had sent : ", {newPassword});
+    console.log("You did send : ", {newPassword});
     console.log("You now send : ", {password : newPassword})
-    const request = axios.patch(`${URL}/register`, { password : newPassword }, config)
+    const request = axios.post(`${URL}/register`, { password : newPassword }, config)
         .then((res) => {
 
             console.log("Server Register Response: ", res);
@@ -93,7 +94,7 @@ export function registerUser(newPassword, token, gotoPlays) {
             }
 
             gotoPlays();
-            console.log("Returning Regist Data: ", data);
+            console.log("Returning Register Data: ", data);
             return {
                 type : REGISTER_USER,
                 payload : data
