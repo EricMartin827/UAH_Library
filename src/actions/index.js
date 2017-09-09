@@ -1,8 +1,7 @@
 import axios from "axios";
 
-export const URL = "https://uahlibrary.herokuapp.com"
-export const ADMIN_TOK = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1OWIxODkxNjQwNjVmZDAwMTIxYzVjMTEiLCJhY2Nlc3MiOiJhZG1pbiIsImlhdCI6MTUwNDgwNzIwN30.o14r7Ei30fXp1hYTwYo01i-j_YzgLSK4lhtINEH4Oas"
-
+export const URL = "https://uahlibrary.herokuapp.com";
+export const ADMIN_TOK = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1OWIxODkxNjQwNjVmZDAwMTIxYzVjMTEiLCJhY2Nlc3MiOiJhZG1pbiIsImlhdCI6MTUwNDkxOTE0Mn0.EVLnx0UhiV1ODNRrPD-HhW74bbA6hI1SQzkLS_QXgq4"
 export const GET_USERS = "get_users";
 export const POST_USERS = "post_users";
 export const LOGIN_USER = "login_user";

@@ -48,9 +48,7 @@ class PlayDetails extends Component {
     renderPlayDetails(play) {
         return (
             <tr key={play._id}>
-                <td> <Link to={`/plays/${play._id}`}>
-                    {play.title}
-                </Link></td>
+                <td>{play.title}</td>
                 <td>{play.genre}</td>
                 <td>{play.actorCount}</td>
                 <td>{play.authorLast}, {play.authorFirst}</td>
