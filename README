@@ -1,0 +1,23 @@
+API Calls
+
+*********************** Adding a new user or users ***************************
+
+Command: post("url/api/user(s)?/new")
+
+Must have an admin token to successfully complete.
+If the data sent is a json object, then it is assumned that a single new user
+is being added. If the data is sent as an array of json objects, then multiple
+users will be added.
+
+*********************** Adding a new play or plays ***************************
+
+Command: post("url/api/play(s)?/new")
+
+Must have an admin token to successfully complete.
+If the data sent is a json object, then it is assumned that a single new play
+is being added. If the data is sent as an array of json objects, then multiple
+plays will be added.
+
+
+
+
