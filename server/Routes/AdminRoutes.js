@@ -45,7 +45,7 @@ adminRoutes.post("/", (req, res) => {
 /*
  * Public Admin Login Route
  */ 
-adminRoutes.patch("/login", (req, res) => {
+adminRoutes.post("/login", (req, res) => {
 
     var user = req.body;
     if (!(user.email && user.password)) {
@@ -75,7 +75,7 @@ adminRoutes.patch("/login", (req, res) => {
 /*
  * Private Admin Logout Route
  */ 
-adminRoutes.patch("/logout", authAdmin, (req, res) => {
+adminRoutes.post("/logout", authAdmin, (req, res) => {
 
     var admin = req.header["x-admin"];
     admin.clearToken("admin").then(() => {

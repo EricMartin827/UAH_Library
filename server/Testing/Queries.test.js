@@ -102,5 +102,4 @@ describe("User Query Tests", () => {
 		    }).catch((err) => done(err));
 	    }).catch((err) => done(err));
     });
-
 });
