@@ -34,11 +34,13 @@ class Plays extends Component {
                 <h3>This is the Plays page</h3>
                 <div>
                     <div>
+                        <a>Add Plays</a>&nbsp;&nbsp;&nbsp;&nbsp;<a>Logout</a>
+                    </div>
+                    <br /> 
+                    <div>
                         <form>
-                            Author Search <input name="authorsearch" type="text"></input><br />
-                            Title Search <input name="titleSearch" type="text"></input><br />
-                            Number of Actors <input name="actors" type="number"></input><br />
-                            Has Spectacle? <input type="radio" name="hasspectacle" value="1"></input> Yes <input type="radio" name="hasspectacle" value="0"></input> No <br />
+                            Author Search <input name="authorsearch" type="text"></input> Title Search <input name="titleSearch" type="text"></input> Number of Actors <input name="actors" type="number"></input><br />
+                            Has Spectacle? <input type="radio" name="hasspectacle" value="1"></input> Yes <input type="radio" name="hasspectacle" value="0"></input> No <input name="search" type="submit" value="Search"></input> <br /> <br />
                         </form>
                     </div>
                     <table className='list-group'>
