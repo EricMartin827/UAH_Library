@@ -32,29 +32,21 @@ class Plays extends Component {
         return (
             <div>
                 <h3>This is the Plays page</h3>
-                <div>
-                    <form>
-                        Author Search <input name="authorsearch" type="text"></input>
-                        Title Search <input name="titleSearch" type="text"></input
-                        Number of Actors <input name="actors" type="number"></input>
-                        Has Spectacle? <input type="radio" name="hasspectacle" value="1">Yes <input type="radio" name="hasspectacle" value="0">No 
-                    </form>
-                    <table className='list-group'>
-                        <tbody>
-                        <tr>
-                            <td>Title</td>
-                            <td>Genre</td>
-                            <td>Actor Count</td>
-                            <td>Author</td>
-                            <td>Time Period</td>
-                            <td>Costume Count</td>
-                            <td>Spectacle?</td>
-                            <td>Copies</td>
-                        </tr>
-                        {this.renderPlays()}
-                        </tbody>
-                    </table>
-                </div>
+                <table className='list-group'>
+                    <tbody>
+                    <tr>
+                        <td>Title</td>
+                        <td>Genre</td>
+                        <td>Actor Count</td>
+                        <td>Author</td>
+                        <td>Time Period</td>
+                        <td>Costume Count</td>
+                        <td>Spectacle?</td>
+                        <td>Copies</td>
+                    </tr>
+                    {this.renderPlays()}
+                    </tbody>
+                </table>
             </div>
         );
     }
