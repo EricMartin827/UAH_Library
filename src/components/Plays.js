@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux"
 import _ from "lodash";
+import {Link}  from "react-router-dom";
 
 import { fetchPlays } from "./../actions";
 
@@ -15,7 +16,7 @@ class Plays extends Component {
             console.log(play);
             return (
                 <tr key={play._id}>
-                    <td>{play.title}</td>
+                    <td><Link to={`/play/${play._id}`}>{play.title}</Link></td>
                     <td>{play.genre}</td>
                     <td>{play.actorCount}</td>
                     <td>{play.authorLast}, {play.authorFirst}</td>
