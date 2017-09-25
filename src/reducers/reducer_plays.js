@@ -2,7 +2,7 @@
 import _ from 'lodash'
 
 /* Local Imports */
-import { FETCH_PLAYS, FETCH_PLAY_DETAILS } from './../actions';
+import { FETCH_PLAYS, FETCH_PLAY_DETAILS, POST_PLAY } from './../actions';
 
 export default function(state = {}, action) {
     switch(action.type) {
@@ -14,6 +14,9 @@ export default function(state = {}, action) {
             const play  = action.payload.data;
             newState[play._id] = play;
             return newState;
+        case POST_PLAY:
+            console.log("Post reducer action:", action);
+            return state;
         default:
           return state;
     }

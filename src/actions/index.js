@@ -8,6 +8,7 @@ export const LOGIN_USER = "login_user";
 export const REGISTER_USER = "register_user";
 export const FETCH_PLAYS = "fetch_plays";
 export const FETCH_PLAY_DETAILS = "fetch_play_detail"
+export const POST_PLAY = "post_play"
 
 var config = {
     headers : {"x-admin" : ADMIN_TOK}
@@ -33,6 +34,26 @@ export function addUsers(users, callback) {
 
     return {
         type : POST_USERS,
+        payload : request
+    };
+}
+
+export function postPlay(play, callback) {
+    play.access = "admin";
+    const request = axios.post(`${URL}/api/users/new`, play, config)
+        .then(() => callback());
+
+    return {
+        type : POST_PLAY,
+        payload : request
+    };
+}
+
+export function addPlay(play, callback) {
+    const request = axios.post(`${URL}/api/play/new`, play, config)
+    .then(() => callback());
+    return {
+        type : POST_PLAY,
         payload : request
     };
 }
