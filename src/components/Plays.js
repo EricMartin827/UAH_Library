@@ -2,18 +2,24 @@ import React, { Component } from "react";
 import { connect } from "react-redux"
 import _ from "lodash";
 import { fetchPlays } from "./../actions";
+import { fetchPlayDetails } from "./../actions";
 import { ButtonToolbar, Button, Pagination } from 'react-bootstrap';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
+import { Link } from "react-router-dom";
 
 class Plays extends Component {
 
     constructor(props) {
-      super(props);
+        super(props);
 
-      this.options = {
-        onPageChange: this.onPageChange.bind(this),
-        onSizePerPageList: this.sizePerPageListChange.bind(this)
-      };
+        this.options = {
+            onPageChange: this.onPageChange.bind(this),
+            onSizePerPageList: this.sizePerPageListChange.bind(this)
+        };
+
+        this.state = {
+            selected_play_id: '59b33f9616df53001221f06c' // make it empty string '' later
+        }
     }
 
     componentDidMount() {
@@ -21,18 +27,25 @@ class Plays extends Component {
     }
 
     sizePerPageListChange(sizePerPage) {
-    //   alert(`sizePerPage: ${sizePerPage}`);
+        console.log(`sizePerPage: ${sizePerPage}`);
     }
 
     onPageChange(page, sizePerPage) {
-    //   alert(`page: ${page}, sizePerPage: ${sizePerPage}`);
+        console.log(`page: ${page}, sizePerPage: ${sizePerPage}`);
+    }
+
+    handleRowSelect(row, isSelected, e) {
+        if(isSelected === true) {
+            this.setState({ selected_play_id: row._id });
+        }
     }
 
     renderPlaysTable() {
         const plays = _.map(this.props.plays);
         const selectRowProp = {
-          mode: 'checkbox',
-          clickToSelect: true
+          mode: 'radio',
+          clickToSelect: true,
+          onSelect: this.handleRowSelect
         };
 
         return (
@@ -43,7 +56,7 @@ class Plays extends Component {
                 <TableHeaderColumn width='150' dataField="genre">
                     Genre
                 </TableHeaderColumn>
-                <TableHeaderColumn  width='150' dataField="actorCount">
+                <TableHeaderColumn width='150' dataField="actorCount">
                     Actor Count
                 </TableHeaderColumn>
                 <TableHeaderColumn width='150' dataField="authorLast">
@@ -68,11 +81,7 @@ class Plays extends Component {
     render() {
         return (
             <div>
-                <ButtonToolbar>
-                <Button bsStyle="success" bsSize="small" active>
-                    Display Detail
-                </Button>
-                </ButtonToolbar>
+                <Link className="btn btn-primary" to={`/plays/${this.state.selected_play_id}`}>Show Play Details</Link>
                 {this.renderPlaysTable()}
             </div>
         );
