@@ -13,8 +13,8 @@ const rootReducer = combineReducers({
     currentUser : currentUserReducer,
     users       : usersReducer,
     plays       : playsReducer,
-    form        : formReducer,
-    navs        : navsReducer
+    navs        : navsReducer,
+    form        : formReducer
 });
 
 export default rootReducer;
