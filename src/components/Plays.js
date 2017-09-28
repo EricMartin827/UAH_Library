@@ -1,18 +1,25 @@
 import React, { Component } from "react";
 import { connect } from "react-redux"
+import { Link } from "react-router-dom";
 import _ from "lodash";
 
 import { fetchPlays } from "./../actions";
 
 class Plays extends Component {
 
-    componentDidMount() {
-        this.props.fetchPlays();
+    constructor(props) {
+        super(props);
+    }
+
+    componentWillReceiveProps(nextProps) {
+        const { access, token } = nextProps;
+        if (access != this.props.access || token != this.props.token) {
+            this.props.fetchPlays(access, token);
+        }
     }
 
     renderPlays() {
         return _.map(this.props.plays, play => {
-            console.log(play);
             return (
                 <tr key={play._id}>
                     <td>{play.title}</td>
@@ -31,6 +38,11 @@ class Plays extends Component {
     render() {
         return (
             <div>
+                <div className="text-xs-right">
+                    <Link className="btn btn-primary" to="/users">
+                        Users Page
+                        </Link>
+                </div>
                 <h3>This is the Plays page</h3>
                 <table className='list-group'>
                     <tbody>
@@ -53,7 +65,11 @@ class Plays extends Component {
 }
 
 function mapStateToProps(state) {
-    return {plays: state.plays };
+    return {
+        access : state.currentUser.access,
+        token : state.currentUser.token,
+        plays : state.plays
+    };
 }
 
 export default connect(mapStateToProps, { fetchPlays })(Plays);

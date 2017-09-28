@@ -21,7 +21,6 @@ class UserLogin extends Component {
 
         /* Passed to this.props by redux from */
         const { handleSubmit } = this.props;
-
         return (
         <form onSubmit={handleSubmit(this.onSubmit.bind(this))}>
             <Field label="Email" type="text" name="email"
@@ -52,7 +51,6 @@ function validate(values) {
 
     return errors;
 }
-
 
 export default reduxForm({
     validate : validate,

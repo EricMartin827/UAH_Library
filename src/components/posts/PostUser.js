@@ -11,7 +11,8 @@ import { renderField } from "./../../renderers";
 class PostUser extends Component {
 
     onSubmit(values) {
-        this.props.addUsers(values, () => {
+        const { token } = this.props;
+        this.props.addUsers(token, values, () => {
             this.props.history.push("/users");
         });
     }
@@ -22,7 +23,8 @@ class PostUser extends Component {
         const { handleSubmit } = this.props;
 
         return (
-            <form onSubmit={handleSubmit(this.onSubmit.bind(this))}>
+            <form  className="input-group"
+                onSubmit={handleSubmit(this.onSubmit.bind(this))}>
                 <Field label="Email" type="text" name="email"
                     component={renderField} />
                 <Field label="Password" type="text" name="password"
@@ -65,10 +67,16 @@ function validate(values) {
     return errors;
 }
 
+function mapStateToProps(state) {
+    return {
+        token : state.currentUser.token,
+    }
+}
+
 
 export default reduxForm({
     validate : validate,
     form : "PostNewUser"
 })(
-    connect(null, { addUsers })(PostUser)
+    connect(mapStateToProps, { addUsers })(PostUser)
 );

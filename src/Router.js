@@ -16,12 +16,6 @@ import Register from "./components/Register.js";
 import PostUser from "./components/posts/PostUser.js";
 import PlayDetails from "./components/PlayDetails.js";
 
-
-/*
- * BUG: Webpack-dev-server and React Router seem to fail on nested
- * urls. Will try to fix. /newuser to /user/new ;)
- */
-
 const Routes = () => {
     return (
         <BrowserRouter>

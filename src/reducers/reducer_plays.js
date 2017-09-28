@@ -2,7 +2,7 @@
 import _ from 'lodash'
 
 /* Local Imports */
-import { FETCH_PLAYS, FETCH_PLAY_DETAILS } from './../actions';
+import { FETCH_PLAYS, FETCH_PLAY_DETAILS } from './../actions/types';
 
 export default function(state = {}, action) {
     switch(action.type) {
