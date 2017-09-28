@@ -14,21 +14,20 @@ import Plays from "./components/Plays.js";
 import Users from "./components/Users.js";
 import Register from "./components/Register.js";
 import PostUser from "./components/posts/PostUser.js";
+import PostMultipleUsers from "./components/posts/PostMultipleUsers.js"
+import PostPlay from "./components/posts/PostPlay.js";
 import PlayDetails from "./components/PlayDetails.js";
-
-
-/*
- * BUG: Webpack-dev-server and React Router seem to fail on nested
- * urls. Will try to fix. /newuser to /user/new ;)
- */
 
 const Routes = () => {
     return (
         <BrowserRouter>
             <div>
                 <Switch>
+                    <Route path="/user(s)?/mnew"
+                        component={PostMultipleUsers} />
                     <Route path="/user(s)?/new" component={PostUser} />
                     <Route path="/user(s)?" component={Users} />
+                    <Route path="/play(s)?/new" component={PostPlay} />
                     <Route path="/play(s)?/:id" component={PlayDetails} />
                     <Route path="/play(s)?" component={Plays} />
                     <Route path="/adminlogin" component={AdminLogin} />

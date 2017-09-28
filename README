@@ -1,5 +1,9 @@
 API Calls
 
+***************************** Query For Users ********************************
+Command: get("url/api/users")
+
+
 *********************** Adding a new user or users ***************************
 
 Command: post("url/api/user(s)?/new")

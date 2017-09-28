@@ -1,18 +1,37 @@
 import React, { Component } from "react";
 import { connect } from "react-redux"
+import { Link } from "react-router-dom";
 import _ from "lodash";
-
 import { fetchPlays } from "./../actions";
+import { fetchPlayDetails } from "./../actions";
+import { ButtonToolbar, Button, Pagination } from 'react-bootstrap';
+import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
+
 
 class Plays extends Component {
 
-    componentDidMount() {
-        this.props.fetchPlays();
+    constructor(props) {
+        super(props);
+
+        this.options = {
+            onPageChange: this.onPageChange.bind(this),
+            onSizePerPageList: this.sizePerPageListChange.bind(this)
+        };
+
+        this.state = {
+            selected_play_id: '59b33f9616df53001221f06c' // make it empty string '' later
+        }
+    }
+
+    componentWillReceiveProps(nextProps) {
+        const { access, token } = nextProps;
+        if (access != this.props.access || token != this.props.token) {
+            this.props.fetchPlays(access, token);
+        }
     }
 
     renderPlays() {
         return _.map(this.props.plays, play => {
-            console.log(play);
             return (
                 <tr key={play._id}>
                     <td>{play.title}</td>
@@ -28,32 +47,80 @@ class Plays extends Component {
         });
     }
 
+    sizePerPageListChange(sizePerPage) {
+        console.log(`sizePerPage: ${sizePerPage}`);
+    }
+
+    onPageChange(page, sizePerPage) {
+        console.log(`page: ${page}, sizePerPage: ${sizePerPage}`);
+    }
+
+    handleRowSelect(row, isSelected, e) {
+        if(isSelected === true) {
+            this.setState({ selected_play_id: row._id });
+        }
+    }
+
+    renderPlaysTable() {
+        const plays = _.map(this.props.plays);
+        const selectRowProp = {
+          mode: 'radio',
+          clickToSelect: true,
+          onSelect: this.handleRowSelect
+        };
+
+        return (
+            <BootstrapTable data={plays} pagination={ true } options={ this.options } selectRow={ selectRowProp }>
+                <TableHeaderColumn width='150' dataField="title" isKey={true} dataSort={true}>
+                    Title
+                </TableHeaderColumn>
+                <TableHeaderColumn width='150' dataField="genre">
+                    Genre
+                </TableHeaderColumn>
+                <TableHeaderColumn width='150' dataField="actorCount">
+                    Actor Count
+                </TableHeaderColumn>
+                <TableHeaderColumn width='150' dataField="authorLast">
+                    Author
+                </TableHeaderColumn>
+                <TableHeaderColumn width='150' dataField="timePeriod">
+                    Time Period
+                </TableHeaderColumn>
+                <TableHeaderColumn width='150' dataField="costumeCount">
+                    Costume Count
+                </TableHeaderColumn>
+                <TableHeaderColumn width='150' dataField="hasSpectacle">
+                    hasSpectacle
+                </TableHeaderColumn>
+                <TableHeaderColumn width='150' dataField="copies">
+                    copies
+                </TableHeaderColumn>
+            </BootstrapTable>
+        )
+
+    }
+
     render() {
         return (
             <div>
-                <h3>This is the Plays page</h3>
-                <table className='list-group'>
-                    <tbody>
-                    <tr>
-                        <td>Title</td>
-                        <td>Genre</td>
-                        <td>Actor Count</td>
-                        <td>Author</td>
-                        <td>Time Period</td>
-                        <td>Costume Count</td>
-                        <td>Spectacle?</td>
-                        <td>Copies</td>
-                    </tr>
-                    {this.renderPlays()}
-                    </tbody>
-                </table>
+                <div className="text-xs-right">
+                    <Link className="btn btn-primary" to="play/new">
+                        Add New Play
+                    </Link>
+                </div>
+                <Link className="btn btn-primary" to={`/plays/${this.state.selected_play_id}`}>Show Play Details</Link>
+                {this.renderPlaysTable()}
             </div>
         );
     }
 }
 
 function mapStateToProps(state) {
-    return {plays: state.plays };
+    return {
+        access : state.currentUser.access,
+        token : state.currentUser.token,
+        plays : state.plays
+    };
 }
 
 export default connect(mapStateToProps, { fetchPlays })(Plays);

@@ -11,7 +11,9 @@ import { renderField } from "./../../renderers";
 class PostUser extends Component {
 
     onSubmit(values) {
-        this.props.addUsers(values, () => {
+        const { token } = this.props;
+        values.access = (values.access) ? "admin" : "user";
+        this.props.addUsers(token, values, () => {
             this.props.history.push("/users");
         });
     }
@@ -22,7 +24,8 @@ class PostUser extends Component {
         const { handleSubmit } = this.props;
 
         return (
-            <form onSubmit={handleSubmit(this.onSubmit.bind(this))}>
+            <form  className="input-group"
+                onSubmit={handleSubmit(this.onSubmit.bind(this))}>
                 <Field label="Email" type="text" name="email"
                     component={renderField} />
                 <Field label="Password" type="text" name="password"
@@ -31,6 +34,8 @@ class PostUser extends Component {
                     component={renderField} />
                 <Field label="Last Name" type="text" name="lastName"
                     component={renderField} />
+                <Field label="Faculty" type="checkbox" name="access"
+                    value="admin" component={renderField} />
                 <button type="submit" className="btn btn-primary">
                     Submit</button>
                 <Link to="/user" className="btn btn-danger">
@@ -39,7 +44,6 @@ class PostUser extends Component {
         );
     }
 }
-
 
 /* Will Improve This: Will Need To Add Query To Database */
 function validate(values) {
@@ -65,10 +69,15 @@ function validate(values) {
     return errors;
 }
 
+function mapStateToProps(state) {
+    return {
+        token : state.currentUser.token,
+    }
+}
 
 export default reduxForm({
     validate : validate,
     form : "PostNewUser"
 })(
-    connect(null, { addUsers })(PostUser)
+    connect(mapStateToProps, { addUsers })(PostUser)
 );

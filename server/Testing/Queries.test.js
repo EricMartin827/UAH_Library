@@ -102,4 +102,23 @@ describe("User Query Tests", () => {
 		    }).catch((err) => done(err));
 	    }).catch((err) => done(err));
     });
+
+    it("Should Allow Admin To Find User by First Name", (done) => {
+
+	regAdmin.get({ firstName : "Peter" }).then((res) => {
+	    expect(res.length).toBe(1);
+	    expect(res[0].lastName).toEqual("Rabbit");
+	    done();
+	}).catch((err) => done(err));
+    });
+
+    it("Should Allow A User To Find A User by First Name", (done) => {
+
+	regAdmin.get({ firstName : "Peter" }).then((res) => {
+	    expect(res.length).toBe(1);
+	    expect(res[0].lastName).toEqual("Rabbit");
+	    done();
+	}).catch((err) => done(err));
+    });
+
 });
