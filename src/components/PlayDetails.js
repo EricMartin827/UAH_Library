@@ -5,7 +5,6 @@ import _ from "lodash";
 
 import { fetchPlayDetails } from "./../actions";
 
-
 class PlayDetails extends Component {
 
     componentDidMount() {
