@@ -1,8 +1,10 @@
+/* NPM Imports */
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import _ from "lodash";
 
+/* Local Imports */
 import { fetchUsers } from "./../actions";
 import { SearchBar } from "./../containers";
 
@@ -33,6 +35,11 @@ class Users extends Component {
                         Add New User
                     </Link>
                 </div>
+                <div className="text-xs-right">
+                    <Link className="btn btn-primary" to="/user/mnew">
+                        Add Many New Users
+                    </Link>
+                </div>
                 <SearchBar />
                 <h3>Current Users</h3>
                 <table className="table table-hover">
@@ -52,7 +59,6 @@ class Users extends Component {
             </div>
         )
     }
-
 
     renderUsers() {
         return _.map(this.props.users, (user) => {

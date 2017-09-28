@@ -8,8 +8,6 @@ import { connect } from "react-redux";
 import { addUsers } from "./../../actions";
 import { renderField } from "./../../renderers";
 
-//const { DOM : { input }} = React;
-
 class PostUser extends Component {
 
     onSubmit(values) {
@@ -76,7 +74,6 @@ function mapStateToProps(state) {
         token : state.currentUser.token,
     }
 }
-
 
 export default reduxForm({
     validate : validate,
