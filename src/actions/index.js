@@ -16,5 +16,9 @@ export { registerUser };
 import fetchPlays from "./fetchPlays.js";
 export { fetchPlays };
 
+
 import fetchPlayDetails from "./fetchPlayDetails.js";
 export { fetchPlayDetails };
+
+import addPlays from "./addPlays.js";
+export { addPlays }

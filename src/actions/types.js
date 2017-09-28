@@ -12,3 +12,4 @@ export const POST_USERS = "post_users";
 
 export const FETCH_PLAYS = "fetch_plays";
 export const FETCH_PLAY_DETAILS = "fetch_play_detail"
+export const POST_PLAYS = "post_plays"

@@ -1,5 +1,4 @@
 /* NPM Imports */
-
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { queryUsers } from "./../actions";

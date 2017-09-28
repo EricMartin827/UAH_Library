@@ -2,7 +2,8 @@
 import _ from 'lodash'
 
 /* Local Imports */
-import { FETCH_PLAYS, FETCH_PLAY_DETAILS } from './../actions/types';
+import { FETCH_PLAYS, FETCH_PLAY_DETAILS,
+    POST_PLAYS } from './../actions/types';
 
 export default function(state = {}, action) {
     switch(action.type) {
@@ -14,6 +15,8 @@ export default function(state = {}, action) {
             const play  = action.payload.data;
             newState[play._id] = play;
             return newState;
+        case POST_PLAYS:
+            return state;
         default:
           return state;
     }

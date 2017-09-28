@@ -7,7 +7,6 @@ import currentUserReducer from "./CurrentUserReducer.js"
 import usersReducer from "./UsersReducer.js";
 import playsReducer from './reducer_plays';
 
-
 const rootReducer = combineReducers({
     currentUser : currentUserReducer,
     users       : usersReducer,

@@ -47,10 +47,6 @@ class Plays extends Component {
         });
     }
 
-    componentDidMount() {
-        this.props.fetchPlays();
-    }
-
     sizePerPageListChange(sizePerPage) {
         console.log(`sizePerPage: ${sizePerPage}`);
     }
@@ -107,6 +103,11 @@ class Plays extends Component {
     render() {
         return (
             <div>
+                <div className="text-xs-right">
+                    <Link className="btn btn-primary" to="play/new">
+                        Add New Play
+                    </Link>
+                </div>
                 <Link className="btn btn-primary" to={`/plays/${this.state.selected_play_id}`}>Show Play Details</Link>
                 {this.renderPlaysTable()}
             </div>
