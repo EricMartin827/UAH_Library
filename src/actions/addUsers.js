@@ -4,9 +4,6 @@ import createHeader from "./utils/createHeader";
 
 export default function addUsers(token, users, callback) {
 
-    /* Little Hack To Get Going */
-    users.access = "admin";
-
     const apiCall = `${URL}/api/users/new`;
     const request = axios.post(apiCall,
         users, createHeader(ADMIN_HEADER, token))
