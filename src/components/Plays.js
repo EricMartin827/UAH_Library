@@ -108,6 +108,11 @@ class Plays extends Component {
                         Add New Play
                     </Link>
                 </div>
+                <div className="text-xs-right">
+                    <Link className="btn btn-primary" to="users">
+                        View Users
+                    </Link>
+                </div>
                 <Link className="btn btn-primary" to={`/plays/${this.state.selected_play_id}`}>Show Play Details</Link>
                 {this.renderPlaysTable()}
             </div>
