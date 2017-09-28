@@ -3,6 +3,7 @@ import { connect } from "react-redux"
 import _ from "lodash";
 
 import { fetchPlays } from "./../actions";
+import NavList from './nav-list';
 
 class Plays extends Component {
 
@@ -34,8 +35,9 @@ class Plays extends Component {
                 <h3>This is the Plays page</h3>
                 <div>
                     <div>
-                        <a>Add Plays</a>&nbsp;&nbsp;&nbsp;&nbsp;<a>Logout</a>
+                        <NavList />
                     </div>
+                    <br />
                     <br /> 
                     <div>
                         <form>
