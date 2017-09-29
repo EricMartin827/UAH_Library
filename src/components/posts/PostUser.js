@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 
 /* Local Imports */
+import { validateUser } from "./utils";
 import { addUsers } from "./../../actions";
 import { renderField } from "./../../renderers";
 
@@ -20,7 +21,6 @@ class PostUser extends Component {
 
     render() {
 
-        /* Passed to this.props by redux from */
         const { handleSubmit } = this.props;
 
         return (
@@ -45,30 +45,6 @@ class PostUser extends Component {
     }
 }
 
-/* Will Improve This: Will Need To Add Query To Database */
-function validate(values) {
-
-    const errors = {};
-
-    if (!values.email) {
-        errors.email = "Enter An Email";
-    }
-
-    if (!values.password) {
-        errors.password = "Enter A Password";
-    }
-
-    if (!values.firstName) {
-        errors.firstName = "Enter A First Name";
-    }
-
-    if (!values.lastName) {
-        errors.lastName = "Enter A Last Name";
-    }
-
-    return errors;
-}
-
 function mapStateToProps(state) {
     return {
         token : state.currentUser.token,
@@ -76,7 +52,7 @@ function mapStateToProps(state) {
 }
 
 export default reduxForm({
-    validate : validate,
+    validate : validateUser,
     form : "PostNewUser"
 })(
     connect(mapStateToProps, { addUsers })(PostUser)

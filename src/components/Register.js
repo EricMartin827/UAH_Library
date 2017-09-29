@@ -11,6 +11,7 @@ class Register extends Component {
 
     onSubmit(values) {
         const { currentUser } = this.props;
+        console.log(this.props.registerUser);
         this.props.registerUser(values.newPassword, currentUser.token,
             () => this.props.history.push("/plays"));
     }
