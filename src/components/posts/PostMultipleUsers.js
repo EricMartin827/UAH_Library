@@ -17,7 +17,6 @@ class PostMultipleUsers extends Component {
     }
 
     incrementUsers() {
-        console.log("Fire");
         const arr = this.state.entryArray;
         this.setState({entryArray : arr.concat([arr.length])});
     }
@@ -27,8 +26,8 @@ class PostMultipleUsers extends Component {
             <div>
             <h3>Add Multiple Users</h3>
             <div className="text-xs-right">
-                <button className="btn btn-primary" type="submit"
-                    onSubmit={this.incrementUsers}>
+                <button className="btn btn-primary" type="button"
+                    onClick={this.incrementUsers.bind(this)}>
                     Add Another
                 </button>
             </div>
@@ -70,8 +69,14 @@ class PostMultipleUsers extends Component {
 
 }
 
+function mapStateToProps(state) {
+    return {
+        token : state.currentUser.token
+    }
+}
+
 export default reduxForm({
     form : "PostMultipleNewUsers"
 })(
-    connect(null, {addUsers})(PostMultipleUsers)
+    connect(mapStateToProps, { addUsers })(PostMultipleUsers)
 );

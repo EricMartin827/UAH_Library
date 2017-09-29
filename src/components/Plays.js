@@ -97,7 +97,6 @@ class Plays extends Component {
                 </TableHeaderColumn>
             </BootstrapTable>
         )
-
     }
 
     render() {
