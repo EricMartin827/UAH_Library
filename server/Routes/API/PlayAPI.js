@@ -95,11 +95,11 @@ playAPI.post("/new", authAdmin, (req, res) => {
 playAPI.post("/delete/:id", authAdmin, (req, res) => {
 
     var id = req.params.id;
-    User.findByIdAndRemove(id).then((user) => {
+    Play.findByIdAndRemove(id).then((play) => {
 	if (!user) {
 	    res.status(400).send(err);
 	}
-	res.send(user);
+	res.send(play);
     }).catch((err) => {
 	res.status(400).send(err);
     });
