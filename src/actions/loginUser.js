@@ -4,33 +4,27 @@ import { URL, LOGIN_USER } from "./types";
 export default function loginUser(credentials, gotoRegister, gotoPlays) {
 
     const { access } = credentials;
-    const request = axios.post(`${URL}/${access}/login`, credentials)
-        .then((res) => {
+    const request = axios.post(`${URL}/${access}/login`, credentials);
 
-            var { data , headers } = res;
-            if (headers["x-register"]) {
-                data.token = headers["x-register"];
-                gotoRegister();
-            } else {
+    return (dispatch) => {
 
-                if (headers["x-admin"]) {
-                    data.token = headers["x-admin"];
-                } else {
-                    data.token = headers["x-user"];
-                }
+        request.then((res) => {
 
-                gotoPlays();
-            }
+            const { data, headers } = res;
+            data.token = (headers["x-register"]) ? headers["x-register"]
+                : (headers["x-admin"]) ? headers["x-admin"] :
+                headers["x-user"];
 
-            return {
+            dispatch({
                 type : LOGIN_USER,
                 payload : data
+            })
+
+            if (headers["x-register"]) {
+                gotoRegister();
+            } else {
+                gotoPlays();
             }
-
-        }).catch((err) => console.log(err));
-
-    return {
-        type : LOGIN_USER,
-        payload : request
-     }
+        });
+    }
 }

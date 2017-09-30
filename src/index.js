@@ -2,6 +2,7 @@
 import React, { Component } from "react";
 import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
+import thunk from "redux-thunk";
 import { createStore, applyMiddleware } from "redux";
 import promise from "redux-promise";
 
@@ -12,7 +13,7 @@ import "./../style/style.css"
 import Routes from "./Router.js";
 import reducers from "./reducers";
 
-const  store = applyMiddleware(promise)(createStore);
+const  store = applyMiddleware(promise, thunk)(createStore);
 
 const MainApp = () => {
     return (

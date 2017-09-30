@@ -7,8 +7,7 @@ import { LOGIN_USER, REGISTER_USER } from "./../actions/types";
 export default function(state = {}, action) {
     switch (action.type) {
         case LOGIN_USER:
-
-            return action.payload.payload;
+            return action.payload;
         case REGISTER_USER:
             const newState = Object.assign(state)
             const { token } = action.payload.payload;
