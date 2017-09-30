@@ -96,7 +96,7 @@ playAPI.post("/delete/:id", authAdmin, (req, res) => {
 
     var id = req.params.id;
     Play.findByIdAndRemove(id).then((play) => {
-	if (!user) {
+	if (!play) {
 	    res.status(400).send(err);
 	}
 	res.send(play);
