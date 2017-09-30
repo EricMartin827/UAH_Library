@@ -19,7 +19,7 @@ class Plays extends Component {
         };
 
         this.state = {
-            selected_play_id: '59b33f9616df53001221f06c' // make it empty string '' later
+            selected_play_id: ''
         }
     }
 
@@ -57,7 +57,10 @@ class Plays extends Component {
 
     handleRowSelect(row, isSelected, e) {
         if(isSelected === true) {
-            this.setState({ selected_play_id: row._id });
+            console.log(row._id);
+            this.setState((prevState, props) => ({
+                selected_play_id: row._id
+            }));
         }
     }
 
@@ -66,7 +69,7 @@ class Plays extends Component {
         const selectRowProp = {
           mode: 'radio',
           clickToSelect: true,
-          onSelect: this.handleRowSelect
+          onSelect: this.handleRowSelect.bind(this)
         };
 
         return (
@@ -101,6 +104,7 @@ class Plays extends Component {
     }
 
     render() {
+        console.log(this.state);
         return (
             <div>
                 <div className="text-xs-right">
