@@ -67,8 +67,6 @@ playAPI.get("/:id", (req, res) => {
 /******************************************************************************/
 /************************* Post Routes For Plays ******************************/
 /******************************************************************************/
-
-
 playAPI.post("/new", authAdmin, (req, res) => {
 
     if (isArray(req.body)) {
@@ -88,6 +86,24 @@ playAPI.post("/new", authAdmin, (req, res) => {
 	    res.status(400).send(err);
 	});
     }
+});
+
+
+/******************************************************************************/
+/************************* DELETE Routes For Plays ****************************/
+/******************************************************************************/
+playAPI.post("/delete/:id", authAdmin, (req, res) => {
+
+    var id = req.params.id;
+    User.findByIdAndRemove(id).then((user) => {
+	if (!user) {
+	    res.status(400).send(err);
+	}
+	res.send(user);
+    }).catch((err) => {
+	res.status(400).send(err);
+    });
+
 });
 
 module.exports = { playAPI };
