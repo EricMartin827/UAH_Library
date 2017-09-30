@@ -16,6 +16,11 @@ export { registerUser };
 import fetchPlays from "./fetchPlays.js";
 export { fetchPlays };
 
+import removeUserById from "./removeUserById.js";
+export { removeUserById };
+
+import removePlayById from "./removePlayById.js"
+export { removePlayById };
 
 import fetchPlayDetails from "./fetchPlayDetails.js";
 export { fetchPlayDetails };
