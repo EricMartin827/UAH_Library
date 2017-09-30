@@ -29,12 +29,6 @@ class Plays extends Component {
             this.props.fetchPlays(access, token);
         }
     }
-    // componentWillReceiveProps(nextProps) {
-    //     const { access, token } = nextProps;
-    //     if (access != this.props.access || token != this.props.token) {
-    //         this.props.fetchPlays(access, token);
-    //     }
-    // }
 
     renderPlays() {
         return _.map(this.props.plays, play => {

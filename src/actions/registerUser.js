@@ -4,27 +4,22 @@ import { URL, REGISTER_USER } from "./types";
 export default function registerUser(newPassword, token, gotoPlays) {
 
     const config = { headers : { "x-register" : token } }
-    const request = axios.post(`${URL}/register`, { password : newPassword }, config)
-        .then((res) => {
+    const request = axios.post(`${URL}/register`, { password : newPassword }, config);
 
-            var { data , headers } = res;
+    return (dispatch) => {
 
-            if (headers["x-admin"]) {
-                data.token = headers["x-admin"];
-            } else {
-                data.token = headers["x-user"];
-            }
+        request.then((res) => {
 
-            gotoPlays();
-            return {
+            const { data, headers } = res;
+            data.token = (headers["x-admin"]) ? headers["x-admin"]
+                : headers["x-user"];
+
+            dispatch({
                 type : REGISTER_USER,
                 payload : data
-            }
+            })
+            gotoPlays();
 
-        }).catch((err) => console.log(err));
-
-    return {
-        type : REGISTER_USER,
-        payload : request
-     }
+        });
+    }
 }

@@ -10,7 +10,7 @@ export default function(state = {}, action) {
             return action.payload;
         case REGISTER_USER:
             const newState = Object.assign(state)
-            const { token } = action.payload.payload;
+            const { token } = action.payload;
             newState.token = token;
             return newState;
         default:
