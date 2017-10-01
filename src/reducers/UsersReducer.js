@@ -13,9 +13,8 @@ export default function(state = {}, action) {
         case POST_USERS:
             return state;
         case DELETE_USER_ID:
-            console.log(action.payload);
             const newState = Object.assign(state);
-            delete newState[action.payload._id];
+            delete newState[action.payload];
             return newState;
         default:
             return state;

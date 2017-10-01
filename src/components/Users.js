@@ -15,7 +15,8 @@ class Users extends Component {
     }
 
     removeUser(id) {
-        this.props.removeUserById(this.props.token, id)
+        this.props.removeUserById(this.props.token, id,
+            () => this.props.history.push("/users"));
     }
 
     componentDidMount() {
