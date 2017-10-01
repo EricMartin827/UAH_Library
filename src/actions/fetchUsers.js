@@ -1,5 +1,5 @@
 import axios from "axios";
-import { URL, GET_USERS } from "./types";
+import { URL, FETCH_USERS } from "./types";
 import createHeader from "./utils/createHeader";
 
 export default function fetchUsers(access, token) {
@@ -8,7 +8,7 @@ export default function fetchUsers(access, token) {
     const request = axios.get(`${URL}/api/users`, createHeader(access, token));
 
     return {
-           type : GET_USERS,
+           type : FETCH_USERS,
            payload : request
        };
 }

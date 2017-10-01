@@ -69,11 +69,15 @@ class Users extends Component {
         return _.map(this.props.users, (user) => {
             return (
                 <tr key={user._id}>
-                    <td>{user.email}</td>
+                    <td>
+                        <Link to={`/users/${user._id}`}>
+                            {user.email}
+                        </Link>
+                    </td>
                     <td>{user.firstName}</td>
                     <td>{user.lastName}</td>
                     <td>{user.access}</td>
-                    <td><button type="button" className="btn btn-primary"
+                    <td><button type="button" className="btn btn-danger"
                             onClick={this.removeUser.bind(this, user._id)}>
                         Delete</button>
                     </td>

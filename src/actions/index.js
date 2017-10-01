@@ -1,6 +1,9 @@
 import fetchUsers from "./fetchUsers.js";
 export { fetchUsers };
 
+import fetchUserById from "./users/fetchUserById.js";
+export { fetchUserById };
+
 import queryUsers from "./queryUsers.js";
 export { queryUsers };
 
