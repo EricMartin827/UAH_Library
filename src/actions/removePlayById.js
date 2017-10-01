@@ -7,8 +7,16 @@ export default function removePlayById(token, id) {
     const apiCall = `${URL}/api/plays/delete/${id}`;
     const request = axios.post(apiCall, {}, createHeader(ADMIN_HEADER, token));
 
-    return {
-        type : DELETE_PLAY_ID,
-        payload : request
-    };
+    return (dispatch) => {
+
+        request.then((res) => {
+
+            const { data } = res;
+
+            dispatch({
+                type : DELETE_PLAY_ID,
+                payload : data._id
+            });
+        });
+    }
 }

@@ -3,10 +3,10 @@ import { connect } from "react-redux"
 import { Link } from "react-router-dom";
 import _ from "lodash";
 import { fetchPlays } from "./../actions";
+import { removePlayById } from "./../actions";
 import { fetchPlayDetails } from "./../actions";
 import { ButtonToolbar, Button, Pagination } from 'react-bootstrap';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
-
 
 class Plays extends Component {
 
@@ -15,7 +15,8 @@ class Plays extends Component {
 
         this.options = {
             onPageChange: this.onPageChange.bind(this),
-            onSizePerPageList: this.sizePerPageListChange.bind(this)
+            onSizePerPageList: this.sizePerPageListChange.bind(this),
+            afterDeleteRow: this.handleDeletedRow.bind(this),
         };
 
         this.state = {
@@ -64,6 +65,26 @@ class Plays extends Component {
         }
     }
 
+    handleDeletedRow() {
+        this.removePlay(this.props.token, this.state.selected_play_id);
+    }
+
+    removePlay(token, id) {
+        this.props.removePlayById(
+            token,
+            id
+        );
+
+        this.setState((prevState, props) => ({
+            selected_play_id: ''
+        }));
+
+        const {access} = this.props;
+        if (access) {
+            this.props.fetchPlays(access, token);
+        }
+    }
+
     renderPlaysTable() {
         const plays = _.map(this.props.plays);
         const selectRowProp = {
@@ -73,7 +94,7 @@ class Plays extends Component {
         };
 
         return (
-            <BootstrapTable data={plays} pagination={ true } options={ this.options } selectRow={ selectRowProp }>
+            <BootstrapTable data={plays} pagination={ true } options={ this.options } selectRow={ selectRowProp } deleteRow>
                 <TableHeaderColumn width='150' dataField="title" isKey={true} dataSort={true}>
                     Title
                 </TableHeaderColumn>
@@ -131,4 +152,4 @@ function mapStateToProps(state) {
     };
 }
 
-export default connect(mapStateToProps, { fetchPlays })(Plays);
+export default connect(mapStateToProps, { fetchPlays, removePlayById })(Plays);
