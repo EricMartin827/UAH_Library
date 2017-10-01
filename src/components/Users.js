@@ -5,13 +5,18 @@ import { Link } from "react-router-dom";
 import _ from "lodash";
 
 /* Local Imports */
-import { fetchUsers } from "./../actions";
+import { fetchUsers, removeUserById } from "./../actions";
 import { SearchBar } from "./../containers";
 
 class Users extends Component {
 
     constructor(props) {
         super(props);
+    }
+
+    removeUser(id) {
+        this.props.removeUserById(this.props.token, id,
+            () => this.props.history.push("/users"));
     }
 
     componentDidMount() {
@@ -64,11 +69,16 @@ class Users extends Component {
         return _.map(this.props.users, (user) => {
             return (
                 <tr key={user._id}>
-                    <td>{user.email}</td>
+                    <td>
+                        <Link to={`/users/${user._id}`}>
+                            {user.email}
+                        </Link>
+                    </td>
                     <td>{user.firstName}</td>
                     <td>{user.lastName}</td>
                     <td>{user.access}</td>
-                    <td><button type="button" className="btn btn-primary">
+                    <td><button type="button" className="btn btn-danger"
+                            onClick={this.removeUser.bind(this, user._id)}>
                         Delete</button>
                     </td>
                 </tr>
@@ -86,4 +96,4 @@ function mapStateToProps(state) {
     };
 }
 
-export default connect(mapStateToProps, { fetchUsers })(Users);
+export default connect(mapStateToProps, { fetchUsers, removeUserById })(Users);

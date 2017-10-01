@@ -6,6 +6,8 @@ import { connect } from "react-redux";
 import _ from "lodash";
 
 /* Local Imports */
+import { validateUser } from "./utils";
+import { processUserArrayForm } from "./utils";
 import { addUsers } from "./../../actions";
 import { renderField } from "./../../renderers";
 
@@ -17,26 +19,41 @@ class PostMultipleUsers extends Component {
     }
 
     incrementUsers() {
-        console.log("Fire");
         const arr = this.state.entryArray;
         this.setState({entryArray : arr.concat([arr.length])});
     }
 
+    onSubmit(values) {
+        const { token } = this.props;
+        // console.log(processUserArrayForm(values));
+        this.props.addUsers(token, processUserArrayForm(values),
+            () => {this.props.history.push("/users")});
+    }
+
     render() {
+
+        const { handleSubmit } = this.props;
+
         return(
             <div>
             <h3>Add Multiple Users</h3>
             <div className="text-xs-right">
-                <button className="btn btn-primary" type="submit"
-                    onSubmit={this.incrementUsers}>
+                <button className="btn btn-primary" type="button"
+                    onClick={this.incrementUsers.bind(this)}>
                     Add Another
                 </button>
             </div>
-            <form>
+            <form className="input-group"
+                onSubmit={handleSubmit(this.onSubmit.bind(this))}>
+                <button type="submit" className="btn btn-primary">
+                    Submit</button>
+                <Link to="/user" className="btn btn-danger">
+                    Cancel</Link>
                 <table className="table table-hover">
                     <thead>
                         <tr>
                             <th>Email</th>
+                            <th>Password</th>
                             <th>First Name</th>
                             <th>Last Name</th>
                             <th>Admin Access?</th>
@@ -55,13 +72,15 @@ class PostMultipleUsers extends Component {
         return _.map(this.state.entryArray, (entry) => {
             return (
                 <tr key={entry}>
-                    <td><Field type="text" name="email"
+                    <td><Field type="text" name={`email${entry}`}
                             component={renderField} /> </td>
-                    <td><Field type="text" name="firstName"
+                    <td><Field type="text" name={`password${entry}`}
                             component={renderField} /> </td>
-                    <td><Field type="text" name="lastName"
+                    <td><Field type="text" name={`firstName${entry}`}
                             component={renderField} /> </td>
-                    <td><Field type="checkbox" name="access"
+                    <td><Field type="text" name={`lastName${entry}`}
+                            component={renderField} /> </td>
+                    <td><Field type="checkbox" name={`access${entry}`}
                             component={renderField} /> </td >
                 </tr>
                 );
@@ -70,8 +89,15 @@ class PostMultipleUsers extends Component {
 
 }
 
+function mapStateToProps(state) {
+    return {
+        token : state.currentUser.token
+    }
+}
+
 export default reduxForm({
+    validate : validateUser,
     form : "PostMultipleNewUsers"
 })(
-    connect(null, {addUsers})(PostMultipleUsers)
+    connect(mapStateToProps, { addUsers })(PostMultipleUsers)
 );

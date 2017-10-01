@@ -1,5 +1,5 @@
 import axios from "axios";
-import  { URL, GET_USERS } from "./types.js";
+import  { URL, FETCH_USERS } from "./types.js";
 import toQuery from "./utils/queryFormer";
 
 export default function queryUsers(access, token, queryObj) {
@@ -12,7 +12,7 @@ export default function queryUsers(access, token, queryObj) {
 
     const request = axios.get(apiCall, config);
     return {
-        type : GET_USERS,
+        type : FETCH_USERS,
         payload : request
     };
 }

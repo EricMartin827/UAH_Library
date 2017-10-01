@@ -1,6 +1,9 @@
 import fetchUsers from "./fetchUsers.js";
 export { fetchUsers };
 
+import fetchUserById from "./users/fetchUserById.js";
+export { fetchUserById };
+
 import queryUsers from "./queryUsers.js";
 export { queryUsers };
 
@@ -16,6 +19,11 @@ export { registerUser };
 import fetchPlays from "./fetchPlays.js";
 export { fetchPlays };
 
+import removeUserById from "./removeUserById.js";
+export { removeUserById };
+
+import removePlayById from "./removePlayById.js"
+export { removePlayById };
 
 import fetchPlayDetails from "./fetchPlayDetails.js";
 export { fetchPlayDetails };

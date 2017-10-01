@@ -4,7 +4,8 @@ var HtmlWebpackPlugin = require("html-webpack-plugin");
 
 const VENDOR_LIST = [
     "react", "react-dom", "react-redux", "react-router-dom", "redux",
-    "redux-form", "redux-promise", "axios", "query-string"
+    "redux-form", "redux-promise", "axios", "query-string", "redux-thunk",
+    "redux-session"
 ]
 
 module.exports = {

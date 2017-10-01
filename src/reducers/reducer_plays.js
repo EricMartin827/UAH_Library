@@ -3,7 +3,7 @@ import _ from 'lodash'
 
 /* Local Imports */
 import { FETCH_PLAYS, FETCH_PLAY_DETAILS,
-    POST_PLAYS } from './../actions/types';
+    POST_PLAYS, DELETE_PLAY_ID } from './../actions/types';
 
 export default function(state = {}, action) {
     switch(action.type) {
@@ -15,6 +15,11 @@ export default function(state = {}, action) {
             const play  = action.payload.data;
             newState[play._id] = play;
             return newState;
+        case DELETE_PLAY_ID: /*Have to change this*/
+            console.log(action.payload);
+            const newState1 = Object.assign(state);
+            delete newState1[action.payload._id];
+            return newState1;
         case POST_PLAYS:
             return state;
         default:
