@@ -73,7 +73,7 @@ class Plays extends Component {
           <DeleteButton
             btnText='Delete Play'
             btnContextual='btn-warning'
-            className='my-custom-class button-custom-size-150'
+            className='my-custom-class button-custom-size-150 button-custom-margin10'
             onClick={ () => this.handleDeleteButtonClick(onClick) }
           />
         );
@@ -147,12 +147,27 @@ class Plays extends Component {
 
         return (
             <div>
-                <ButtonGroup bsSize="small">
-                    <Link className="btn btn-primary button-custom-size-150" to={`/plays/${this.state.selected_play_id}`}>Show Play Details</Link>
-                    <Link className="btn btn-primary button-custom-size-150" to="play/new">Add New Play</Link>
-                    <Link className="btn btn-primary button-custom-size-150" to="users">View Users</Link>
-                </ButtonGroup>
-
+                <ButtonToolbar>
+                    <ButtonGroup bsSize="small">
+                        <Link className="btn btn-primary button-custom-size-150 button-custom-margin5" to={`/plays/${this.state.selected_play_id}`}>
+                            Show Play Details
+                        </Link>
+                        <Link className="btn btn-primary button-custom-size-150" to="play/new">
+                            Add New Play
+                        </Link>
+                    </ButtonGroup>
+                    <ButtonGroup bsSize="small">
+                        <Link className="btn btn-primary button-custom-size-150 button-custom-margin5" to="users">
+                            View Users
+                        </Link>
+                        <Link className="btn btn-primary button-custom-size-150 button-custom-margin5" to="/user/new">
+                            Add User
+                        </Link>
+                        <Link className="btn btn-primary button-custom-size-150 button-custom-margin5" to="/user/mnew">
+                            Add Users
+                        </Link>
+                    </ButtonGroup>
+                </ButtonToolbar>
                 {this.renderPlaysTable()}
             </div>
         );

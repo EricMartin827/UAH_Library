@@ -18,6 +18,14 @@ body {
   float: node;
 }
 
+.button-custom-margin5 {
+    margin: 0 auto 5px;
+}
+
+.button-custom-margin10 {
+    margin: 0 auto 10px;
+}
+
 .button-custom-size-150 {
     width: 120px !important;
 }
