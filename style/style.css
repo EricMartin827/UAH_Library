@@ -17,3 +17,11 @@ body {
   margin: 0 auto;
   float: node;
 }
+
+.button-custom-size-150 {
+    width: 120px !important;
+}
+
+.button-custom-size-200 {
+    width: 200px !important;
+}

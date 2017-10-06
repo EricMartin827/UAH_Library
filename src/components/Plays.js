@@ -5,8 +5,10 @@ import _ from "lodash";
 import { fetchPlays } from "./../actions";
 import { removePlayById } from "./../actions";
 import { fetchPlayDetails } from "./../actions";
-import { ButtonToolbar, Button, Pagination } from 'react-bootstrap';
-import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
+import { ButtonToolbar, Button, Pagination, ButtonGroup, Col } from 'react-bootstrap';
+import { BootstrapTable, TableHeaderColumn, DeleteButton } from 'react-bootstrap-table';
+
+import '../../style/style.css';
 
 class Plays extends Component {
 
@@ -17,6 +19,7 @@ class Plays extends Component {
             onPageChange: this.onPageChange.bind(this),
             onSizePerPageList: this.sizePerPageListChange.bind(this),
             afterDeleteRow: this.handleDeletedRow.bind(this),
+            deleteBtn: this.createCustomDeleteButton
         };
 
         this.state = {
@@ -63,6 +66,17 @@ class Plays extends Component {
                 selected_play_id: row._id
             }));
         }
+    }
+
+    createCustomDeleteButton() {
+        return (
+          <DeleteButton
+            btnText='Delete Play'
+            btnContextual='btn-warning'
+            className='my-custom-class button-custom-size-150'
+            onClick={ () => this.handleDeleteButtonClick(onClick) }
+          />
+        );
     }
 
     handleDeletedRow() {
@@ -125,19 +139,20 @@ class Plays extends Component {
 
     render() {
         console.log(this.state);
+
+        const localStyles = {
+            maxWidth: 400,
+            margin: '0 auto 10px'
+        };
+
         return (
             <div>
-                <div className="text-xs-right">
-                    <Link className="btn btn-primary" to="play/new">
-                        Add New Play
-                    </Link>
-                </div>
-                <div className="text-xs-right">
-                    <Link className="btn btn-primary" to="users">
-                        View Users
-                    </Link>
-                </div>
-                <Link className="btn btn-primary" to={`/plays/${this.state.selected_play_id}`}>Show Play Details</Link>
+                <ButtonGroup bsSize="small">
+                    <Link className="btn btn-primary button-custom-size-150" to={`/plays/${this.state.selected_play_id}`}>Show Play Details</Link>
+                    <Link className="btn btn-primary button-custom-size-150" to="play/new">Add New Play</Link>
+                    <Link className="btn btn-primary button-custom-size-150" to="users">View Users</Link>
+                </ButtonGroup>
+
                 {this.renderPlaysTable()}
             </div>
         );

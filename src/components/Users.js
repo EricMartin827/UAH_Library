@@ -8,6 +8,9 @@ import _ from "lodash";
 import { fetchUsers, removeUserById } from "./../actions";
 import { SearchBar } from "./../containers";
 
+import { ButtonToolbar, Button, ButtonGroup, Col } from 'react-bootstrap';
+import '../../style/style.css';
+
 class Users extends Component {
 
     constructor(props) {
@@ -28,6 +31,7 @@ class Users extends Component {
 
     render() {
         const { users } = this.props;
+        const localStyles = {margin: '0 auto 10px'};
 
         if (!users) {
             return (<div>Loading User Content...</div>);
@@ -35,16 +39,15 @@ class Users extends Component {
 
         return (
             <div>
-                <div className="text-xs-right">
-                    <Link className="btn btn-primary" to="/user/new">
+                <ButtonGroup style={localStyles}>
+                    <Link className="btn btn-primary button-custom-size-200" to="/user/new">
                         Add New User
                     </Link>
-                </div>
-                <div className="text-xs-right">
-                    <Link className="btn btn-primary" to="/user/mnew">
+                    <Link className="btn btn-primary button-custom-size-200" to="/user/mnew">
                         Add Many New Users
                     </Link>
-                </div>
+                </ButtonGroup>
+
                 <SearchBar />
                 <h3>Current Users</h3>
                 <table className="table table-hover">
