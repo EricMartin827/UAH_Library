@@ -24,15 +24,16 @@ class AdminLogin extends Component {
 
         /* Passed to this.props by redux from */
         const { handleSubmit } = this.props;
+        const localStyles = {maxWidth: 400, margin: '0 auto 10px'};
 
         return (
-        <form onSubmit={handleSubmit(this.onSubmit.bind(this))}>
+        <form onSubmit={handleSubmit(this.onSubmit.bind(this))} style={localStyles}>
 
             <FormGroup>
                 <Col sm={10}>
                     Email
                 </Col>
-                <Col xs={6} md={4}>
+                <Col xs={6} md={10}>
                     <Field type="text" name="email" component={renderField} />
                 </Col>
             </FormGroup>
@@ -41,19 +42,19 @@ class AdminLogin extends Component {
                 <Col sm={10}>
                     Password
                 </Col>
-                <Col xs={6} md={4}>
+                <Col xs={6} md={10}>
                     <Field type="text" name="password" component={renderField} />
                 </Col>
             </FormGroup>
 
             <FormGroup>
-              <Col smOffset={2} sm={10}>
+              <Col smOffset={4} sm={10}>
                 <Checkbox>Remember me</Checkbox>
               </Col>
             </FormGroup>
 
             <FormGroup>
-                <Col smOffset={2} sm={10}>
+                <Col smOffset={4} sm={10}>
                     <button type="submit" className="btn btn-primary">
                         Login</button>
                     <Link to="/" className="btn btn-danger">
