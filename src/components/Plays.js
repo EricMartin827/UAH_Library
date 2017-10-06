@@ -19,7 +19,7 @@ class Plays extends Component {
             onPageChange: this.onPageChange.bind(this),
             onSizePerPageList: this.sizePerPageListChange.bind(this),
             afterDeleteRow: this.handleDeletedRow.bind(this),
-            deleteBtn: this.createCustomDeleteButton
+            deleteBtn: this.createCustomDeleteButton.bind(this)
         };
 
         this.state = {
@@ -68,13 +68,13 @@ class Plays extends Component {
         }
     }
 
-    createCustomDeleteButton() {
+    createCustomDeleteButton(onClick) {
         return (
           <DeleteButton
             btnText='Delete Play'
             btnContextual='btn-warning'
             className='my-custom-class button-custom-size-150 button-custom-margin10'
-            onClick={ () => this.handleDeleteButtonClick(onClick) }
+            onClick={ () => this.handleDeletedRow(onClick) }
           />
         );
     }
@@ -140,13 +140,8 @@ class Plays extends Component {
     render() {
         console.log(this.state);
 
-        const localStyles = {
-            maxWidth: 400,
-            margin: '0 auto 10px'
-        };
-
         return (
-            <div>
+            <div className="play-div-custom-padding">
                 <ButtonToolbar>
                     <ButtonGroup bsSize="small">
                         <Link className="btn btn-primary button-custom-size-150 button-custom-margin5" to={`/plays/${this.state.selected_play_id}`}>

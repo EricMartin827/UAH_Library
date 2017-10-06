@@ -6,6 +6,8 @@ import { connect } from "react-redux";
 import { addPlays } from "../../actions";
 import { renderField } from "./../../renderers";
 
+import '../../../style/style.css';
+
 class PostPlay extends Component {
 
     onSubmit(values) {
@@ -18,7 +20,7 @@ class PostPlay extends Component {
     render() {
         const { handleSubmit } = this.props;
         return (
-            <form onSubmit={handleSubmit(this.onSubmit.bind(this))}>
+            <form onSubmit={handleSubmit(this.onSubmit.bind(this))} className="postplay-form-custom-padding">
                 <Field label="Title" type="text" name="title"
                     component={renderField} />
                 <Field label="Genre" type="text" name="genre"
