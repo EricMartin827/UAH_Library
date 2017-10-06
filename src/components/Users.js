@@ -38,7 +38,7 @@ class Users extends Component {
         }
 
         return (
-            <div>
+            <div className="users-div-custom-padding">
                 <ButtonGroup style={localStyles}>
                     <Link className="btn btn-primary button-custom-size-200" to="/user/new">
                         Add New User

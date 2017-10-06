@@ -45,3 +45,15 @@ body {
     padding-bottom: 30px;
     padding-left: 15px;
 }
+
+.users-div-custom-padding {
+    padding-right: 30px;
+    padding-bottom: 30px;
+    padding-left: 30px;
+}
+
+.postmultipleusers-div-custom-padding {
+    padding-right: 50px;
+    padding-bottom: 50px;
+    padding-left: 50px;
+}

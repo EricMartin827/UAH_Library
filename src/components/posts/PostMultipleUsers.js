@@ -35,7 +35,7 @@ class PostMultipleUsers extends Component {
         const { handleSubmit } = this.props;
 
         return(
-            <div>
+            <div className="postmultipleusers-div-custom-padding">
             <h3>Add Multiple Users</h3>
             <div className="text-xs-right">
                 <button className="btn btn-primary" type="button"
