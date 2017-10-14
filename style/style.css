@@ -63,3 +63,13 @@ body {
     padding-bottom: 80px;
     padding-left: 80px;
 }
+
+.btn {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.rowContent {
+    display: flex;
+    flex-direction: row;
+}

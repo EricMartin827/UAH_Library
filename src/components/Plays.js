@@ -7,12 +7,14 @@ import { removePlayById } from "./../actions";
 import { fetchPlayDetails } from "./../actions";
 import { ButtonToolbar, Button, Pagination, ButtonGroup, Col } from 'react-bootstrap';
 import { BootstrapTable, TableHeaderColumn, DeleteButton } from 'react-bootstrap-table';
+import { AdminNavigation } from "./navigation/adminNavigation.js";
 
 import '../../style/style.css';
 
 class Plays extends Component {
 
     constructor(props) {
+
         super(props);
 
         this.options = {
@@ -108,6 +110,8 @@ class Plays extends Component {
         };
 
         return (
+            <div className="rowContent">
+            <AdminNavigation />
             <BootstrapTable data={plays} pagination={ true } options={ this.options } selectRow={ selectRowProp } deleteRow>
                 <TableHeaderColumn width='150' dataField="title" isKey={true} dataSort={true}>
                     Title
@@ -134,11 +138,11 @@ class Plays extends Component {
                     copies
                 </TableHeaderColumn>
             </BootstrapTable>
+            </div>
         )
     }
 
     render() {
-        console.log(this.state);
 
         return (
             <div className="play-div-custom-padding">

@@ -1,15 +1,14 @@
 /* NPM Imports */
+import { ButtonToolbar, Button, ButtonGroup, Col } from 'react-bootstrap';
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import _ from "lodash";
 
 /* Local Imports */
+import { AdminNavigation } from "./navigation/adminNavigation.js";
 import { fetchUsers, removeUserById } from "./../actions";
 import { SearchBar } from "./../containers";
-
-import { ButtonToolbar, Button, ButtonGroup, Col } from 'react-bootstrap';
-import '../../style/style.css';
 
 class Users extends Component {
 
@@ -50,6 +49,8 @@ class Users extends Component {
 
                 <SearchBar />
                 <h3>Current Users</h3>
+                <div className="rowContent">
+                <AdminNavigation />
                 <table className="table table-hover">
                     <thead>
                         <tr>
@@ -64,6 +65,7 @@ class Users extends Component {
                             {this.renderUsers()}
                         </tbody>
                 </table>
+                </div>
             </div>
         )
     }

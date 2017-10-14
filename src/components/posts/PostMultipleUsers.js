@@ -10,6 +10,7 @@ import { validateUser } from "./utils";
 import { processUserArrayForm } from "./utils";
 import { addUsers } from "./../../actions";
 import { renderField } from "./../../renderers";
+import { AdminNavigation } from "./../navigation";
 
 class PostMultipleUsers extends Component {
 
@@ -34,21 +35,26 @@ class PostMultipleUsers extends Component {
 
         const { handleSubmit } = this.props;
 
-        return(
+        return (
+
             <div className="postmultipleusers-div-custom-padding">
             <h3>Add Multiple Users</h3>
-            <div className="text-xs-right">
-                <button className="btn btn-primary" type="button"
+            <div className="rowContent">
+            < AdminNavigation />
+            <form className="input-group"
+                onSubmit={handleSubmit(this.onSubmit.bind(this))}>
+
+                <button type="button" className="btn btn-primary"
                     onClick={this.incrementUsers.bind(this)}>
                     Add Another
                 </button>
-            </div>
-            <form className="input-group"
-                onSubmit={handleSubmit(this.onSubmit.bind(this))}>
+
                 <button type="submit" className="btn btn-primary">
                     Submit</button>
+
                 <Link to="/user" className="btn btn-danger">
                     Cancel</Link>
+
                 <table className="table table-hover">
                     <thead>
                         <tr>
@@ -64,6 +70,7 @@ class PostMultipleUsers extends Component {
                     </tbody>
                 </table>
             </form>
+            </div>
             </div>
         );
     }

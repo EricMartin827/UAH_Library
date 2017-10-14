@@ -8,6 +8,7 @@ import { connect } from "react-redux";
 import { validateUser } from "./utils";
 import { addUsers } from "./../../actions";
 import { renderField } from "./../../renderers";
+import { AdminNavigation } from ".././navigation/adminNavigation.js";
 
 class PostUser extends Component {
 
@@ -24,6 +25,8 @@ class PostUser extends Component {
         const { handleSubmit } = this.props;
 
         return (
+            <div className="rowContent">
+            <AdminNavigation />
             <form  className="input-group"
                 onSubmit={handleSubmit(this.onSubmit.bind(this))}>
                 <Field label="Email" type="text" name="email"
@@ -41,6 +44,7 @@ class PostUser extends Component {
                 <Link to="/user" className="btn btn-danger">
                     Cancel</Link>
             </form>
+            </div>
         );
     }
 }
