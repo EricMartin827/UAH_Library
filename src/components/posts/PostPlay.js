@@ -1,8 +1,10 @@
+/* NPM Imports */
 import React, { Component } from "react";
 import { Field, reduxForm } from "redux-form";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 
+/* Local Imports */
 import { AdminNavigation } from "./../admin";
 import { addPlays } from "../../actions";
 import { renderField } from "./../../renderers";
@@ -19,9 +21,15 @@ class PostPlay extends Component {
 
     render() {
         const { handleSubmit } = this.props;
+
         return (
+            <div>
+            <h3 className="text-center"> Add A New Play </h3>
+            <div className="rowContent">
+            <AdminNavigation />
             <form onSubmit={handleSubmit(this.onSubmit.bind(this))}
-                    className="postplay-form-custom-padding">
+                    className="postplay-form-custom-padding"
+                    style={{width: "90%"}}>
                 <Field label="Title" type="text" name="title"
                     component={renderField} />
                 <Field label="Genre" type="text" name="genre"
@@ -42,9 +50,11 @@ class PostPlay extends Component {
                     component={renderField} />
                 <button type="submit" className="btn btn-primary">
                     Submit</button>
-                <Link to="/play" className="btn btn-danger">
-                    Cancel</Link>
+                <Link to={ADMIN_PLAYS} className="btn btn-danger">
+                    Return To Plays</Link>
             </form>
+            </div>
+            </div>
         );
     }
 }

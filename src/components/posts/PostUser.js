@@ -26,9 +26,12 @@ class PostUser extends Component {
         const { handleSubmit } = this.props;
 
         return (
+            <div>
+            <h3 className="text-center"> Add A New User </h3>
             <div className="rowContent">
             <AdminNavigation />
-            <form  className="input-group"
+            <form className="postuser-form-custom-padding"
+                style={{width: "90%"}}
                 onSubmit={handleSubmit(this.onSubmit.bind(this))}>
                 <Field label="Email" type="text" name="email"
                     component={renderField} />
@@ -43,8 +46,9 @@ class PostUser extends Component {
                 <button type="submit" className="btn btn-primary">
                     Submit</button>
                 <Link to={ADMIN_USERS} className="btn btn-danger">
-                    Cancel</Link>
+                    Return To Users</Link>
             </form>
+            </div>
             </div>
         );
     }
