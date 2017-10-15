@@ -9,7 +9,7 @@ import _ from "lodash";
 import AdminNavigation from "./AdminNavigation.js";
 import { fetchUsers, removeUserById } from "./../../actions";
 import { SearchBar } from "./../../containers";
-import { ADMIN_USERS } from "./../paths";
+import { ADMIN_USERS, ADMIN_USER_ID } from "./../paths";
 
 class AdminUsers extends Component {
 
@@ -66,7 +66,7 @@ class AdminUsers extends Component {
             return (
                 <tr key={user._id}>
                     <td>
-                        <Link to={`/users/${user._id}`}>
+                        <Link to={`${ADMIN_USER_ID}/${user._id}`}>
                             {user.email}
                         </Link>
                     </td>
@@ -92,4 +92,5 @@ function mapStateToProps(state) {
     };
 }
 
-export default connect(mapStateToProps,{ fetchUsers, removeUserById })(AdminUsers);
+export default connect(mapStateToProps,
+    { fetchUsers, removeUserById })(AdminUsers);
