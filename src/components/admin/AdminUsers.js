@@ -6,11 +6,12 @@ import { Link } from "react-router-dom";
 import _ from "lodash";
 
 /* Local Imports */
-import { AdminNavigation } from "./navigation/adminNavigation.js";
-import { fetchUsers, removeUserById } from "./../actions";
-import { SearchBar } from "./../containers";
+import AdminNavigation from "./AdminNavigation.js";
+import { fetchUsers, removeUserById } from "./../../actions";
+import { SearchBar } from "./../../containers";
+import { ADMIN_USERS } from "./../paths";
 
-class Users extends Component {
+class AdminUsers extends Component {
 
     constructor(props) {
         super(props);
@@ -18,7 +19,7 @@ class Users extends Component {
 
     removeUser(id) {
         this.props.removeUserById(this.props.token, id,
-            () => this.props.history.push("/users"));
+            () => this.props.history.push(ADMIN_USERS));
     }
 
     componentDidMount() {
@@ -30,7 +31,6 @@ class Users extends Component {
 
     render() {
         const { users } = this.props;
-        const localStyles = {margin: '0 auto 10px'};
 
         if (!users) {
             return (<div>Loading User Content...</div>);
@@ -38,17 +38,8 @@ class Users extends Component {
 
         return (
             <div className="users-div-custom-padding">
-                <ButtonGroup style={localStyles}>
-                    <Link className="btn btn-primary button-custom-size-200" to="/user/new">
-                        Add New User
-                    </Link>
-                    <Link className="btn btn-primary button-custom-size-200" to="/user/mnew">
-                        Add Many New Users
-                    </Link>
-                </ButtonGroup>
-
+                <h3 className="text-center">Current Users</h3>
                 <SearchBar />
-                <h3>Current Users</h3>
                 <div className="rowContent">
                 <AdminNavigation />
                 <table className="table table-hover">
@@ -101,4 +92,4 @@ function mapStateToProps(state) {
     };
 }
 
-export default connect(mapStateToProps, { fetchUsers, removeUserById })(Users);
+export default connect(mapStateToProps,{ fetchUsers, removeUserById })(AdminUsers);

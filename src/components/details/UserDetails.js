@@ -2,7 +2,7 @@ import React , { Component } from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { fetchUserById, removeUserById } from "./../../actions";
-
+import { ADMIN_USERS } from "./../paths";
 
 class UserDetails extends Component {
 
@@ -20,7 +20,7 @@ class UserDetails extends Component {
         const {token, selectedUser} = this.props;
         if (token && selectedUser) {
             this.props.removeUserById(token, selectedUser._id,
-            () => this.props.history.push("/users"));
+            () => this.props.history.push(ADMIN_USERS));
         }
     }
 

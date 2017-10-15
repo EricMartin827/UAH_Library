@@ -4,7 +4,6 @@ form a {
 
 table, th, td {
     border: 1px solid black;
-
 }
 
 body {
@@ -13,9 +12,27 @@ body {
   background-color: #eee;
 }
 
+.text-center {
+    text-align: center;
+}
+
+.search-bar-padding {
+    padding-top : 30px;
+    padding-bottom: 30px;
+    padding-left: 30px;
+}
+
+.table {
+    width: 90%;
+}
+
 .input-group {
-  margin: 0 auto;
-  float: node;
+    margin: 0 auto;
+    float: node;
+}
+
+.input-group-btn {
+    vertical-align: middle;
 }
 
 .button-custom-margin5 {
@@ -50,6 +67,7 @@ body {
     padding-right: 30px;
     padding-bottom: 30px;
     padding-left: 30px;
+    width: 90%;
 }
 
 .postmultipleusers-div-custom-padding {
@@ -64,12 +82,9 @@ body {
     padding-left: 80px;
 }
 
-.btn {
-    margin-top: 10px;
-    margin-bottom: 10px;
-}
-
 .rowContent {
     display: flex;
     flex-direction: row;
+    padding-top: 20px;
+    padding-bottom: 20px;
 }

@@ -1,4 +1,5 @@
 import React from "react";
+
 /*
  * BrowserRouter tells react router to look at the entire URL
  * when determining which component to displace in the HTML
@@ -7,36 +8,57 @@ import React from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 
 /* Application Routes */
-import Intro from "./components/Intro.js";
-import AdminLogin from "./components/AdminLogin.js";
-import UserLogin from "./components/UserLogin.js";
-import Plays from "./components/Plays.js";
-import Users from "./components/Users.js";
-import Register from "./components/Register.js";
-import PostUser from "./components/posts/PostUser.js";
-import PostMultipleUsers from "./components/posts/PostMultipleUsers.js";
-import UserDetails from "./components/details/UserDetails.js";
-import PostPlay from "./components/posts/PostPlay.js";
-import PlayDetails from "./components/PlayDetails.js";
+import { Intro, Register, UserLogin, AdminLogin, AdminPlays, AdminUsers,
+            UserDetails, PlayDetails, AdminNavigation, PostMultiplePlays,
+            PostMultipleUsers, PostUser, PostPlay } from "./components";
+
+/* Path names for URL */
+import {
+
+    ROOT, REGISTER,
+
+    ADMIN_LOGIN, ADMIN_PLAYS, ADMIN_SPECIFIC_PLAY,
+    ADMIN_POST_PLAY, ADMIN_POST_MANY_PLAYS, ADMIN_USERS, ADMIN_SPECIFIC_USER,
+    ADMIN_POST_USER, ADMIN_POST_MANY_USERS,
+
+    USER_LOGIN, USER_PLAYS, USER_SPECIFIC_PLAY
+
+} from "./components/paths";
 
 const Routes = () => {
     return (
         <BrowserRouter>
             <div>
                 <Switch>
-                    <Route path="/user(s)?/mnew"
-                        component={PostMultipleUsers} />
-                    <Route path="/user(s)?/new" component={PostUser} />
-                    <Route path="/users(s)?/:id" component={UserDetails} />
-                    <Route path="/user(s)?" component={Users} />
-                    <Route path="/play(s)?/new" component={PostPlay} />
-                    <Route path="/play(s)?/:id" component={PlayDetails} />
-                    <Route path="/play(s)?" component={Plays} />
-                    <Route path="/adminlogin" component={AdminLogin} />
-                    <Route path="/userlogin" component={UserLogin} />
-                    <Route path="/register" component={Register} />
-                    <Route path="/" component={Intro} />
-                </ Switch>
+
+                    <Route path={ADMIN_POST_MANY_USERS}
+                                component={PostMultipleUsers} />
+                    <Route path={ADMIN_POST_USER}
+                                component={PostUser} />
+                    <Route path={ADMIN_SPECIFIC_USER}
+                                component={UserDetails} />
+                    <Route path={ADMIN_USERS}
+                                component={AdminUsers} />
+
+                    <Route path={ADMIN_POST_MANY_PLAYS}
+                                component={PostMultiplePlays} />
+                    <Route path={ADMIN_POST_PLAY}
+                                component={PostPlay} />
+                    <Route path={ADMIN_SPECIFIC_PLAY}
+                                component={PlayDetails} />
+                    <Route path={ADMIN_PLAYS}
+                                component={AdminPlays} />
+
+                    <Route path={ADMIN_LOGIN}
+                                component={AdminLogin} />
+                    <Route path={USER_LOGIN}
+                                component={UserLogin} />
+
+                    <Route path={REGISTER}
+                                component={Register} />
+                    <Route path={ROOT}
+                                component={Intro} />
+                </Switch>
             </div>
         </BrowserRouter>
     );

@@ -1,17 +1,18 @@
+/* NPM Imports*/
 import React, { Component } from "react";
 import { connect } from "react-redux"
 import { Link } from "react-router-dom";
 import _ from "lodash";
-import { fetchPlays } from "./../actions";
-import { removePlayById } from "./../actions";
-import { fetchPlayDetails } from "./../actions";
-import { ButtonToolbar, Button, Pagination, ButtonGroup, Col } from 'react-bootstrap';
-import { BootstrapTable, TableHeaderColumn, DeleteButton } from 'react-bootstrap-table';
-import { AdminNavigation } from "./navigation/adminNavigation.js";
+import { ButtonToolbar, Button, Pagination, ButtonGroup,
+        Col } from 'react-bootstrap';
+import { BootstrapTable, TableHeaderColumn,
+        DeleteButton } from 'react-bootstrap-table';
 
-import '../../style/style.css';
+/* Local Imports */
+import { fetchPlays, removePlayById, fetchPlayDetails } from "./../../actions";
+import AdminNavigation from "./AdminNavigation.js";
 
-class Plays extends Component {
+class AdminPlays extends Component {
 
     constructor(props) {
 
@@ -112,8 +113,12 @@ class Plays extends Component {
         return (
             <div className="rowContent">
             <AdminNavigation />
-            <BootstrapTable data={plays} pagination={ true } options={ this.options } selectRow={ selectRowProp } deleteRow>
-                <TableHeaderColumn width='150' dataField="title" isKey={true} dataSort={true}>
+            <BootstrapTable data={plays} pagination={ true }
+                            options={ this.options }
+                            selectRow={ selectRowProp }
+                            deleteRow>
+                <TableHeaderColumn width='150' dataField="title"
+                                    isKey={true} dataSort={true}>
                     Title
                 </TableHeaderColumn>
                 <TableHeaderColumn width='150' dataField="genre">
@@ -143,30 +148,11 @@ class Plays extends Component {
     }
 
     render() {
-
         return (
             <div className="play-div-custom-padding">
-                <ButtonToolbar>
-                    <ButtonGroup bsSize="small">
-                        <Link className="btn btn-primary button-custom-size-150 button-custom-margin5" to={`/plays/${this.state.selected_play_id}`}>
-                            Show Play Details
-                        </Link>
-                        <Link className="btn btn-primary button-custom-size-150" to="play/new">
-                            Add New Play
-                        </Link>
-                    </ButtonGroup>
-                    <ButtonGroup bsSize="small">
-                        <Link className="btn btn-primary button-custom-size-150 button-custom-margin5" to="users">
-                            View Users
-                        </Link>
-                        <Link className="btn btn-primary button-custom-size-150 button-custom-margin5" to="/user/new">
-                            Add User
-                        </Link>
-                        <Link className="btn btn-primary button-custom-size-150 button-custom-margin5" to="/user/mnew">
-                            Add Users
-                        </Link>
-                    </ButtonGroup>
-                </ButtonToolbar>
+                <h3 className="text-center">
+                    Falculty Plays
+                </h3>
                 {this.renderPlaysTable()}
             </div>
         );
@@ -181,4 +167,5 @@ function mapStateToProps(state) {
     };
 }
 
-export default connect(mapStateToProps, { fetchPlays, removePlayById })(Plays);
+export default connect(mapStateToProps,
+        {fetchPlays, removePlayById })(AdminPlays);

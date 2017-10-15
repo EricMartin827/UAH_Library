@@ -1,23 +1,22 @@
 /* NPM Imports */
+import { Form, FormGroup, Col, Checkbox, Button } from "react-bootstrap";
 import React, { Component } from "react";
 import { Field, reduxForm } from "redux-form";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 
 /* Local Imports */
-import { loginUser } from "./../actions";
-import { renderField } from "./../renderers";
+import { loginUser } from "./../../actions";
+import { renderField } from "./../../renderers";
+import { REGISTER, USER_PLAYS } from "./../paths";
 
-import { Form, FormGroup, Col, Checkbox, Button } from "react-bootstrap";
-import '../../style/style.css';
-
-class AdminLogin extends Component {
+class UserLogin extends Component {
 
     onSubmit(values) {
-        values.access = "admin";
+        values.access = "user";
         this.props.loginUser(values,
-            () => this.props.history.push("/register"),
-            () => this.props.history.push("/plays"));
+            () => this.props.history.push(REGISTER),
+            () => this.props.history.push(USER_PLAYS));
     }
 
     render() {
@@ -27,7 +26,7 @@ class AdminLogin extends Component {
         const localStyles = {maxWidth: 400, margin: '0 auto 10px'};
 
         return (
-        <form onSubmit={handleSubmit(this.onSubmit.bind(this))} style={localStyles}>
+        <Form onSubmit={handleSubmit(this.onSubmit.bind(this))} style={localStyles}>
 
             <FormGroup>
                 <Col sm={10}>
@@ -61,8 +60,7 @@ class AdminLogin extends Component {
                         Cancel</Link>
                 </Col>
             </FormGroup>
-
-        </form>
+        </Form>
         );
     }
 }
@@ -83,10 +81,9 @@ function validate(values) {
     return errors;
 }
 
-
 export default reduxForm({
     validate : validate,
     form : "LoginUser"
 })(
-    connect(null, { loginUser })(AdminLogin)
+    connect(null, { loginUser })(UserLogin)
 );

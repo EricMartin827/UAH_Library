@@ -3,10 +3,9 @@ import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import _ from "lodash";
 
-import { fetchPlayDetails } from "./../actions";
+import { fetchPlayDetails } from "./../../actions";
 
 import { Media } from 'react-bootstrap';
-import '../../style/style.css';
 
 class PlayDetails extends Component {
 

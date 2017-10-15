@@ -3,21 +3,21 @@ import React, { Component } from "react";
 import { Field, reduxForm } from "redux-form";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
+import { Form, FormGroup, Col, Checkbox, Button } from "react-bootstrap";
 
 /* Local Imports */
-import { loginUser } from "./../actions";
-import { renderField } from "./../renderers";
+import { loginUser } from "./../../actions";
+import { renderField } from "./../../renderers";
+import { REGISER, ADMIN_PLAYS } from "./../paths";
 
-import { Form, FormGroup, Col, Checkbox, Button } from "react-bootstrap";
-import '../../style/style.css';
 
-class UserLogin extends Component {
+class AdminLogin extends Component {
 
     onSubmit(values) {
-        values.access = "user";
+        values.access = "admin";
         this.props.loginUser(values,
-            () => this.props.history.push("/register"),
-            () => this.props.history.push("/plays"));
+            () => this.props.history.push(REGISTER),
+            () => this.props.history.push(ADMIN_PLAYS));
     }
 
     render() {
@@ -27,14 +27,16 @@ class UserLogin extends Component {
         const localStyles = {maxWidth: 400, margin: '0 auto 10px'};
 
         return (
-        <Form onSubmit={handleSubmit(this.onSubmit.bind(this))} style={localStyles}>
+        <form onSubmit={handleSubmit(this.onSubmit.bind(this))}
+                    style={localStyles}>
 
             <FormGroup>
                 <Col sm={10}>
                     Email
                 </Col>
                 <Col xs={6} md={10}>
-                    <Field type="text" name="email" component={renderField} />
+                    <Field type="text" name="email"
+                            component={renderField} />
                 </Col>
             </FormGroup>
 
@@ -43,7 +45,8 @@ class UserLogin extends Component {
                     Password
                 </Col>
                 <Col xs={6} md={10}>
-                    <Field type="text" name="password" component={renderField} />
+                    <Field type="text" name="password"
+                            component={renderField} />
                 </Col>
             </FormGroup>
 
@@ -61,7 +64,8 @@ class UserLogin extends Component {
                         Cancel</Link>
                 </Col>
             </FormGroup>
-        </Form>
+
+        </form>
         );
     }
 }
@@ -82,9 +86,10 @@ function validate(values) {
     return errors;
 }
 
+
 export default reduxForm({
     validate : validate,
     form : "LoginUser"
 })(
-    connect(null, { loginUser })(UserLogin)
+    connect(null, { loginUser })(AdminLogin)
 );

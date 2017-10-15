@@ -6,14 +6,13 @@ import { connect } from "react-redux";
 import _ from "lodash";
 
 /* Local Imports */
-import { validateUser } from "./utils";
-import { processUserArrayForm } from "./utils";
+import { validateUser, processUserArrayForm } from "./utils";
 import { addUsers } from "./../../actions";
 import { renderField } from "./../../renderers";
 import { AdminNavigation } from "./../admin";
 import { ADMIN_USERS } from "./../paths";
 
-class PostMultipleUsers extends Component {
+class PostMultiplePlays extends Component {
 
     constructor(props) {
         super(props);
@@ -27,6 +26,7 @@ class PostMultipleUsers extends Component {
 
     onSubmit(values) {
         const { token } = this.props;
+        // console.log(processUserArrayForm(values));
         this.props.addUsers(token, processUserArrayForm(values),
             () => {this.props.history.push(ADMIN_USERS)});
     }
@@ -106,5 +106,5 @@ export default reduxForm({
     validate : validateUser,
     form : "PostMultipleNewUsers"
 })(
-    connect(mapStateToProps, { addUsers })(PostMultipleUsers)
+    connect(mapStateToProps, { addUsers })(PostMultiplePlays)
 );

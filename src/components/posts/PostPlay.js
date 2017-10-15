@@ -3,24 +3,25 @@ import { Field, reduxForm } from "redux-form";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 
+import { AdminNavigation } from "./../admin";
 import { addPlays } from "../../actions";
 import { renderField } from "./../../renderers";
-
-import '../../../style/style.css';
+import { ADMIN_PLAYS } from "./../paths";
 
 class PostPlay extends Component {
 
     onSubmit(values) {
         const { token } = this.props;
         this.props.addPlays(token, values, () => {
-            this.props.history.push("/plays");
+            this.props.history.push(ADMIN_PLAYS);
         });
     }
 
     render() {
         const { handleSubmit } = this.props;
         return (
-            <form onSubmit={handleSubmit(this.onSubmit.bind(this))} className="postplay-form-custom-padding">
+            <form onSubmit={handleSubmit(this.onSubmit.bind(this))}
+                    className="postplay-form-custom-padding">
                 <Field label="Title" type="text" name="title"
                     component={renderField} />
                 <Field label="Genre" type="text" name="genre"
