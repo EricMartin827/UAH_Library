@@ -6,11 +6,11 @@ import { connect } from "react-redux";
 import _ from "lodash";
 
 /* Local Imports */
-import { validateUser, processUserArrayForm } from "./utils";
-import { addUsers } from "./../../actions";
+import { validatePlay, processPlayArrayForm } from "./utils";
+import { addPlays } from "./../../actions";
 import { renderField } from "./../../renderers";
 import { AdminNavigation } from "./../admin";
-import { ADMIN_USERS } from "./../paths";
+import { ADMIN_PLAY } from "./../paths";
 
 class PostMultiplePlays extends Component {
 
@@ -19,16 +19,15 @@ class PostMultiplePlays extends Component {
         this.state = {entryArray : [ 0 ] };
     }
 
-    incrementUsers() {
+    incrementPlays() {
         const arr = this.state.entryArray;
         this.setState({entryArray : arr.concat([arr.length])});
     }
 
     onSubmit(values) {
         const { token } = this.props;
-        // console.log(processUserArrayForm(values));
-        this.props.addUsers(token, processUserArrayForm(values),
-            () => {this.props.history.push(ADMIN_USERS)});
+        this.props.addPlays(token, processPlayArrayForm(values),
+            () => {this.props.history.push(ADMIN_PLAY)});
     }
 
     render() {
@@ -37,36 +36,40 @@ class PostMultiplePlays extends Component {
 
         return (
 
-            <div className="postmultipleusers-div-custom-padding">
-            <h3 className="text-center"> Add Multiple Users </h3>
+            <div className="postmultipleplays-div-custom-padding">
+            <h3 className="text-center"> Add Multiple Plays </h3>
             <div className="rowContent">
             < AdminNavigation />
             <form className="input-group"
                 onSubmit={handleSubmit(this.onSubmit.bind(this))}>
 
                 <button type="button" className="btn btn-primary"
-                    onClick={this.incrementUsers.bind(this)}>
+                    onClick={this.incrementPlays.bind(this)}>
                     Add Another
                 </button>
 
                 <button type="submit" className="btn btn-primary">
                     Submit</button>
 
-                <Link to="/user" className="btn btn-danger">
-                    Cancel</Link>
+                <Link to={ADMIN_PLAY} className="btn btn-danger">
+                    Return To Plays</Link>
 
                 <table className="table table-hover">
                     <thead>
                         <tr>
-                            <th>Email</th>
-                            <th>Password</th>
-                            <th>First Name</th>
-                            <th>Last Name</th>
-                            <th>Admin Access?</th>
+                            <th>Title</th>
+                            <th>Author First Name</th>
+                            <th>Authoor Last Name</th>
+                            <th>Genre</th>
+                            <th>Time Period</th>
+                            <th>Acotor Count</th>
+                            <th>Costume Count</th>
+                            <th>Copies</th>
+                            <th>Spectacle</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {this.renderUserInputs()}
+                        {this.renderPlayInputs()}
                     </tbody>
                 </table>
             </form>
@@ -75,19 +78,27 @@ class PostMultiplePlays extends Component {
         );
     }
 
-    renderUserInputs() {
+    renderPlayInputs() {
         return _.map(this.state.entryArray, (entry) => {
             return (
                 <tr key={entry}>
-                    <td><Field type="text" name={`email${entry}`}
+                    <td><Field type="text" name={`title${entry}`}
                             component={renderField} /> </td>
-                    <td><Field type="text" name={`password${entry}`}
+                    <td><Field type="text" name={`authorFirst${entry}`}
                             component={renderField} /> </td>
-                    <td><Field type="text" name={`firstName${entry}`}
+                    <td><Field type="text" name={`authorLast${entry}`}
                             component={renderField} /> </td>
-                    <td><Field type="text" name={`lastName${entry}`}
+                    <td><Field type="text" name={`genre${entry}`}
                             component={renderField} /> </td>
-                    <td><Field type="checkbox" name={`access${entry}`}
+                    <td><Field type="text" name={`timePeriod${entry}`}
+                            component={renderField} /> </td>
+                    <td><Field type="text" name={`actorCount${entry}`}
+                            component={renderField} /> </td>
+                    <td><Field type="text" name={`costumeCount${entry}`}
+                            component={renderField} /> </td>
+                    <td><Field type="text" name={`copies${entry}`}
+                            component={renderField} /> </td>
+                    <td><Field type="checkbox" name={`hasSpectacle${entry}`}
                             component={renderField} /> </td >
                 </tr>
                 );
@@ -103,8 +114,8 @@ function mapStateToProps(state) {
 }
 
 export default reduxForm({
-    validate : validateUser,
-    form : "PostMultipleNewUsers"
+    validate : validatePlay,
+    form : "PostMultipleNewPlays"
 })(
-    connect(mapStateToProps, { addUsers })(PostMultiplePlays)
+    connect(mapStateToProps, { addPlays })(PostMultiplePlays)
 );

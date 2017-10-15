@@ -16,8 +16,8 @@ import { AdminLogin, AdminPlays, AdminUsers,
 export { AdminLogin, AdminPlays, AdminUsers, AdminNavigation };
 
 /* Interface with user specific components */
-import { UserLogin } from "./user";
-export { UserLogin };
+import { UserLogin, UserPlays, UserNavigation } from "./user";
+export { UserLogin, UserPlays, UserNavigation };
 
 /* Interface with entrance components */
 import Intro from "./Intro.js";

@@ -8,7 +8,7 @@ import { Form, FormGroup, Col, Checkbox, Button } from "react-bootstrap";
 /* Local Imports */
 import { loginUser } from "./../../actions";
 import { renderField } from "./../../renderers";
-import { REGISER, ADMIN_PLAYS } from "./../paths";
+import { REGISER, ADMIN_PLAY } from "./../paths";
 
 
 class AdminLogin extends Component {
@@ -17,7 +17,7 @@ class AdminLogin extends Component {
         values.access = "admin";
         this.props.loginUser(values,
             () => this.props.history.push(REGISTER),
-            () => this.props.history.push(ADMIN_PLAYS));
+            () => this.props.history.push(ADMIN_PLAY));
     }
 
     render() {

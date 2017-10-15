@@ -8,7 +8,7 @@ import { connect } from "react-redux";
 /* Local Imports */
 import { loginUser } from "./../../actions";
 import { renderField } from "./../../renderers";
-import { REGISTER, USER_PLAYS } from "./../paths";
+import { REGISTER, USER_PLAY } from "./../paths";
 
 class UserLogin extends Component {
 
@@ -16,7 +16,7 @@ class UserLogin extends Component {
         values.access = "user";
         this.props.loginUser(values,
             () => this.props.history.push(REGISTER),
-            () => this.props.history.push(USER_PLAYS));
+            () => this.props.history.push(USER_PLAY));
     }
 
     render() {
@@ -26,7 +26,8 @@ class UserLogin extends Component {
         const localStyles = {maxWidth: 400, margin: '0 auto 10px'};
 
         return (
-        <Form onSubmit={handleSubmit(this.onSubmit.bind(this))} style={localStyles}>
+        <Form onSubmit={handleSubmit(this.onSubmit.bind(this))}
+            style={localStyles}>
 
             <FormGroup>
                 <Col sm={10}>

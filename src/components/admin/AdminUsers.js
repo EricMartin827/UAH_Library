@@ -9,7 +9,7 @@ import _ from "lodash";
 import AdminNavigation from "./AdminNavigation.js";
 import { fetchUsers, removeUserById } from "./../../actions";
 import { SearchBar } from "./../../containers";
-import { ADMIN_USERS, ADMIN_USER_ID } from "./../paths";
+import { ADMIN_USER } from "./../paths";
 
 class AdminUsers extends Component {
 
@@ -19,7 +19,7 @@ class AdminUsers extends Component {
 
     removeUser(id) {
         this.props.removeUserById(this.props.token, id,
-            () => this.props.history.push(ADMIN_USERS));
+            () => this.props.history.push(ADMIN_USER));
     }
 
     componentDidMount() {
@@ -66,7 +66,7 @@ class AdminUsers extends Component {
             return (
                 <tr key={user._id}>
                     <td>
-                        <Link to={`${ADMIN_USER_ID}/${user._id}`}>
+                        <Link to={`${ADMIN_USER}/${user._id}`}>
                             {user.email}
                         </Link>
                     </td>

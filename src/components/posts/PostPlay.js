@@ -6,16 +6,17 @@ import { connect } from "react-redux";
 
 /* Local Imports */
 import { AdminNavigation } from "./../admin";
+import { validatePlay } from "./utils";
 import { addPlays } from "../../actions";
 import { renderField } from "./../../renderers";
-import { ADMIN_PLAYS } from "./../paths";
+import { ADMIN_PLAY } from "./../paths";
 
 class PostPlay extends Component {
 
     onSubmit(values) {
         const { token } = this.props;
         this.props.addPlays(token, values, () => {
-            this.props.history.push(ADMIN_PLAYS);
+            this.props.history.push(ADMIN_PLAY);
         });
     }
 
@@ -50,46 +51,13 @@ class PostPlay extends Component {
                     component={renderField} />
                 <button type="submit" className="btn btn-primary">
                     Submit</button>
-                <Link to={ADMIN_PLAYS} className="btn btn-danger">
+                <Link to={ADMIN_PLAY} className="btn btn-danger">
                     Return To Plays</Link>
             </form>
             </div>
             </div>
         );
     }
-}
-
-
-function validate(values) {
-    const errors = {};
-    if (!values.title) {
-            errors.title = "Enter A Title";
-    }
-    if (!values.genre) {
-        errors.genre = "Enter A Genre";
-    }
-    if (!(values.actorCount - 0)) {
-        errors.actorCount = "Enter Number of Actors";
-    }
-    if (!values.authorLast) {
-        errors.authorLast = "Enter Author's Last Name";
-    }
-    if (!values.authorFirst) {
-        errors.authorFirst = "Enter Author's First Name";
-    }
-    if (!values.timePeriod) {
-        errors.timePeriod = "Enter time period";
-    }
-    if (!(values.costumeCount - 0)) {
-        errors.costumeCount = "Enter Number of Costumes";
-    }
-    if (!values.hasSpectacle) {
-        errors.hasSpectacle = "Enter spectacle name or 'false'"
-    }
-    if (!(values.copies - 0)) {
-        errors.copies = "Enter Number of Copies of Script"
-    }
-    return errors;
 }
 
 function mapStateToProps(state) {
@@ -99,7 +67,7 @@ function mapStateToProps(state) {
 }
 
 export default reduxForm({
-   validate : validate,
+   validate : validatePlay,
    form : "PostNewPlay"
 })(
 connect(mapStateToProps, { addPlays })(PostPlay)

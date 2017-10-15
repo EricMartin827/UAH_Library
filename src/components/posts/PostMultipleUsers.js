@@ -6,12 +6,11 @@ import { connect } from "react-redux";
 import _ from "lodash";
 
 /* Local Imports */
-import { validateUser } from "./utils";
-import { processUserArrayForm } from "./utils";
+import { validateUser, processUserArrayForm } from "./utils";
 import { addUsers } from "./../../actions";
 import { renderField } from "./../../renderers";
 import { AdminNavigation } from "./../admin";
-import { ADMIN_USERS } from "./../paths";
+import { ADMIN_USER } from "./../paths";
 
 class PostMultipleUsers extends Component {
 
@@ -28,7 +27,7 @@ class PostMultipleUsers extends Component {
     onSubmit(values) {
         const { token } = this.props;
         this.props.addUsers(token, processUserArrayForm(values),
-            () => {this.props.history.push(ADMIN_USERS)});
+            () => {this.props.history.push(ADMIN_USER)});
     }
 
     render() {
@@ -52,8 +51,8 @@ class PostMultipleUsers extends Component {
                 <button type="submit" className="btn btn-primary">
                     Submit</button>
 
-                <Link to="/user" className="btn btn-danger">
-                    Cancel</Link>
+                <Link to={ADMIN_USER} className="btn btn-danger">
+                    Return To Users</Link>
 
                 <table className="table table-hover">
                     <thead>

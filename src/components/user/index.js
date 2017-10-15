@@ -1,2 +1,4 @@
 import UserLogin from "./UserLogin.js";
-export { UserLogin };
+import UserPlays from "./UserPlays.js";
+import UserNavigation from "./UserNavigation.js"
+export { UserLogin, UserPlays, UserNavigation };
