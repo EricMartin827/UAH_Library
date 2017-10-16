@@ -92,6 +92,12 @@ body {
     padding-left: 50px;
 }
 
+.postmultipleplays-div-custom-padding {
+    padding-right: 50px;
+    padding-bottom: 50px;
+    padding-left: 50px;
+}
+
 .playdetail-div-custom-padding {
     padding-right: 200px;
     padding-bottom: 80px;

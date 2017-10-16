@@ -4,20 +4,20 @@ import { Link } from "react-router-dom"
 import { ButtonGroup } from "react-bootstrap";
 
 /* Local Imports */
-import { ADMIN_PLAYS, ADMIN_POST_PLAY, ADMIN_POST_MANY_PLAYS, ADMIN_USERS,
+import { ADMIN_PLAY, ADMIN_POST_PLAY, ADMIN_POST_MANY_PLAYS, ADMIN_USER,
         ADMIN_POST_USER, ADMIN_POST_MANY_USERS } from "./../paths";
 
 const AdminNavigation = () => {
     return (
         <div>
             <ButtonGroup vertical style={{padding: 30}}>
-            <Link className="btn btn-primary" to={ADMIN_PLAYS}>
+            <Link className="btn btn-primary" to={ADMIN_PLAY}>
                 View Plays </ Link>
             <Link className="btn btn-primary" to={ADMIN_POST_PLAY}>
                 Add A Play </ Link>
             <Link className="btn btn-primary" to={ADMIN_POST_MANY_PLAYS}>
                     Add Many Plays </ Link>
-            <Link className="btn btn-primary" to={ADMIN_USERS}>
+            <Link className="btn btn-primary" to={ADMIN_USER}>
                 View Users </ Link>
             <Link className="btn btn-primary" to={ADMIN_POST_USER}>
                 Add A User </ Link>
