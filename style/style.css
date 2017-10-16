@@ -43,6 +43,10 @@ body {
     margin: 0 auto 10px;
 }
 
+.button-custom-size-120 {
+    width: 120px !important;
+}
+
 .button-custom-size-150 {
     width: 120px !important;
 }
@@ -65,8 +69,14 @@ body {
 
 .play-div-custom-padding {
     padding-right: 15px;
-    padding-bottom: 30px;
+    padding-bottom: 15px;
     padding-left: 15px;
+}
+
+.play-ButtonToolbar {
+    position: relative;
+    top: 20px;
+    left: 190px;
 }
 
 .users-div-custom-padding {
@@ -93,4 +103,16 @@ body {
     flex-direction: row;
     padding-top: 20px;
     padding-bottom: 20px;
+}
+
+.intro-div {
+    position: relative;
+    top: 80px;
+    left: 600px;
+}
+
+.intro-link-padding {
+    padding-right: 15px;
+    padding-left: 15px;
+    margin: 10px;
 }

@@ -23,9 +23,13 @@ class PlayDetails extends Component {
             return (<div>Loading Play Content...</div>);
         }
 
+        const {access} = this.props;
+        const trimed_access = access.replace(/^\s+|\s+$/g,"");
+        const URL = '/'+ trimed_access + '/plays';
+
         return (
             <div className="play-div-custom-padding">
-                <Link className="btn btn-primary" to="/plays" >Back To Plays</Link>
+                <Link className="btn btn-primary" to={URL}>Back To Plays</Link>
                 <Media className="play-div-custom-padding">
                     <Media.Body>
                         <Media.Heading>{play.title}</Media.Heading>
@@ -69,8 +73,13 @@ Three different early versions of the play are extant: the First Quarto (Q1, 160
     }
 }
 
-function mapStateToProps( { plays }, ownProps) {
-    return { play : plays[ownProps.match.params.id] }
+function mapStateToProps(state, ownProps) {
+
+    return {
+        access : state.currentUser.access,
+        token : state.currentUser.token,
+        play : state.plays[ownProps.match.params.id]
+    };
 }
 
 export default connect(mapStateToProps, { fetchPlayDetails })(PlayDetails);
