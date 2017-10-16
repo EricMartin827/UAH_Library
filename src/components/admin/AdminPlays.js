@@ -23,7 +23,8 @@ class AdminPlays extends Component {
             onPageChange: this.onPageChange.bind(this),
             onSizePerPageList: this.sizePerPageListChange.bind(this),
             afterDeleteRow: this.handleDeletedRow.bind(this),
-            deleteBtn: this.createCustomDeleteButton.bind(this)
+            deleteBtn: this.createCustomDeleteButton.bind(this),
+            searchField: this.createCustomSearchField.bind(this)
         };
 
         this.state = {
@@ -72,6 +73,15 @@ class AdminPlays extends Component {
         }
     }
 
+    createCustomSearchField(props) {
+        return (
+            <SearchField
+                className='my-custom-class play-search-field'
+                placeholder='search'
+            />
+        );
+    }
+
     createCustomDeleteButton(onClick) {
         return (
           <DeleteButton
@@ -117,7 +127,7 @@ class AdminPlays extends Component {
             <BootstrapTable data={plays} pagination={ true }
                             options={ this.options }
                             selectRow={ selectRowProp }
-                            deleteRow>
+                            deleteRow search>
                 <TableHeaderColumn width='150' dataField="title"
                                     isKey={true} dataSort={true}>
                     Title
