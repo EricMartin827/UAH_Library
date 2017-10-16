@@ -55,7 +55,7 @@ const Routes = () => {
                                 component={PostMultiplePlays} />
                     <Route path={ADMIN_POST_PLAY}
                                 component={PostPlay} />
-                    <Route path={`${ADMIN_USER}/:id`}
+                    <Route path={`${ADMIN_PLAY}/:id`}
                                 component={PlayDetails} />
                     <Route path={ADMIN_PLAY}
                                 component={AdminPlays} />
