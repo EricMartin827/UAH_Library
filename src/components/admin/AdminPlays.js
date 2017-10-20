@@ -122,38 +122,42 @@ class AdminPlays extends Component {
         };
 
         return (
-            <div className="rowContent">
-            <AdminNavigation />
-            <BootstrapTable data={plays} pagination={ true }
-                            options={ this.options }
-                            selectRow={ selectRowProp }
-                            deleteRow search>
-                <TableHeaderColumn width='150' dataField="title"
-                                    isKey={true} dataSort={true}>
-                    Title
-                </TableHeaderColumn>
-                <TableHeaderColumn width='150' dataField="genre">
-                    Genre
-                </TableHeaderColumn>
-                <TableHeaderColumn width='150' dataField="actorCount">
-                    Actor Count
-                </TableHeaderColumn>
-                <TableHeaderColumn width='150' dataField="authorLast">
-                    Author
-                </TableHeaderColumn>
-                <TableHeaderColumn width='150' dataField="timePeriod">
-                    Time Period
-                </TableHeaderColumn>
-                <TableHeaderColumn width='150' dataField="costumeCount">
-                    Costume Count
-                </TableHeaderColumn>
-                <TableHeaderColumn width='150' dataField="hasSpectacle">
-                    hasSpectacle
-                </TableHeaderColumn>
-                <TableHeaderColumn width='150' dataField="copies">
-                    copies
-                </TableHeaderColumn>
-            </BootstrapTable>
+            <div>
+                <div className="play-AdminNavigation-div">
+                    <AdminNavigation />
+                </div>
+                <div className="play-table-div">
+                    <BootstrapTable data={plays} pagination={ true }
+                                    options={ this.options }
+                                    selectRow={ selectRowProp }
+                                    deleteRow search>
+                        <TableHeaderColumn width='150' dataField="title"
+                                            isKey={true} dataSort={true}>
+                            Title
+                        </TableHeaderColumn>
+                        <TableHeaderColumn width='150' dataField="genre">
+                            Genre
+                        </TableHeaderColumn>
+                        <TableHeaderColumn width='150' dataField="actorCount">
+                            Actor Count
+                        </TableHeaderColumn>
+                        <TableHeaderColumn width='150' dataField="authorLast">
+                            Author
+                        </TableHeaderColumn>
+                        <TableHeaderColumn width='150' dataField="timePeriod">
+                            Time Period
+                        </TableHeaderColumn>
+                        <TableHeaderColumn width='150' dataField="costumeCount">
+                            Costume Count
+                        </TableHeaderColumn>
+                        <TableHeaderColumn width='150' dataField="hasSpectacle">
+                            hasSpectacle
+                        </TableHeaderColumn>
+                        <TableHeaderColumn width='150' dataField="copies">
+                            copies
+                        </TableHeaderColumn>
+                    </BootstrapTable>
+                </div>
             </div>
         )
     }
@@ -162,7 +166,7 @@ class AdminPlays extends Component {
         return (
             <div className="play-div-custom-padding">
                 <h3 className="text-center">
-                    Falculty Plays
+                    Admin Home
                 </h3>
                 <ButtonToolbar className="play-ButtonToolbar">
                     <ButtonGroup bsSize="small">

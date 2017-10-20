@@ -111,6 +111,22 @@ body {
     padding-bottom: 20px;
 }
 
+.play-table-div {
+    display: inline;
+    float: left;
+    width: 1360px !important;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    position: absolute;
+    margin: auto;
+}
+
+.play-AdminNavigation-div {
+    display: inline;
+    float: left;
+    margin: auto;
+}
+
 .intro-div {
     position: relative;
     top: 80px;
@@ -124,5 +140,5 @@ body {
 }
 
 .play-search-field {
-    width: 270px !important;
+    width: 297px !important;
 }
