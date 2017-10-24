@@ -360,7 +360,7 @@ schemaMethods.findByToken = function(token, access) {
  * @return {Promise} to return the user associated with the specified email
  *                   and password
  */
-schemaMethods.findByCredentials = function (email, password, access) {
+schemaMethods.findByCredentials = function(email, password, access) {
 
     var User = this;
     var cred = (access) ? {email, access} : {email};

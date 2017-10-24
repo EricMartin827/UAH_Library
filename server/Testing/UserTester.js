@@ -22,6 +22,7 @@ const {request} = TestLibrary;
 function UserTester(app, schema) {
     Tester.call(this, app, schema)
 }
+
 UserTester.prototype = Object.create(Tester.prototype)
 UserTester.prototype.constructor = UserTester;
 var Interface = UserTester.prototype;
@@ -284,10 +285,58 @@ Interface.get = function(query) {
 		if (err) {
 		    return reject(err);
 		}
-
 		expect(res.clientError).toBe(false);
 		expect(res.serverError).toBe(false);
 		resolve(res.body);
+	    })
+    });
+}
+
+Interface.checkOutValid = function(data) {
+
+    var _app = this.app;
+    var _tok = this.authToken;
+    return new Promise((resolve, reject) => {
+
+	request(_app)
+	    .post(`/api/play/checkout/${data}`)
+	    .send(data)
+	    .set("x-user", `${_tok}`)
+	    .expect(200)
+	    .end((err, res) => {
+
+		if (err) {
+		    return reject(err);
+		}
+
+		expect(res.clientError).toBe(false);
+		expect(res.serverError).toBe(false);
+		
+		resolve(res.body);
+	    })
+    });
+}
+
+Interface.checkOutInvalid = function(data) {
+
+    var _app = this.app;
+    var _tok = this.authToken;
+    return new Promise((resolve, reject) => {
+
+	request(_app)
+	    .post(`/api/play/checkout/${data}`)
+	    .send(data)
+	    .set("x-user", `${_tok}`)
+	    .expect(400)
+	    .end((err, res) => {
+
+		if (err) {
+		    return reject(err);
+		}
+
+		expect(res.clientError).toBe(true);
+		expect(res.serverError).toBe(false);
+		resolve();
 	    })
     });
 }

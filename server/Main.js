@@ -39,7 +39,7 @@ main.post("/register", authRegistration, (req, res) => {
     var { password } = req.body;
     var oldUser = req.oldUser;
     var tok_header = (oldUser.access === "admin") ? "x-admin" : "x-user";
-    
+
     /* Change the password. clearToken() will invkoke a save call. */
     oldUser.password = password;
     oldUser.swapToken("newUser", oldUser.access).then((tok) => {

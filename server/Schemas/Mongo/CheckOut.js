@@ -15,20 +15,23 @@
  * @author Eric William Martin
  */
 "use strict"
-
-const {NODE_LIB} = require("./../library");
-const {Schema} = NODE_LIB;
-const {Immutable} = NODE_LIB;
+const {NODE_LIB}       = require("./../library");
+const {Schema}         = NODE_LIB;
+const {Immutable}      = NODE_LIB;
 
 /* Error Improts */
-const {ERROR_LIB} = require("./../library");
+const {ERROR_LIB}      = require("./../library");
+const {CUSTOM_ERRNO}   = ERROR_LIB;
+const {makeErrno}      = ERROR_LIB;
+const {ENO_PLAY}       = CUSTOM_ERRNO;
+const {ENOT_AVAILABLE} = CUSTOM_ERRNO;
 
 /* Mongo Database Imports */
-const {MongoDB} = require("./MongoDatabase.js");
+const {MongoDB}        = require("./MongoDatabase.js");
 
 /* Mongo Collection Imports */
-const {User} = require("./User.js");
-const {Play} = require("./Play.js");
+const {User}           = require("./User.js");
+const {Play}           = require("./Play.js");
 
 /**
  * CheckOut is A Mongoose Model that defines the major properties of the
@@ -38,7 +41,7 @@ const {Play} = require("./Play.js");
  * @class CheckOut
  * @constructor
  */
-var CheckOut; /* This defined at the bottom due to Mongoose API */
+var CheckOut; /* Forward delcaration. Defined at bottom due to Mongoose API */
 
 /**
  * CheckOutSchema defines the properties of a CheckOut Collection stored in
@@ -70,7 +73,36 @@ const CheckOutSchema = new Schema({
     }
     
 }, {strict : true});
+CheckOutSchema.plugin(Immutable); /* Prevent Client From Changing Date */
 
+/* Alias CheckOut Schema's instance and static methods for readibility */
+var instanceMethods = CheckOutSchema.methods;
+var schemaMethods = CheckOutSchema.statics;
+
+/******************************************************************************/
+/**************************** Static Methods **********************************/
+/******************************************************************************/
+
+schemaMethods.findNumberOfPlays = function(playID) {
+
+    return CheckOut.find({"playID" : playID}).then((res) => {
+	return res.length;
+    });
+}
+
+schemaMethods.userHasPlay = function(userID, playID) {
+    return CheckOut.find(
+	{
+	    "userID" : userID,
+	    "playID" : playID
+	}).then((resArray) =>  {
+	    return (resArray.length === 0) ? false : true;
+	})
+}
+
+/******************************************************************************/
+/**************************** Mongoose Middelware *****************************/
+/******************************************************************************/
 
 /*
  * In order for a user to successfully check out a play, the server must
@@ -85,9 +117,56 @@ const CheckOutSchema = new Schema({
  * middleware hook.
  */
 
-CheckOutSchema.pre("validate", true, (done) => {
-    
+/*
+ * Verify the play exists and the number of play copies is greater than the
+ * number of checkouts associated with the target play.
+ */
+CheckOutSchema.pre("validate", true, function(next, done) {
+
+    var checkOut = this;
+    Play.findById(checkOut.playID).then((play) => {
+
+	if (!play) {
+	    done(new Error("Failed to locate play"));
+	} else  {
+	    CheckOut.findNumberOfPlays(checkOut.playID).then((count) => {
+
+		if (play.copies <= count) {
+		    done(new Error(`Play ${play.title} is not available`));
+		} else {
+		    done();
+		}
+	    }).catch((err) => done(err));
+	}
+    });
+
+    next();
 });
 
+/* Verify the user exist */
+CheckOutSchema.pre("validate", function(next) {
 
-CheckOutSchema.plugin(Immutable);
+    var checkOut = this;
+    User.findOne({"_id" : checkOut.userID})
+	.then((user) =>  {
+
+	    if (!user) {
+		next(new Error(`User ${id} is not presnt`));
+	    } else {
+
+		CheckOut.userHasPlay(user._id, checkOut.playID)
+		    .then((res) => {
+			if (res) {
+			    next(new Error("User already has play"))
+			} else {
+			    next();
+			}
+		    })
+	    }
+	}).catch((err) => next(err));
+});
+
+CheckOut = MongoDB.model("CheckOut", CheckOutSchema);
+module.exports = {
+    CheckOut : CheckOut
+}

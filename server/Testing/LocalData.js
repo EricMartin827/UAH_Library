@@ -14,25 +14,30 @@ var data = {
 	    authorLast  : "Shakespeare",
 	    authorFirst : "William"
 	},
+
 	{
 	    title       : "Othello",
 	    authorLast  : "Shakespeare",
 	    authorFirst : "William"
 	},
+
 	{
 	    title       : "A Street Car Name Desire",
 	    authorLast  : "Williams",
 	    authorFirst : "Tennesee"
 	},
+
 	{
 	    title       : "Hamlet",
 	    authorLast  : "William",
 	    authorFirst : "Shakespeare"
 	},
+
 	{
 	    title       : "Death of A Salesman",
 	    authorLast  : "Miller",
-	    authorFirst : "Arthur"
+	    authorFirst : "Arthur",
+	    copies : 3
 	}
     ],
 
@@ -101,6 +106,24 @@ var data = {
 	lastName  : "Rabbit",
 	access    : "user"
     },
+
+    checkOutUsers : [
+	{
+	    email     : "cfunnye@bunny.com",
+	    password  : "firstPassword",
+	    firstName : "Peter",
+	    lastName  : "Rabbit",
+	    access    : "user"
+	},
+
+	{
+	    email     : "cweee@bunny.com",
+	    password  : "init@abc",
+	    firstName : "Peter",
+	    lastName  : "Rabbit",
+	    access    : "user"
+	}	
+    ],
 
     fiveUsers :
     [

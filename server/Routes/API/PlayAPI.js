@@ -20,6 +20,7 @@ const {parseQueries} = MIDDLEWARE;
 
 const {Schemas} = require("./../../Schemas");
 const {Play} = Schemas;
+const {CheckOut} = Schemas;
 
 var playAPI = new express.Router();
 playAPI.use(bodyParser.json());
@@ -68,7 +69,6 @@ playAPI.get("/:id", (req, res) => {
 /************************* Post Routes For Plays ******************************/
 /******************************************************************************/
 
-
 playAPI.post("/new", authAdmin, (req, res) => {
 
     if (isArray(req.body)) {
@@ -88,6 +88,26 @@ playAPI.post("/new", authAdmin, (req, res) => {
 	    res.status(400).send(err);
 	});
     }
+});
+
+
+/******************************************************************************/
+/************************* Chechout For Plays *********************************/
+/******************************************************************************/
+
+playAPI.post("/checkout/:id", authEither, (req, res) => {
+
+    var checkOut = new CheckOut(
+	{
+	    playID : req.params.id,
+	    userID : req.header["x-user"]._id
+	});
+    
+    checkOut.save().then((checkOut) => {
+	res.send(checkOut);
+    }).catch((err) => {
+	res.status(400).send(err);
+    });
 });
 
 module.exports = { playAPI };
