@@ -16,6 +16,7 @@
 const {NODE_LIB} = require("./../library");
 const {Schema} = NODE_LIB;
 const {Immutable} = NODE_LIB;
+const {_} = NODE_LIB;
 
 /* Mongo Database Import */
 const {MongoDB} = require("./MongoDatabase.js");
@@ -104,7 +105,16 @@ const publicAttributes = ["_id",
 			  "hasSpectacle",
 			  "actorCount",
 			  "costumeCount",
-			  "copies"];
+			  "copies",
+			  "comments"];
+
+const modifiableAttributes = ["genre",
+			      "timePeriod",
+			      "hasSpectacle",
+			      "actorCount",
+			      "costumeCount",
+			      "copies",
+			      "comments"];
 
 /******************************************************************************/
 /**************************** Instance Methods ********************************/
@@ -141,8 +151,27 @@ schemaMethods.getAttributes = function() {
 schemaMethods.removePlayById = function(id) {
 
     MongoDB.collection("CheckOut").remove({playID : id});
-    Play.findByIdAndRemove(id).then((res) => {
+    return Play.findByIdAndRemove(id).then((res) => {
 	return res;
+    });
+}
+
+schemaMethods.updatePlayById = function(id, update) {
+
+    var playUpdate = {};
+    for (let prop in update) {
+	if (_.includes(modifiableAttributes, prop)) {
+	    playUpdate[prop] = update[prop];
+	}
+    }
+
+    return Play.findById(id).then((play) => {
+	for (let prop in playUpdate) {
+	    play[prop] = playUpdate[prop];
+	}
+	return play.save().then((play) => {
+	    return play;
+	})
     });
 }
 

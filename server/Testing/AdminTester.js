@@ -376,14 +376,40 @@ Interface.deleteById = function(id) {
 
 		expect(res.clientError).toBe(false);
 		expect(res.serverError).toBe(false);
-		
 		_schema.findOne(res.body).then((data) => {
 		    expect(data).toBe(null);
+		    resolve(res.body);
 		}).catch((err) => reject(err));
-		resolve(res.body);
 	    })
     });
 }
+
+Interface.updatePlayById = function(id, update) {
+
+    var _app = this.app;
+    var _mode = this.mode;
+    var _schema = this.schema;
+    var _tok = this.authToken;
+    return new Promise((resolve, reject) => {
+	request(_app)
+	    .post(`/api/${_mode}/update/${id}`)
+	    .set("x-admin", `${_tok}`)
+	    .send(update)
+	    .expect(200)
+	    .end((err, res) => {
+
+		if (err) {
+		    return reject(err);
+		}
+
+		expect(res.clientError).toBe(false);
+		expect(res.serverError).toBe(false);
+		resolve(res.body);
+
+	    });
+    });
+}
+
 
 
 module.exports = {

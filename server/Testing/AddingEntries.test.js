@@ -97,8 +97,20 @@ describe("Play Addition Tests", () => {
     });
 
     it("Should Allow Admin To Post Multple Plays", (done) => {
+
 	_Admin.postMany(DATA.fivePlays)
 	    .then(() => done()).catch((err) => done(err));
+    });
+
+    it("Should Allow Admin To Update a Play", (done) => {
+	_Admin.postOne(DATA.onePlay)
+	    .then((res) =>  {
+		var update = {comments : "The Best Play In the world!!!!!",
+			      genre: "Tengo gatos en mi pantelones"};
+		_Admin.updatePlayById(res._id, update).then((res) => {
+		    done()
+		}).catch((err) => done(err));
+	    }).catch((err) => done(err));
     });
 
 });
