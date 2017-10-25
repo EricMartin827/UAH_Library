@@ -8,7 +8,7 @@ import { Form, FormGroup, Col, Checkbox, Button } from "react-bootstrap";
 /* Local Imports */
 import { loginUser } from "./../../actions";
 import { renderField } from "./../../renderers";
-import { REGISER, ADMIN_PLAY } from "./../paths";
+import { REGISTER, ADMIN_PLAY } from "./../paths";
 
 
 class AdminLogin extends Component {

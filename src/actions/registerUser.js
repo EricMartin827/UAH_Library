@@ -20,7 +20,7 @@ export default function registerUser(newPassword, token, gotoUserPlays,
                 type : REGISTER_USER,
                 payload : data
             })
-            if (header["x-admin"]) {
+            if (headers["x-admin"]) {
                 gotoAdminPlays();
             } else {
                 gotoUserPlays();
