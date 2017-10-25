@@ -360,7 +360,7 @@ schemaMethods.findByToken = function(token, access) {
  * @return {Promise} to return the user associated with the specified email
  *                   and password
  */
-schemaMethods.findByCredentials = function (email, password, access) {
+schemaMethods.findByCredentials = function(email, password, access) {
 
     var User = this;
     var cred = (access) ? {email, access} : {email};
@@ -384,6 +384,14 @@ schemaMethods.findByCredentials = function (email, password, access) {
 		});
 	    });
 	})
+}
+
+schemaMethods.removeUserById = function(id) {
+
+    MongoDB.collection("CheckOut").remove({userID : id});
+    Play.findByIdAndRemove(id).then((res) => {
+	return res;
+    });
 }
 
 /******************************************************************************/

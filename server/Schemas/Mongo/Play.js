@@ -16,6 +16,7 @@
 const {NODE_LIB} = require("./../library");
 const {Schema} = NODE_LIB;
 const {Immutable} = NODE_LIB;
+const {_} = NODE_LIB;
 
 /* Mongo Database Import */
 const {MongoDB} = require("./MongoDatabase.js");
@@ -82,7 +83,8 @@ const PlaySchema = new Schema({
     hasSpectacle:  {type: Boolean, default: false},
     actorCount:    {type: Number, min: 1, max: 50, default: 10},
     costumeCount:  {type: Number, min: 1, max: 50, default: 10},
-    copies:        {type: Number, min: 0, max: 50, default: 1}
+    copies:        {type: Number, min: 0, max: 50, default: 1},
+    comments:      {type: String, default: "None at the present moment :)"}
 
 }, {strict : true}); /* Prevents client from adding new attributes */
 
@@ -103,7 +105,16 @@ const publicAttributes = ["_id",
 			  "hasSpectacle",
 			  "actorCount",
 			  "costumeCount",
-			  "copies"];
+			  "copies",
+			  "comments"];
+
+const modifiableAttributes = ["genre",
+			      "timePeriod",
+			      "hasSpectacle",
+			      "actorCount",
+			      "costumeCount",
+			      "copies",
+			      "comments"];
 
 /******************************************************************************/
 /**************************** Instance Methods ********************************/
@@ -135,6 +146,33 @@ instanceMethods.toString = function() {
 schemaMethods.getAttributes = function() {
 
     return publicAttributes;
+}
+
+schemaMethods.removePlayById = function(id) {
+
+    MongoDB.collection("CheckOut").remove({playID : id});
+    return Play.findByIdAndRemove(id).then((res) => {
+	return res;
+    });
+}
+
+schemaMethods.updatePlayById = function(id, update) {
+
+    var playUpdate = {};
+    for (let prop in update) {
+	if (_.includes(modifiableAttributes, prop)) {
+	    playUpdate[prop] = update[prop];
+	}
+    }
+
+    return Play.findById(id).then((play) => {
+	for (let prop in playUpdate) {
+	    play[prop] = playUpdate[prop];
+	}
+	return play.save().then((play) => {
+	    return play;
+	})
+    });
 }
 
 /* Compile the Mongoose Schema into an active Mongoose "Play" model and

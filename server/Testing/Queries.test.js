@@ -121,4 +121,15 @@ describe("User Query Tests", () => {
 	}).catch((err) => done(err));
     });
 
+    it("Should Allow Admin To Delete User by Id", (done) => {
+
+	regAdmin.get({ firstName : "Peter" }).then((res) => {
+	    expect(res.length).toBe(1);
+	    expect(res[0].lastName).toEqual("Rabbit");
+	    regAdmin.deleteById(res[0]._id).then((data) => {
+		expect(res[0]._id).toBe(data._id);
+		done();
+	    }).catch((err) => done(err));
+	}).catch((err) => done(err));
+    });
 });

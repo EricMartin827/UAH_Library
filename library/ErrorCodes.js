@@ -11,6 +11,8 @@ const CUSTOM_ERRNO = {
     NO_USER             : 1507,
     EPERM               : 1508,
     BAD_WEB_TOKEN       : 1509,
+    ENOT_AVAILABLE      : 1510,
+    ENO_PLAY            : 1511,
     ESINVAL             : 1550
 };
 
@@ -28,6 +30,8 @@ var ERRNO = {
     1507 : "UserNotPresent",
     1508 : "ValidationError",
     1509 : "JSON_WebToken_Malformed",
+    1510 : "ResourceUnAvalilable -> Checkout limit reached",
+    1511 : "PlayNotPresent",
     1550 : "InvalidServerArguments",
     /*********************************/
 
