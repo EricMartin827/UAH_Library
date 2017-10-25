@@ -82,7 +82,8 @@ const PlaySchema = new Schema({
     hasSpectacle:  {type: Boolean, default: false},
     actorCount:    {type: Number, min: 1, max: 50, default: 10},
     costumeCount:  {type: Number, min: 1, max: 50, default: 10},
-    copies:        {type: Number, min: 0, max: 50, default: 1}
+    copies:        {type: Number, min: 0, max: 50, default: 1},
+    comments:      {type: String, default: "None at the present moment :)"}
 
 }, {strict : true}); /* Prevents client from adding new attributes */
 
