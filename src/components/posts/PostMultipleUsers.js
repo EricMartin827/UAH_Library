@@ -6,10 +6,11 @@ import { connect } from "react-redux";
 import _ from "lodash";
 
 /* Local Imports */
-import { validateUser } from "./utils";
-import { processUserArrayForm } from "./utils";
+import { validateUser, processUserArrayForm } from "./utils";
 import { addUsers } from "./../../actions";
 import { renderField } from "./../../renderers";
+import { AdminNavigation } from "./../admin";
+import { ADMIN_USER } from "./../paths";
 
 class PostMultipleUsers extends Component {
 
@@ -25,30 +26,34 @@ class PostMultipleUsers extends Component {
 
     onSubmit(values) {
         const { token } = this.props;
-        // console.log(processUserArrayForm(values));
         this.props.addUsers(token, processUserArrayForm(values),
-            () => {this.props.history.push("/users")});
+            () => {this.props.history.push(ADMIN_USER)});
     }
 
     render() {
 
         const { handleSubmit } = this.props;
 
-        return(
-            <div>
-            <h3>Add Multiple Users</h3>
-            <div className="text-xs-right">
-                <button className="btn btn-primary" type="button"
+        return (
+
+            <div className="postmultipleusers-div-custom-padding">
+            <h3 className="text-center"> Add Multiple Users </h3>
+            <div className="rowContent">
+            < AdminNavigation />
+            <form className="input-group"
+                onSubmit={handleSubmit(this.onSubmit.bind(this))}>
+
+                <button type="button" className="btn btn-primary"
                     onClick={this.incrementUsers.bind(this)}>
                     Add Another
                 </button>
-            </div>
-            <form className="input-group"
-                onSubmit={handleSubmit(this.onSubmit.bind(this))}>
+
                 <button type="submit" className="btn btn-primary">
                     Submit</button>
-                <Link to="/user" className="btn btn-danger">
-                    Cancel</Link>
+
+                <Link to={ADMIN_USER} className="btn btn-danger">
+                    Return To Users</Link>
+
                 <table className="table table-hover">
                     <thead>
                         <tr>
@@ -64,6 +69,7 @@ class PostMultipleUsers extends Component {
                     </tbody>
                 </table>
             </form>
+            </div>
             </div>
         );
     }

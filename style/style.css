@@ -4,10 +4,141 @@ form a {
 
 table, th, td {
     border: 1px solid black;
+}
 
+body {
+  padding-top: 40px;
+  padding-bottom: 40px;
+  background-color: #eee;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.search-bar-padding {
+    padding-top : 30px;
+    padding-bottom: 30px;
+    padding-left: 30px;
+}
+
+.table {
+    width: 90%;
 }
 
 .input-group {
-  margin: 0 auto;
-  float: node;
+    margin: 0 auto;
+    float: node;
+}
+
+.input-group-btn {
+    vertical-align: middle;
+}
+
+.button-custom-margin5 {
+    margin: 0 auto 5px;
+}
+
+.button-custom-margin10 {
+    margin: 0 auto 10px;
+}
+
+.button-custom-size-120 {
+    width: 120px !important;
+}
+
+.button-custom-size-150 {
+    width: 120px !important;
+}
+
+.button-custom-size-200 {
+    width: 200px !important;
+}
+
+.postplay-form-custom-padding {
+    padding-right: 80px;
+    padding-bottom: 50px;
+    padding-left: 30px;
+}
+
+.postuser-form-custom-padding {
+    padding-right: 80px;
+    padding-bottom: 50px;
+    padding-left: 30px;
+}
+
+.play-div-custom-padding {
+    padding-right: 15px;
+    padding-bottom: 15px;
+    padding-left: 15px;
+}
+
+.play-ButtonToolbar {
+    position: relative;
+    top: 20px;
+    left: 190px;
+}
+
+.users-div-custom-padding {
+    padding-right: 30px;
+    padding-bottom: 30px;
+    padding-left: 30px;
+    width: 90%;
+}
+
+.postmultipleusers-div-custom-padding {
+    padding-right: 50px;
+    padding-bottom: 50px;
+    padding-left: 50px;
+}
+
+.postmultipleplays-div-custom-padding {
+    padding-right: 50px;
+    padding-bottom: 50px;
+    padding-left: 50px;
+}
+
+.playdetail-div-custom-padding {
+    padding-right: 200px;
+    padding-bottom: 80px;
+    padding-left: 80px;
+}
+
+.rowContent {
+    display: flex;
+    flex-direction: row;
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+.play-table-div {
+    display: inline;
+    float: left;
+    width: 1360px !important;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    position: absolute;
+    margin: auto;
+}
+
+.play-AdminNavigation-div {
+    display: inline;
+    float: left;
+    margin: auto;
+}
+
+.intro-div {
+    position: relative;
+    top: 80px;
+    left: 600px;
+}
+
+.intro-link-padding {
+    padding-right: 15px;
+    padding-left: 15px;
+    margin: 10px;
+}
+
+.play-search-field {
+    width: 297px !important;
 }

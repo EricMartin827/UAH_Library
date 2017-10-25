@@ -13,7 +13,7 @@ import "./../style/style.css"
 import Routes from "./Router.js";
 import reducers from "./reducers";
 
-const  store = applyMiddleware(promise, thunk)(createStore);
+const store = applyMiddleware(promise, thunk)(createStore);
 
 const MainApp = () => {
     return (

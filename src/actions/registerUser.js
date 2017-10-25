@@ -1,10 +1,12 @@
 import axios from "axios";
 import { URL, REGISTER_USER } from "./types";
 
-export default function registerUser(newPassword, token, gotoPlays) {
+export default function registerUser(newPassword, token, gotoUserPlays,
+                                        gotoAdminPlays) {
 
     const config = { headers : { "x-register" : token } }
-    const request = axios.post(`${URL}/register`, { password : newPassword }, config);
+    const request = axios.post(`${URL}/register`, { password : newPassword },
+                                config);
 
     return (dispatch) => {
 
@@ -18,8 +20,11 @@ export default function registerUser(newPassword, token, gotoPlays) {
                 type : REGISTER_USER,
                 payload : data
             })
-            gotoPlays();
-
+            if (headers["x-admin"]) {
+                gotoAdminPlays();
+            } else {
+                gotoUserPlays();
+            }
         });
     }
 }

@@ -2,7 +2,7 @@ import React , { Component } from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { fetchUserById, removeUserById } from "./../../actions";
-
+import { ADMIN_USER } from "./../paths";
 
 class UserDetails extends Component {
 
@@ -20,7 +20,7 @@ class UserDetails extends Component {
         const {token, selectedUser} = this.props;
         if (token && selectedUser) {
             this.props.removeUserById(token, selectedUser._id,
-            () => this.props.history.push("/users"));
+            () => this.props.history.push(ADMIN_USER));
         }
     }
 
@@ -35,7 +35,7 @@ class UserDetails extends Component {
 
         return (
             <div>
-                <Link to="/users"> Return To Users</Link>
+                <Link to={ADMIN_USER}> Return To Users</Link>
                 <button className="btn btn-danger pull-xs-right"
                     onClick={this.onDeleteClick.bind(this)}>
                 Delete User

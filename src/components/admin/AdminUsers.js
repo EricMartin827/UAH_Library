@@ -1,14 +1,17 @@
 /* NPM Imports */
+import { ButtonToolbar, Button, ButtonGroup, Col } from 'react-bootstrap';
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import _ from "lodash";
 
 /* Local Imports */
-import { fetchUsers, removeUserById } from "./../actions";
-import { SearchBar } from "./../containers";
+import AdminNavigation from "./AdminNavigation.js";
+import { fetchUsers, removeUserById } from "./../../actions";
+import { SearchBar } from "./../../containers";
+import { ADMIN_USER } from "./../paths";
 
-class Users extends Component {
+class AdminUsers extends Component {
 
     constructor(props) {
         super(props);
@@ -16,7 +19,7 @@ class Users extends Component {
 
     removeUser(id) {
         this.props.removeUserById(this.props.token, id,
-            () => this.props.history.push("/users"));
+            () => this.props.history.push(ADMIN_USER));
     }
 
     componentDidMount() {
@@ -34,19 +37,11 @@ class Users extends Component {
         }
 
         return (
-            <div>
-                <div className="text-xs-right">
-                    <Link className="btn btn-primary" to="/user/new">
-                        Add New User
-                    </Link>
-                </div>
-                <div className="text-xs-right">
-                    <Link className="btn btn-primary" to="/user/mnew">
-                        Add Many New Users
-                    </Link>
-                </div>
+            <div className="users-div-custom-padding">
+                <h3 className="text-center">Current Users</h3>
                 <SearchBar />
-                <h3>Current Users</h3>
+                <div className="rowContent">
+                <AdminNavigation />
                 <table className="table table-hover">
                     <thead>
                         <tr>
@@ -61,6 +56,7 @@ class Users extends Component {
                             {this.renderUsers()}
                         </tbody>
                 </table>
+                </div>
             </div>
         )
     }
@@ -70,7 +66,7 @@ class Users extends Component {
             return (
                 <tr key={user._id}>
                     <td>
-                        <Link to={`/users/${user._id}`}>
+                        <Link to={`${ADMIN_USER}/${user._id}`}>
                             {user.email}
                         </Link>
                     </td>
@@ -96,4 +92,5 @@ function mapStateToProps(state) {
     };
 }
 
-export default connect(mapStateToProps, { fetchUsers, removeUserById })(Users);
+export default connect(mapStateToProps,
+    { fetchUsers, removeUserById })(AdminUsers);

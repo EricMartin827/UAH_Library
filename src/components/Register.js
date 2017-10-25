@@ -6,14 +6,15 @@ import { connect } from "react-redux";
 /* Local Imports */
 import { registerUser } from "./../actions";
 import { renderField } from "./../renderers";
+import { ADMIN_PLAY, USER_PLAY } from "./paths";
 
 class Register extends Component {
 
     onSubmit(values) {
         const { currentUser } = this.props;
-        console.log(this.props.registerUser);
         this.props.registerUser(values.newPassword, currentUser.token,
-            () => this.props.history.push("/plays"));
+            () => this.props.history.push(USER_PLAY),
+            () => this.props.history.push(ADMIN_PLAY));
     }
 
     render() {

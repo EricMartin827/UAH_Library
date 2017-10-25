@@ -8,6 +8,8 @@ import { connect } from "react-redux";
 import { validateUser } from "./utils";
 import { addUsers } from "./../../actions";
 import { renderField } from "./../../renderers";
+import { AdminNavigation } from "./../admin";
+import { ADMIN_USER } from "./../paths";
 
 class PostUser extends Component {
 
@@ -15,7 +17,7 @@ class PostUser extends Component {
         const { token } = this.props;
         values.access = (values.access) ? "admin" : "user";
         this.props.addUsers(token, values, () => {
-            this.props.history.push("/users");
+            this.props.history.push(ADMIN_USER);
         });
     }
 
@@ -24,7 +26,12 @@ class PostUser extends Component {
         const { handleSubmit } = this.props;
 
         return (
-            <form  className="input-group"
+            <div>
+            <h3 className="text-center"> Add A New User </h3>
+            <div className="rowContent">
+            <AdminNavigation />
+            <form className="postuser-form-custom-padding"
+                style={{width: "90%"}}
                 onSubmit={handleSubmit(this.onSubmit.bind(this))}>
                 <Field label="Email" type="text" name="email"
                     component={renderField} />
@@ -38,9 +45,11 @@ class PostUser extends Component {
                     value="admin" component={renderField} />
                 <button type="submit" className="btn btn-primary">
                     Submit</button>
-                <Link to="/user" className="btn btn-danger">
-                    Cancel</Link>
+                <Link to={ADMIN_USER} className="btn btn-danger">
+                    Return To Users</Link>
             </form>
+            </div>
+            </div>
         );
     }
 }
