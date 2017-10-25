@@ -119,6 +119,22 @@ userAPI.post("/new", authAdmin, (req, res) => {
 	    res.status(400).send(err);
 	});
     }
-})
+});
+
+/******************************************************************************/
+/******************** DELETE Request for User API *****************************/
+/******************************************************************************/
+userAPI.post("/delete/:id", authAdmin, (req, res) => {
+
+    var id = req.params.id;
+    User.findByIdAndRemove(id).then((user) => {
+	if (!user) {
+	    res.status(400).send(err);
+	}
+	res.send(user);
+    }).catch((err) => {
+	res.status(400).send(err);
+    });
+});
 
 module.exports = { userAPI };

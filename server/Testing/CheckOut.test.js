@@ -155,4 +155,15 @@ describe("Basic Checkout Tests", () => {
 	_User.checkOutInvalid(plays[0]._id).then(() => done()).catch((err) => done(err));
     });
 
+    it("Should Allow The Student To Return a Play/Delete a Checkout", (done) => {
+	User.find({email : userTwo.email}).then((res) => {
+	    var id = res[0]._id;
+	    CheckOut.find({playID : plays[4]._id, userID : id}).then((res) => {
+		_User.returnCheckOut(res[0]._id, id)
+		    .then(() => done())
+		    .catch((err) => done(err));
+	    }).catch((err) => done(err));
+	}).catch((err) => done(err));
+    });
+
 });

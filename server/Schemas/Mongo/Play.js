@@ -137,6 +137,14 @@ schemaMethods.getAttributes = function() {
     return publicAttributes;
 }
 
+schemaMethods.removePlayById = function(id) {
+
+    MongoDB.collection("CheckOut").remove({playID : id});
+    Play.findByIdAndRemove(id).then((res) => {
+	return res;
+    });
+}
+
 /* Compile the Mongoose Schema into an active Mongoose "Play" model and
  * export the model. No new database methods/functions can be added to the
  * Play Class after this point.

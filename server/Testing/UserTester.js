@@ -341,6 +341,32 @@ Interface.checkOutInvalid = function(data) {
     });
 }
 
+
+Interface.returnCheckOut = function(checkOutID, userID) {
+
+    var _app = this.app;
+    var _tok = this.authToken;
+    
+    return new Promise((resolve, reject) => {
+
+	request(_app)
+	    .post(`/api/play/checkout/delete/${checkOutID}`)
+	    .send({})
+	    .set("x-user", `${_tok}`)
+	    .expect(200)
+	    .end((err, res) => {
+
+		if (err) {
+		    reject(err);
+		}
+
+		expect(res.clientError).toBe(false);
+		expect(res.serverError).toBe(false);
+		resolve();
+	    });
+    });
+}
+
 module.exports = {
     UserTester : UserTester
 }

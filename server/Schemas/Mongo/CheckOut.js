@@ -30,8 +30,8 @@ const {ENOT_AVAILABLE} = CUSTOM_ERRNO;
 const {MongoDB}        = require("./MongoDatabase.js");
 
 /* Mongo Collection Imports */
-const {User}           = require("./User.js");
 const {Play}           = require("./Play.js");
+const {User}           = require("./User.js");
 
 /**
  * CheckOut is A Mongoose Model that defines the major properties of the
@@ -97,6 +97,26 @@ schemaMethods.userHasPlay = function(userID, playID) {
 	    "playID" : playID
 	}).then((resArray) =>  {
 	    return (resArray.length === 0) ? false : true;
+	})
+}
+
+schemaMethods.removeCheckOut = function(docID, userID) {
+
+    return CheckOut.find(
+	{
+	    "_id" : docID,
+	    "userID" : userID
+	}).then((checkOut) => {
+	if (!checkOut) {
+	    return Promise.reject(makeErrno(
+		NO_USER,
+		`UserID: ${userID} is not renting play`
+	    ));
+	} else {
+	    return CheckOut.findByIdAndRemove(docID).then((res) => {
+		return res;
+	    });
+	}
 	})
 }
 

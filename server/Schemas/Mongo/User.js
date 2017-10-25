@@ -386,6 +386,14 @@ schemaMethods.findByCredentials = function(email, password, access) {
 	})
 }
 
+schemaMethods.removeUserById = function(id) {
+
+    MongoDB.collection("CheckOut").remove({userID : id});
+    Play.findByIdAndRemove(id).then((res) => {
+	return res;
+    });
+}
+
 /******************************************************************************/
 /**************************** Mongoose Middelware *****************************/
 /******************************************************************************/
