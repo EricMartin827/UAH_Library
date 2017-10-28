@@ -10,6 +10,7 @@ import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 /* Local Imports */
 import { fetchPlays, fetchPlayDetails } from "./../../actions";
 import UserNavigation from "./UserNavigation.js";
+import "../../../style/style.css";
 
 class UserPlays extends Component {
 
@@ -68,6 +69,10 @@ class UserPlays extends Component {
         }
     }
 
+    checkoutPlay() {
+        console.log(this.state.selected_play_id);
+    }
+
     renderPlaysTable() {
         const plays = _.map(this.props.plays);
         const selectRowProp = {
@@ -78,36 +83,36 @@ class UserPlays extends Component {
 
         return (
             <div className="rowContent">
-            <UserNavigation />
-            <BootstrapTable data={plays} pagination={ true }
-                            options={ this.options }
-                            selectRow={ selectRowProp }>
-                <TableHeaderColumn width='150' dataField="title"
-                                    isKey={true} dataSort={true}>
-                    Title
-                </TableHeaderColumn>
-                <TableHeaderColumn width='150' dataField="genre">
-                    Genre
-                </TableHeaderColumn>
-                <TableHeaderColumn width='150' dataField="actorCount">
-                    Actor Count
-                </TableHeaderColumn>
-                <TableHeaderColumn width='150' dataField="authorLast">
-                    Author
-                </TableHeaderColumn>
-                <TableHeaderColumn width='150' dataField="timePeriod">
-                    Time Period
-                </TableHeaderColumn>
-                <TableHeaderColumn width='150' dataField="costumeCount">
-                    Costume Count
-                </TableHeaderColumn>
-                <TableHeaderColumn width='150' dataField="hasSpectacle">
-                    hasSpectacle
-                </TableHeaderColumn>
-                <TableHeaderColumn width='150' dataField="copies">
-                    copies
-                </TableHeaderColumn>
-            </BootstrapTable>
+                <UserNavigation />
+                <BootstrapTable data={plays} pagination={ true }
+                                options={ this.options }
+                                selectRow={ selectRowProp }>
+                    <TableHeaderColumn width='150' dataField="title"
+                                        isKey={true} dataSort={true}>
+                        Title
+                    </TableHeaderColumn>
+                    <TableHeaderColumn width='150' dataField="genre">
+                        Genre
+                    </TableHeaderColumn>
+                    <TableHeaderColumn width='150' dataField="actorCount">
+                        Actor Count
+                    </TableHeaderColumn>
+                    <TableHeaderColumn width='150' dataField="authorLast">
+                        Author
+                    </TableHeaderColumn>
+                    <TableHeaderColumn width='150' dataField="timePeriod">
+                        Time Period
+                    </TableHeaderColumn>
+                    <TableHeaderColumn width='150' dataField="costumeCount">
+                        Costume Count
+                    </TableHeaderColumn>
+                    <TableHeaderColumn width='150' dataField="hasSpectacle">
+                        hasSpectacle
+                    </TableHeaderColumn>
+                    <TableHeaderColumn width='150' dataField="copies">
+                        copies
+                    </TableHeaderColumn>
+                </BootstrapTable>
             </div>
         )
     }
@@ -118,6 +123,18 @@ class UserPlays extends Component {
                 <h3 className="text-center">
                     Student Play Selection
                 </h3>
+                <ButtonToolbar className="play-ButtonToolbar">
+                    <ButtonGroup bsSize="small">
+                        <Link className="btn btn-primary button-custom-size-120 button-custom-margin5" to={`/student/plays/${this.state.selected_play_id}`}>
+                            Show Play Details
+                        </Link>
+                    </ButtonGroup>
+                    <ButtonGroup bsSize="small">
+                        <button className="btn btn-primary button-custom-size-120 button-custom-margin5" onClick={this.checkoutPlay.bind(this)}>
+                            Checkout Play
+                        </button>
+                    </ButtonGroup>
+                </ButtonToolbar>
                 {this.renderPlaysTable()}
             </div>
         );
