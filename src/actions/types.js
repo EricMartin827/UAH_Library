@@ -17,3 +17,5 @@ export const FETCH_PLAY_ID = "fetch_play_id";
 export const DELETE_PLAY_ID = "delete_play_id";
 export const FETCH_PLAY_DETAILS = "fetch_play_detail"
 export const POST_PLAYS = "post_plays"
+
+export const CHECKOUT_PLAY = "checkout_play";

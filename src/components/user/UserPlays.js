@@ -8,7 +8,7 @@ import { ButtonToolbar, Button, Pagination, ButtonGroup,
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 
 /* Local Imports */
-import { fetchPlays, fetchPlayDetails } from "./../../actions";
+import { fetchPlays, fetchPlayDetails, checkoutPlay } from "./../../actions";
 import UserNavigation from "./UserNavigation.js";
 import "../../../style/style.css";
 
@@ -71,6 +71,18 @@ class UserPlays extends Component {
 
     checkoutPlay() {
         console.log(this.state.selected_play_id);
+
+        this.props.checkoutPlay(this.state.selected_play_id);
+
+        const {access, token} = this.props;
+        const id = this.state.selected_play_id;
+
+        //console.log(id);
+
+        if (access && token && id) {
+            this.props.checkoutPlay(access, token, id);
+            this.props.fetchPlays(access, token);
+        }
     }
 
     renderPlaysTable() {
@@ -149,4 +161,4 @@ function mapStateToProps(state) {
     };
 }
 
-export default connect(mapStateToProps,{ fetchPlays })(UserPlays);
+export default connect(mapStateToProps,{ fetchPlays, checkoutPlay })(UserPlays);
