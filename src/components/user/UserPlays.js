@@ -8,7 +8,7 @@ import { ButtonToolbar, Button, Pagination, ButtonGroup,
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 
 /* Local Imports */
-import { fetchPlays, fetchPlayDetails, checkoutPlay } from "./../../actions";
+import { fetchPlays, fetchPlayDetails, checkoutPlay, fetchCheckedPlays } from "./../../actions";
 import UserNavigation from "./UserNavigation.js";
 import "../../../style/style.css";
 
@@ -32,24 +32,8 @@ class UserPlays extends Component {
         const {access, token} = this.props;
         if (access && token) {
             this.props.fetchPlays(access, token);
+            this.props.fetchCheckedPlays(access, token);
         }
-    }
-
-    renderPlays() {
-        return _.map(this.props.plays, play => {
-            return (
-                <tr key={play._id}>
-                    <td>{play.title}</td>
-                    <td>{play.genre}</td>
-                    <td>{play.actorCount}</td>
-                    <td>{play.authorLast}, {play.authorFirst}</td>
-                    <td>{play.timePeriod}</td>
-                    <td>{play.costumeCount}</td>
-                    <td>{play.hasSpectacle + ""}</td>
-                    <td>{play.copies}</td>
-                </tr>
-            );
-        });
     }
 
     sizePerPageListChange(sizePerPage) {
@@ -69,24 +53,24 @@ class UserPlays extends Component {
         }
     }
 
-    checkoutPlay() {
-        console.log(this.state.selected_play_id);
-
-        this.props.checkoutPlay(this.state.selected_play_id);
-
+    checkout() {
         const {access, token} = this.props;
         const id = this.state.selected_play_id;
 
-        //console.log(id);
-
         if (access && token && id) {
+
+            console.log(access);
+            console.log(token);
+            console.log(id);
+
             this.props.checkoutPlay(access, token, id);
             this.props.fetchPlays(access, token);
+            this.props.fetchCheckedPlays(access, token);
         }
     }
 
-    renderPlaysTable() {
-        const plays = _.map(this.props.plays);
+    renderCheckedPlays() {
+        const plays = _.map(this.props.checkedPlays);
         const selectRowProp = {
           mode: 'radio',
           clickToSelect: true,
@@ -98,7 +82,8 @@ class UserPlays extends Component {
                 <UserNavigation />
                 <BootstrapTable data={plays} pagination={ true }
                                 options={ this.options }
-                                selectRow={ selectRowProp }>
+                                selectRow={ selectRowProp }
+                                search>
                     <TableHeaderColumn width='150' dataField="title"
                                         isKey={true} dataSort={true}>
                         Title
@@ -129,6 +114,52 @@ class UserPlays extends Component {
         )
     }
 
+    renderPlaysTable() {
+        const plays = _.map(this.props.plays);
+        const selectRowProp = {
+          mode: 'radio',
+          clickToSelect: true,
+          onSelect: this.handleRowSelect.bind(this)
+        };
+
+        return (
+            <div className="rowContent">
+                <UserNavigation />
+                <BootstrapTable data={plays} pagination={ true }
+                                options={ this.options }
+                                selectRow={ selectRowProp }
+                                search>
+                    <TableHeaderColumn width='150' dataField="title"
+                                        isKey={true} dataSort={true}>
+                        Title
+                    </TableHeaderColumn>
+                    <TableHeaderColumn width='150' dataField="genre">
+                        Genre
+                    </TableHeaderColumn>
+                    <TableHeaderColumn width='150' dataField="actorCount">
+                        Actor Count
+                    </TableHeaderColumn>
+                    <TableHeaderColumn width='150' dataField="authorLast">
+                        Author
+                    </TableHeaderColumn>
+                    <TableHeaderColumn width='150' dataField="timePeriod">
+                        Time Period
+                    </TableHeaderColumn>
+                    <TableHeaderColumn width='150' dataField="costumeCount">
+                        Costume Count
+                    </TableHeaderColumn>
+                    <TableHeaderColumn width='150' dataField="hasSpectacle">
+                        hasSpectacle
+                    </TableHeaderColumn>
+                    <TableHeaderColumn width='150' dataField="copies">
+                        copies
+                    </TableHeaderColumn>
+                </BootstrapTable>
+            </div>
+        )
+    }
+
+
     render() {
         return (
             <div className="play-div-custom-padding">
@@ -142,23 +173,32 @@ class UserPlays extends Component {
                         </Link>
                     </ButtonGroup>
                     <ButtonGroup bsSize="small">
-                        <button className="btn btn-primary button-custom-size-120 button-custom-margin5" onClick={this.checkoutPlay.bind(this)}>
+                        <button className="btn btn-primary button-custom-size-120 button-custom-margin5" onClick={this.checkout.bind(this)}>
                             Checkout Play
                         </button>
                     </ButtonGroup>
                 </ButtonToolbar>
-                {this.renderPlaysTable()}
+                <div style={{padding: 60}}>
+                    {this.renderPlaysTable()}
+                </div>
+                <div style={{padding: 60}}>
+                    {this.renderCheckedPlays()}
+                </div>
             </div>
         );
     }
 }
 
 function mapStateToProps(state) {
+
+    console.log(state);
+
     return {
         access : state.currentUser.access,
         token : state.currentUser.token,
-        plays : state.plays
+        plays : state.plays,
+        checkedPlays : state.checkedPlays
     };
 }
 
-export default connect(mapStateToProps,{ fetchPlays, checkoutPlay })(UserPlays);
+export default connect(mapStateToProps,{ fetchPlays, checkoutPlay, fetchCheckedPlays })(UserPlays);

@@ -19,3 +19,4 @@ export const FETCH_PLAY_DETAILS = "fetch_play_detail"
 export const POST_PLAYS = "post_plays"
 
 export const CHECKOUT_PLAY = "checkout_play";
+export const FETCH_CHECKED_PLAYS = "fetch_checked_plays";

@@ -33,3 +33,6 @@ export { addPlays }
 
 import checkoutPlay from "./checkoutPlay.js";
 export { checkoutPlay };
+
+import fetchCheckedPlays from "./fetchCheckedPlays.js";
+export { fetchCheckedPlays };
