@@ -34,5 +34,8 @@ export { addPlays }
 import checkoutPlay from "./checkoutPlay.js";
 export { checkoutPlay };
 
+import returnPlay from "./returnPlay.js";
+export { returnPlay };
+
 import fetchCheckedPlays from "./fetchCheckedPlays.js";
 export { fetchCheckedPlays };

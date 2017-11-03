@@ -8,7 +8,7 @@ import { ButtonToolbar, Button, Pagination, ButtonGroup,
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 
 /* Local Imports */
-import { fetchPlays, fetchPlayDetails, checkoutPlay, fetchCheckedPlays } from "./../../actions";
+import { fetchPlays, fetchPlayDetails, checkoutPlay, returnPlay, fetchCheckedPlays } from "./../../actions";
 import UserNavigation from "./UserNavigation.js";
 import "../../../style/style.css";
 
@@ -58,11 +58,6 @@ class UserPlays extends Component {
         const id = this.state.selected_play_id;
 
         if (access && token && id) {
-
-            console.log(access);
-            console.log(token);
-            console.log(id);
-
             this.props.checkoutPlay(access, token, id);
             this.props.fetchPlays(access, token);
             this.props.fetchCheckedPlays(access, token);
@@ -70,7 +65,14 @@ class UserPlays extends Component {
     }
 
     returnPlay() {
+        const {access, token} = this.props;
+        const id = this.state.selected_play_id;
 
+        if (access && token && id) {
+            this.props.returnPlay(access, token, id);
+            this.props.fetchPlays(access, token);
+            this.props.fetchCheckedPlays(access, token);
+        }
     }
 
     renderCheckedPlays() {
@@ -182,7 +184,7 @@ class UserPlays extends Component {
                         </Link>
                     </ButtonGroup>
                     <ButtonGroup bsSize="small">
-                        <button className="btn btn-primary button-custom-size-120 button-custom-margin5" onClick={this.returnPlay.bind(this)}>
+                        <button className="btn btn-primary button-custom-size-120 button-custom-margin5" onClick={this.checkout.bind(this)}>
                             Checkout Play
                         </button>
                     </ButtonGroup>
@@ -205,7 +207,7 @@ class UserPlays extends Component {
                     </h3>
                     <ButtonToolbar className="play-ButtonToolbar">
                         <ButtonGroup bsSize="small">
-                            <button className="btn btn-primary button-custom-size-120 button-custom-margin5" onClick={this.checkout.bind(this)}>
+                            <button className="btn btn-primary button-custom-size-120 button-custom-margin5" onClick={this.returnPlay.bind(this)}>
                                 Return Play
                             </button>
                         </ButtonGroup>
@@ -229,4 +231,4 @@ function mapStateToProps(state) {
     };
 }
 
-export default connect(mapStateToProps,{ fetchPlays, checkoutPlay, fetchCheckedPlays })(UserPlays);
+export default connect(mapStateToProps,{ fetchPlays, checkoutPlay, returnPlay, fetchCheckedPlays })(UserPlays);
