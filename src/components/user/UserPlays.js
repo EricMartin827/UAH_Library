@@ -21,6 +21,7 @@ class UserPlays extends Component {
         this.options = {
             onPageChange: this.onPageChange.bind(this),
             onSizePerPageList: this.sizePerPageListChange.bind(this),
+            searchField: this.createCustomSearchField.bind(this)
         };
 
         this.state = {
@@ -53,7 +54,16 @@ class UserPlays extends Component {
         }
     }
 
-    checkout() {
+    createCustomSearchField(props) {
+        return (
+            <SearchField
+                className='my-custom-class user-play-search-field'
+                placeholder='search'
+            />
+        );
+    }
+
+    checkoutPlay() {
         const {access, token} = this.props;
         const id = this.state.selected_play_id;
 
@@ -62,6 +72,9 @@ class UserPlays extends Component {
             this.props.fetchPlays(access, token);
             this.props.fetchCheckedPlays(access, token);
         }
+
+        this.props.fetchPlays(access, token);
+        this.props.fetchCheckedPlays(access, token);
     }
 
     returnPlay() {
@@ -70,6 +83,19 @@ class UserPlays extends Component {
 
         if (access && token && id) {
             this.props.returnPlay(access, token, id);
+            this.props.fetchPlays(access, token);
+            this.props.fetchCheckedPlays(access, token);
+        }
+
+        this.props.fetchPlays(access, token);
+        this.props.fetchCheckedPlays(access, token);
+    }
+
+    refresh() {
+        const {access, token} = this.props;
+        const id = this.state.selected_play_id;
+
+        if (access && token && id) {
             this.props.fetchPlays(access, token);
             this.props.fetchCheckedPlays(access, token);
         }
@@ -101,8 +127,7 @@ class UserPlays extends Component {
         };
 
         return (
-            <div className="rowContent">
-                <UserNavigation />
+            <div>
                 <BootstrapTable data={checkedPlays} pagination={ true }
                                 options={ this.options }
                                 selectRow={ selectRowProp }
@@ -134,8 +159,7 @@ class UserPlays extends Component {
         };
 
         return (
-            <div className="rowContent">
-                <UserNavigation />
+            <div>
                 <BootstrapTable data={plays} pagination={ true }
                                 options={ this.options }
                                 selectRow={ selectRowProp }
@@ -184,8 +208,13 @@ class UserPlays extends Component {
                         </Link>
                     </ButtonGroup>
                     <ButtonGroup bsSize="small">
-                        <button className="btn btn-primary button-custom-size-120 button-custom-margin5" onClick={this.checkout.bind(this)}>
+                        <button className="btn btn-primary button-custom-size-120 button-custom-margin5" onClick={this.checkoutPlay.bind(this)}>
                             Checkout Play
+                        </button>
+                    </ButtonGroup>
+                    <ButtonGroup bsSize="small">
+                        <button className="btn btn-primary button-custom-size-120 button-custom-margin5" onClick={this.refresh.bind(this)}>
+                            Refresh
                         </button>
                     </ButtonGroup>
                 </ButtonToolbar>
@@ -194,21 +223,17 @@ class UserPlays extends Component {
                 </div>
                 <div>
                     <h3 className="text-center">
-                    ''
-                    </h3>
-                    <h3 className="text-center">
-                    ''
-                    </h3>
-                    <h3 className="text-center">
-                    ''
-                    </h3>
-                    <h3 className="text-center">
                         Checked Plays
                     </h3>
                     <ButtonToolbar className="play-ButtonToolbar">
                         <ButtonGroup bsSize="small">
                             <button className="btn btn-primary button-custom-size-120 button-custom-margin5" onClick={this.returnPlay.bind(this)}>
                                 Return Play
+                            </button>
+                        </ButtonGroup>
+                        <ButtonGroup bsSize="small">
+                            <button className="btn btn-primary button-custom-size-120 button-custom-margin5" onClick={this.refresh.bind(this)}>
+                                Refresh
                             </button>
                         </ButtonGroup>
                     </ButtonToolbar>
