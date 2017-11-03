@@ -5,7 +5,8 @@ import createHeader from "./utils/createHeader";
 export default function checkoutPlay(access, token, id) {
 
     const apiCall = `${URL}/api/play/checkout/${id}`;
-    const request = axios.post(apiCall, createHeader(access, token));
+    const none = '';
+    const request = axios.post(apiCall, none, createHeader(access, token));
 
     return {
         type : CHECKOUT_PLAY,

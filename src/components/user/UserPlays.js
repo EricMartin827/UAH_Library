@@ -69,8 +69,29 @@ class UserPlays extends Component {
         }
     }
 
+    returnPlay() {
+
+    }
+
     renderCheckedPlays() {
-        const plays = _.map(this.props.checkedPlays);
+        const plays = this.props.plays;
+        var checkedPlays = _.map(this.props.checkedPlays);
+
+
+        console.log(plays);
+        // add title, genre, author, time Period as json
+        for(var i = 0; i < checkedPlays.length; i++) {
+
+            const curPlay = checkedPlays[i].playID;
+            const title = plays[curPlay].title;
+            const genre = plays[curPlay].genre;
+            const author = plays[curPlay].authorFirst + " " + plays[curPlay].authorLast
+
+            checkedPlays[i].title = title;
+            checkedPlays[i].genre = genre;
+            checkedPlays[i].author = author;
+        }
+
         const selectRowProp = {
           mode: 'radio',
           clickToSelect: true,
@@ -80,34 +101,22 @@ class UserPlays extends Component {
         return (
             <div className="rowContent">
                 <UserNavigation />
-                <BootstrapTable data={plays} pagination={ true }
+                <BootstrapTable data={checkedPlays} pagination={ true }
                                 options={ this.options }
                                 selectRow={ selectRowProp }
                                 search>
-                    <TableHeaderColumn width='150' dataField="title"
+                    <TableHeaderColumn width='240' dataField="title"
                                         isKey={true} dataSort={true}>
                         Title
                     </TableHeaderColumn>
-                    <TableHeaderColumn width='150' dataField="genre">
+                    <TableHeaderColumn width='240' dataField="genre">
                         Genre
                     </TableHeaderColumn>
-                    <TableHeaderColumn width='150' dataField="actorCount">
-                        Actor Count
-                    </TableHeaderColumn>
-                    <TableHeaderColumn width='150' dataField="authorLast">
+                    <TableHeaderColumn width='240' dataField="author">
                         Author
                     </TableHeaderColumn>
-                    <TableHeaderColumn width='150' dataField="timePeriod">
-                        Time Period
-                    </TableHeaderColumn>
-                    <TableHeaderColumn width='150' dataField="costumeCount">
-                        Costume Count
-                    </TableHeaderColumn>
-                    <TableHeaderColumn width='150' dataField="hasSpectacle">
-                        hasSpectacle
-                    </TableHeaderColumn>
-                    <TableHeaderColumn width='150' dataField="copies">
-                        copies
+                    <TableHeaderColumn width='240' dataField="date">
+                        Checked Date
                     </TableHeaderColumn>
                 </BootstrapTable>
             </div>
@@ -173,15 +182,34 @@ class UserPlays extends Component {
                         </Link>
                     </ButtonGroup>
                     <ButtonGroup bsSize="small">
-                        <button className="btn btn-primary button-custom-size-120 button-custom-margin5" onClick={this.checkout.bind(this)}>
+                        <button className="btn btn-primary button-custom-size-120 button-custom-margin5" onClick={this.returnPlay.bind(this)}>
                             Checkout Play
                         </button>
                     </ButtonGroup>
                 </ButtonToolbar>
-                <div style={{padding: 60}}>
+                <div>
                     {this.renderPlaysTable()}
                 </div>
-                <div style={{padding: 60}}>
+                <div>
+                    <h3 className="text-center">
+                    ''
+                    </h3>
+                    <h3 className="text-center">
+                    ''
+                    </h3>
+                    <h3 className="text-center">
+                    ''
+                    </h3>
+                    <h3 className="text-center">
+                        Checked Plays
+                    </h3>
+                    <ButtonToolbar className="play-ButtonToolbar">
+                        <ButtonGroup bsSize="small">
+                            <button className="btn btn-primary button-custom-size-120 button-custom-margin5" onClick={this.checkout.bind(this)}>
+                                Return Play
+                            </button>
+                        </ButtonGroup>
+                    </ButtonToolbar>
                     {this.renderCheckedPlays()}
                 </div>
             </div>
