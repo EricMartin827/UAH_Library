@@ -76,6 +76,7 @@ body {
 .play-ButtonToolbar {
     position: relative;
     top: 20px;
+    left: 190px;
 }
 
 .users-div-custom-padding {
