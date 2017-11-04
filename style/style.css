@@ -79,6 +79,11 @@ body {
     left: 190px;
 }
 
+.user-play-ButtonToolbar {
+    position: relative;
+    top: 20px;
+}
+
 .users-div-custom-padding {
     padding-right: 30px;
     padding-bottom: 30px;

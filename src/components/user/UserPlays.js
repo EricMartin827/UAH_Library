@@ -201,7 +201,7 @@ class UserPlays extends Component {
                 <h3 className="text-center">
                     Student Play Selection
                 </h3>
-                <ButtonToolbar className="play-ButtonToolbar">
+                <ButtonToolbar className="user-play-ButtonToolbar">
                     <ButtonGroup bsSize="small">
                         <Link className="btn btn-primary button-custom-size-120 button-custom-margin5" to={`/student/plays/${this.state.selected_play_id}`}>
                             Show Play Details
@@ -225,7 +225,7 @@ class UserPlays extends Component {
                     <h3 className="text-center">
                         Checked Plays
                     </h3>
-                    <ButtonToolbar className="play-ButtonToolbar">
+                    <ButtonToolbar className="user-play-ButtonToolbar">
                         <ButtonGroup bsSize="small">
                             <button className="btn btn-primary button-custom-size-120 button-custom-margin5" onClick={this.returnPlay.bind(this)}>
                                 Return Play
