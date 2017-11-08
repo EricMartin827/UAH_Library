@@ -14,7 +14,7 @@ use Pod::Usage;
 # For Linux Users,
 # curl -L http://cpanmin.us | perl - --sudo App::cpanminus
 # Step 2
-# Installation emailer module
+# Install emailer module
 # sudo cpanm Email::Send
 # sudo cpanm Email::Send::Gmail
 # sudo cpanm Email::Simple::Creator
