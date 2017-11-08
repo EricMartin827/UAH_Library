@@ -184,10 +184,10 @@ class UserPlays extends Component {
                         Costume Count
                     </TableHeaderColumn>
                     <TableHeaderColumn width='150' dataField="hasSpectacle">
-                        hasSpectacle
+                        Spectacle
                     </TableHeaderColumn>
                     <TableHeaderColumn width='150' dataField="copies">
-                        copies
+                        Total Copies
                     </TableHeaderColumn>
                 </BootstrapTable>
             </div>
