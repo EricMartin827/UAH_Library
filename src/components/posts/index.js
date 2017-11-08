@@ -9,3 +9,6 @@ export { PostUser };
 
 import PostPlay from "./PostPlay.js";
 export { PostPlay };
+
+import UpdatePlay from "./UpdatePlay.js";
+export { UpdatePlay };
