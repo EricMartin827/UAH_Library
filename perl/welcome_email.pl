@@ -5,7 +5,16 @@ use warnings;
 use Getopt::Long;
 use Pod::Usage;
 #########################################
-# Installation
+# Step 1
+# Install cpanm
+# For MacOS Users,
+# brew install cpanminus
+# ---
+# Install cpanm
+# For Linux Users,
+# curl -L http://cpanmin.us | perl - --sudo App::cpanminus
+# Step 2
+# Installation emailer module
 # sudo cpanm Email::Send
 # sudo cpanm Email::Send::Gmail
 # sudo cpanm Email::Simple::Creator
