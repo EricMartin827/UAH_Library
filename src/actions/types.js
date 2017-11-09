@@ -15,5 +15,10 @@ export const POST_USERS = "post_users";
 export const FETCH_PLAYS = "fetch_plays";
 export const FETCH_PLAY_ID = "fetch_play_id";
 export const DELETE_PLAY_ID = "delete_play_id";
-export const FETCH_PLAY_DETAILS = "fetch_play_detail"
-export const POST_PLAYS = "post_plays"
+export const FETCH_PLAY_DETAILS = "fetch_play_detail";
+export const POST_PLAYS = "post_plays";
+
+export const FETCH_COMMENTS = "fetch_comments";
+export const FETCH_COMMENT_ID = "fetch_comment_id";
+export const POST_COMMENT = "post_comment";
+export const DELETE_COMMENT_ID = "delete_comment_id";

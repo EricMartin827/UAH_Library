@@ -12,6 +12,7 @@ const REGISTER = "/register";
 export { ROOT, REGISTER };
 
 const ADMIN_LOGIN = `/${ADMIN}/${LOGIN}`;
+const ADMIN_COMMENT = `${ADMIN}/${COMMENT}`;
 const ADMIN_PLAY = `/${ADMIN}/${PLAY}`;
 const ADMIN_POST_PLAY = `/${ADMIN}/${PLAY}/${NEW}`;
 const ADMIN_POST_MANY_PLAYS = `/${ADMIN}/${PLAY}/${MULT_NEW}`;
