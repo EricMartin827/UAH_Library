@@ -64,7 +64,7 @@ const Routes = () => {
                                 component={UserLogin} />
 
                     <Route path={`${USER_PLAY}/:id`}
-                                component={UserLogin} />
+                                component={PlayDetails} />
                     <Route path={USER_PLAY}
                                 component={UserPlays} />
 
