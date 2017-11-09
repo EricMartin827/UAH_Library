@@ -1,7 +1,7 @@
 import axios from "axios";
 import { URL, LOGIN_USER } from "./types";
 
-export default function loginUser(credentials, gotoRegister, gotoPlays) {
+export default function loginUser(credentials, gotoRegister, gotoPlays, error) {
 
     const { access } = credentials;
     const request = axios.post(`${URL}/${access}/login`, credentials);
@@ -25,6 +25,6 @@ export default function loginUser(credentials, gotoRegister, gotoPlays) {
             } else {
                 gotoPlays();
             }
-        });
+        }).catch((err) => error());
     }
 }

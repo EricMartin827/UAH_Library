@@ -10,13 +10,19 @@ import { loginUser } from "./../../actions";
 import { renderField } from "./../../renderers";
 import { REGISTER, USER_PLAY } from "./../paths";
 
+function userReportError() {
+  alert("Please enter valid login credentials.");
+}
 class UserLogin extends Component {
 
     onSubmit(values) {
         values.access = "user";
         this.props.loginUser(values,
             () => this.props.history.push(REGISTER),
-            () => this.props.history.push(USER_PLAY));
+            () => this.props.history.push(USER_PLAY),
+          userReportError);
+
+
     }
 
     render() {
