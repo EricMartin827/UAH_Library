@@ -3,6 +3,7 @@ const STUDENT = "student";
 const LOGIN = "login";
 const USER = "users";
 const PLAY = "plays";
+const COMMENT = "comments";
 const MULT_NEW = "mnew";
 const NEW = "new";
 const ID = ":id"
