@@ -52,6 +52,8 @@ const Routes = () => {
                     <Route path={ADMIN_USER}
                                 component={AdminUsers} />
 
+                    <Route path={ADMIN_UPDATE_PLAY}
+                                component={UpdatePlay} />
                     <Route path={ADMIN_POST_MANY_PLAYS}
                                 component={PostMultiplePlays} />
                     <Route path={ADMIN_POST_PLAY}
@@ -60,8 +62,6 @@ const Routes = () => {
                                 component={PlayDetails} />
                     <Route path={ADMIN_PLAY}
                                 component={AdminPlays} />
-                    <Route path={ADMIN_UPDATE_PLAY}
-                                component={UpdatePlay} />
 
                     <Route path={USER_LOGIN}
                                 component={UserLogin} />

@@ -7,71 +7,42 @@ import { connect } from "react-redux";
 /* Local Imports */
 import { AdminNavigation } from "./../admin";
 import { validatePlay } from "./utils";
-import { updatePlay } from "../../actions";
+import { updatePlay, fetchPlayDetails } from "../../actions";
 import { renderField } from "./../../renderers";
 import { ADMIN_PLAY } from "./../paths";
 
 class UpdatePlay extends Component {
 
-    /*onSubmit(values) {
-        const { token } = this.props;
-        this.props.addPlays(token, values, () => {
-            this.props.history.push(ADMIN_PLAY);
-        });
-    }*/
-
+    componentDidMount() {
+        if (!this.props.play) {
+            const { id } = this.props.match.params;
+            this.props.fetchPlayDetails(id);
+        }
+    }
     render() {
-        //const { handleSubmit } = this.props;
+        const { play } = this.props;
 
+        if (!play) {
+            return (<div>Loading Play Content...</div>);
+        }
         return (
             <div>
-            <p>Hello world</p>
-            /*<h3 className="text-center"> Add A New Play </h3>
-            <div className="rowContent">
-            <AdminNavigation />
-            <form onSubmit={handleSubmit(this.onSubmit.bind(this))}
-                    className="postplay-form-custom-padding"
-                    style={{width: "90%"}}>
-                <Field label="Title" type="text" name="title"
-                    component={renderField} />
-                <Field label="Genre" type="text" name="genre"
-                    component={renderField} />
-                <Field label="Actor Count" type="text" name="actorCount"
-                    component={renderField} />
-                <Field label="Author Last Name" type="text" name="authorLast"
-                    component={renderField} />
-                <Field label="Author First Name" type="text" name="authorFirst"
-                    component={renderField} />
-                <Field label="Time Period" type="text" name="timePeriod"
-                    component={renderField} />
-                <Field label="Costume Count" type="text" name="costumeCount"
-                    component={renderField} />
-                <Field label="Spectacle" type="text" name="hasSpectacle"
-                    component={renderField} />
-                <Field label="Copies" type="text" name="copies"
-                    component={renderField} />
-                <button type="submit" className="btn btn-primary">
-                    Submit</button>
-                <Link to={ADMIN_PLAY} className="btn btn-danger">
-                    Return To Plays</Link>
-            </form>
-            </div>*/
+            <p>{play.title}</p><br/>
+            <p>{play.genre}</p><br/>
+            <p>{play.actorCount}</p><br/>
+            <p>{play.timePeriod}</p><br/>
+            <p>{play.costumeCount}</p><br/>
             </div>
         );
     }
 }
 
-function mapStateToProps(state) {
+function mapStateToProps(state, ownProps) {
     return {
-        token : state.currentUser.token
-    }
+        access : state.currentUser.access,
+        token : state.currentUser.token,
+        play : state.plays[ownProps.match.params.id]
+    };
 }
 
-/*export default reduxForm({
-   validate : validatePlay,
-   form : "UpdatePlay"
-})(
-connect(mapStateToProps, { updatePlay })(UpdatePlay)
-);
-*/
-export default UpdatePlay;
+export default connect(mapStateToProps, {fetchPlayDetails})(UpdatePlay);

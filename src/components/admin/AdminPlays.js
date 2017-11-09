@@ -43,7 +43,7 @@ class AdminPlays extends Component {
         return _.map(this.props.plays, play => {
             return (
                 <tr key={play._id}>
-                    <td>{play.title}</td>
+                    <input value={play.title}></input>
                     <td>{play.genre}</td>
                     <td>{play.actorCount}</td>
                     <td>{play.authorLast}, {play.authorFirst}</td>
