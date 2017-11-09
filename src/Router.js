@@ -16,7 +16,7 @@ import { Intro, Register,
         /* Admin Specific */
         AdminLogin, AdminPlays, AdminUsers,
         UserDetails, PlayDetails, AdminNavigation, PostMultiplePlays,
-        PostMultipleUsers, PostUser, PostPlay
+        PostMultipleUsers, PostUser, PostPlay, CommentPlay
 
         } from "./components";
 
