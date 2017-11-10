@@ -12,6 +12,10 @@ import { fetchPlays, fetchPlayDetails, checkoutPlay, returnPlay, fetchCheckedPla
 import UserNavigation from "./UserNavigation.js";
 import "../../../style/style.css";
 
+function checkoutError() {
+  alert("This play has already been checked out.");
+}
+
 class UserPlays extends Component {
 
     constructor(props) {
@@ -68,7 +72,7 @@ class UserPlays extends Component {
         const id = this.state.selected_play_id;
 
         if (access && token && id) {
-            this.props.checkoutPlay(access, token, id);
+            this.props.checkoutPlay(access, token, id, checkoutError);
             this.props.fetchPlays(access, token);
             this.props.fetchCheckedPlays(access, token);
         }
