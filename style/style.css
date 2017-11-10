@@ -68,15 +68,20 @@ body {
 }
 
 .play-div-custom-padding {
-    padding-right: 15px;
-    padding-bottom: 15px;
-    padding-left: 15px;
+    padding-right: 40px;
+    padding-bottom: 40px;
+    padding-left: 40px;
 }
 
 .play-ButtonToolbar {
     position: relative;
     top: 20px;
     left: 190px;
+}
+
+.user-play-ButtonToolbar {
+    position: relative;
+    top: 20px;
 }
 
 .users-div-custom-padding {
@@ -141,4 +146,8 @@ body {
 
 .play-search-field {
     width: 297px !important;
+}
+
+.user-play-search-field {
+    width: 68.5% !important;
 }
