@@ -25,7 +25,7 @@ class UpdatePlay extends Component {
         this.updateCostumeCount = this.updateCostumeCount.bind(this);
         this.updateSpectacle = this.updateSpectacle.bind(this);
         this.updateCopies = this.updateCopies.bind(this);
-
+        this.handleSubmit = this.handleSubmit.bind(this);
     }
 
     componentDidMount() {
@@ -89,8 +89,14 @@ class UpdatePlay extends Component {
             <input defaultValue={play.hasSpectacle} onChange={this.updateSpectacle}></input><br/>
             <p>Copies</p>
             <input defaultValue={play.copies} onChange={this.updateCopies}></input>
+            <btn onClick={this.handleSubmit}>Submit</btn>
             </div>
         );
+    }
+    callbackSubmit() {
+    }
+    handleSubmit() {
+        updatePlay(this.props.token, this.props.play, this.props.play._id, this.callbackSubmit);
     }
 }
 
