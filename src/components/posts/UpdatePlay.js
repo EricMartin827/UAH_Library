@@ -13,90 +13,67 @@ import { ADMIN_PLAY } from "./../paths";
 
 class UpdatePlay extends Component {
 
-    constructor(props) {
-        super(props);
-        
-        this.updateTitle = this.updateTitle.bind(this);
-        this.updateGenre = this.updateGenre.bind(this);
-        this.updateAuthorFirst = this.updateAuthorFirst.bind(this);
-        this.updateAuthorLast = this.updateAuthorLast.bind(this);
-        this.updateActorCount = this.updateActorCount.bind(this);
-        this.updateTimePeriod = this.updateTimePeriod.bind(this);
-        this.updateCostumeCount = this.updateCostumeCount.bind(this);
-        this.updateSpectacle = this.updateSpectacle.bind(this);
-        this.updateCopies = this.updateCopies.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
+    onSubmit(values) {
+        const { token } = this.props;
+        const { play } = this.props;
+        this.props.updatePlay(token, values, play._id, () => {
+            this.props.history.push(ADMIN_PLAY);
+        });
     }
 
-    componentDidMount() {
-        if (!this.props.play) {
-            const { id } = this.props.match.params;
-            console.log(id);
-            this.props.fetchPlayDetails(id);
-        }
-        this.state = this.props.play;
-    }
-    updateTitle(event) {
-         console.log(this.props.play);
-         this.props.play.title = event.target.value;
-    }
-    updateGenre(event) {
-        this.props.play.genre = event.target.value;
-    }
-    updateActorCount(event) {
-        this.props.play.actorCount = event.target.value;
-    }
-    updateAuthorFirst(event) {
-        this.props.play.authorFirst = event.target.value;
-    }
-    updateAuthorLast(event) {
-        this.props.play.authorLast = event.target.value;
-    }
-    updateTimePeriod(event) {
-        this.props.play.timePeriod = event.target.value;
-    }
-    updateCostumeCount(event) {
-        this.props.play.costumeCount = event.target.value;
-    }
-    updateSpectacle(event) {
-        this.props.play.spectacle = event.target.value;
-    }
-    updateCopies(event) {
-        this.props.play.copies = event.target.value;
-    }
     render() {
-        const { play } = this.props;
-        if (!play) {
-            return (<div>Loading Play Content...</div>);
-        }
+
+        const { handleSubmit } = this.props;
         return (
             <div>
-            <p>Title</p>
-            <input defaultValue={this.props.play.title} onChange={this.updateTitle}></input><br/>
-            <p>Genre</p>
-            <input defaultValue={play.genre} onChange={this.updateGenre}></input><br/>
-            <p>Actor Count</p>
-            <input defaultValue={play.actorCount} onChange={this.updateActorCount}></input><br/>
-            <p>Author First Name</p>
-            <input defaultValue={play.authorFirst} onChange={this.updateAuthorFirst}></input><br/>
-            <p>Author Last Name</p>
-            <input defaultValue={play.authorLast} onChange={this.updateAuthorLast}></input><br/>
-            <p>Time Period</p>
-            <input defaultValue={play.timePeriod} onChange={this.updateTimePeriod}></input><br/>
-            <p>Costume Count</p>
-            <input defaultValue={play.costumeCount} onChange={this.updateCostumeCount}></input><br/>
-            <p>Spectacle</p>
-            <input defaultValue={play.hasSpectacle} onChange={this.updateSpectacle}></input><br/>
-            <p>Copies</p>
-            <input defaultValue={play.copies} onChange={this.updateCopies}></input>
-            <btn onClick={this.handleSubmit}>Submit</btn>
+            <h3 className="text-center"> Update A Play </h3>
+            <div className="rowContent">
+            <AdminNavigation />
+            <form onSubmit={handleSubmit(this.onSubmit.bind(this))}
+                    className="postplay-form-custom-padding"
+                    style={{width: "90%"}}>
+                <Field label="Title" type="text" name="title"
+                    component={renderField} />
+                <Field label="Genre" type="text" name="genre"
+                    component={renderField} />
+                <Field label="Actor Count" type="text" name="actorCount"
+                    component={renderField} />
+                <Field label="Author Last Name" type="text" name="authorLast"
+                    component={renderField} />
+                <Field label="Author First Name" type="text" name="authorFirst"
+                    component={renderField} />
+                <Field label="Time Period" type="text" name="timePeriod"
+                    component={renderField} />
+                <Field label="Costume Count" type="text" name="costumeCount"
+                    component={renderField} />
+                <Field label="Spectacle" type="text" name="hasSpectacle"
+                    component={renderField} />
+                <Field label="Copies" type="text" name="copies"
+                    component={renderField} />
+                <button type="submit" className="btn btn-primary">
+                    Submit</button>
+                <Link to={ADMIN_PLAY} className="btn btn-danger">
+                    Return To Plays</Link>
+            </form>
+            </div>
             </div>
         );
     }
-    callbackSubmit() {
-    }
-    handleSubmit() {
-        updatePlay(this.props.token, this.props.play, this.props.play._id, this.callbackSubmit);
+
+    componentDidMount() {
+        const { play } = this.props;
+        if (play) {
+            const { initialValues } = this.props;
+            initialValues.title = play.title;
+            initialValues.authorFirst = play.authorFirst;
+            initialValues.authorLast = play.authorLast;
+            initialValues.genre = play.genre;
+            initialValues.costumeCount  = play.costumeCount;
+            initialValues.actorCount = play.actorCount;
+            initialValues.hasSpectacle = play.hasSpectacle;
+            initialValues.timePeriod = play.timePeriod;
+            initialValues.copies = play.copies;
+        }
     }
 }
 
@@ -108,4 +85,22 @@ function mapStateToProps(state, ownProps) {
     };
 }
 
-export default connect(mapStateToProps, {fetchPlayDetails})(UpdatePlay);
+export default reduxForm({
+    validate : validatePlay,
+    enableReinitialize : true,
+    keepDirtyOnReinitialize : true,
+    initialValues : {
+        title : "Loading",
+        genre : "Loading",
+        authorFirst : "Loading",
+        authorLast : "Loading",
+        actorCount : "Loading",
+        timePeriod : "Loading",
+        costumeCount : "Loading",
+        hasSpectacle : "Loading",
+        copies : "Loading"
+    },
+    form : "UpdatePlayFrom"
+})(
+connect(mapStateToProps, { fetchPlayDetails, updatePlay })
+(UpdatePlay));

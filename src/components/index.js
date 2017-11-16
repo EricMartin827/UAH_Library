@@ -7,8 +7,8 @@ export { PostMultiplePlays, PostMultipleUsers,
         PostUser, PostPlay, UpdatePlay };
 
 /* Interface with detail routes */
-import { UserDetails, PlayDetails } from "./details";
-export { UserDetails, PlayDetails};
+import { UserDetails, UserPlayDetails, AdminPlayDetails } from "./details";
+export { UserDetails, UserPlayDetails, AdminPlayDetails};
 
 /* Interface with admin specific components */
 import { AdminLogin, AdminPlays, AdminUsers,

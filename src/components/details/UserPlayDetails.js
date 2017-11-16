@@ -2,12 +2,12 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import _ from "lodash";
-
-import { fetchPlayDetails } from "./../../actions";
-
 import { Media } from 'react-bootstrap';
 
-class PlayDetails extends Component {
+import { fetchPlayDetails } from "./../../actions";
+import { USER_PLAY } from "./../paths";
+
+class UserPlayDetails extends Component {
 
     componentDidMount() {
         if (!this.props.play) {
@@ -25,21 +25,11 @@ class PlayDetails extends Component {
 
         const { id } = this.props.match.params;
         const {access} = this.props;
-        const trimed_access = access.replace(/^\s+|\s+$/g,"");
-        var URL = '';
-
-        if (trimed_access == 'admin') {
-            URL = '/admin/plays';
-        } else if (trimed_access == 'user') {
-            URL = '/student/plays';
-        } else {
-            URL = '/student/plays';
-        }
 
         return (
             <div className="play-div-custom-padding">
-                <Link className="btn btn-primary" to={URL}>Back To Plays</Link>
-                <Link className="btn btn-primary" to={URL2}>Update</Link>
+                <Link className="btn btn-primary" to={USER_PLAY}>
+                Back To Plays</Link>
                 <Media className="play-div-custom-padding">
                     <Media.Body>
                         <Media.Heading>{play.title}</Media.Heading>
@@ -92,4 +82,4 @@ function mapStateToProps(state, ownProps) {
     };
 }
 
-export default connect(mapStateToProps, { fetchPlayDetails })(PlayDetails);
+export default connect(mapStateToProps, { fetchPlayDetails })(UserPlayDetails);

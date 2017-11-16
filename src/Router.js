@@ -11,11 +11,11 @@ import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { Intro, Register,
 
         /* User Specific */
-        UserLogin, UserPlays,
+        UserLogin, UserPlays, UserPlayDetails,
 
         /* Admin Specific */
         AdminLogin, AdminPlays, AdminUsers,
-        UserDetails, PlayDetails, AdminNavigation, PostMultiplePlays,
+        UserDetails, AdminPlayDetails, AdminNavigation, PostMultiplePlays,
         PostMultipleUsers, PostUser, PostPlay, UpdatePlay
 
         } from "./components";
@@ -59,7 +59,7 @@ const Routes = () => {
                     <Route path={ADMIN_POST_PLAY}
                                 component={PostPlay} />
                     <Route path={`${ADMIN_PLAY}/:id`}
-                                component={PlayDetails} />
+                                component={AdminPlayDetails} />
                     <Route path={ADMIN_PLAY}
                                 component={AdminPlays} />
 
@@ -67,7 +67,7 @@ const Routes = () => {
                                 component={UserLogin} />
 
                     <Route path={`${USER_PLAY}/:id`}
-                                component={PlayDetails} />
+                                component={UserPlayDetails} />
                     <Route path={USER_PLAY}
                                 component={UserPlays} />
 

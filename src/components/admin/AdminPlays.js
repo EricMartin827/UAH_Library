@@ -11,6 +11,7 @@ import { BootstrapTable, TableHeaderColumn,
 /* Local Imports */
 import { fetchPlays, removePlayById, fetchPlayDetails } from "./../../actions";
 import AdminNavigation from "./AdminNavigation.js";
+import {ADMIN_PLAY} from "./../paths";
 import "../../../style/style.css";
 
 class AdminPlays extends Component {
@@ -170,7 +171,8 @@ class AdminPlays extends Component {
                 </h3>
                 <ButtonToolbar className="play-ButtonToolbar">
                     <ButtonGroup bsSize="small">
-                        <Link className="btn btn-primary button-custom-size-120 button-custom-margin5" to={`/admin/plays/${this.state.selected_play_id}`}>
+                        <Link className="btn btn-primary button-custom-size-120 button-custom-margin5"
+                        to={`${ADMIN_PLAY}/${this.state.selected_play_id}`}>
                             Show Play Details
                         </Link>
                     </ButtonGroup>
