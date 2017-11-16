@@ -8,7 +8,7 @@ import { connect } from "react-redux";
 import { AdminNavigation } from "./../admin";
 import { validatePlay } from "./utils";
 import { addPlays } from "../../actions";
-import { renderField } from "./../../renderers";
+import { renderField, renderTextArea } from "./../../renderers";
 import { ADMIN_PLAY } from "./../paths";
 
 class PostPlay extends Component {
@@ -49,6 +49,8 @@ class PostPlay extends Component {
                     component={renderField} />
                 <Field label="Copies" type="text" name="copies"
                     component={renderField} />
+                <Field label="Summary & Comments" type="text" name="comments"
+                    component={renderTextArea}/>
                 <button type="submit" className="btn btn-primary">
                     Submit</button>
                 <Link to={ADMIN_PLAY} className="btn btn-danger">

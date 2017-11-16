@@ -22,9 +22,7 @@ export default function validatePlay(values) {
     if (!(values.costumeCount - 0)) {
         errors.costumeCount = "Enter Number of Costumes";
     }
-    if (!values.hasSpectacle) {
-        errors.hasSpectacle = "Enter spectacle name or 'false'"
-    }
+
     if (!(values.copies - 0)) {
         errors.copies = "Enter Number of Copies of Script"
     }

@@ -8,7 +8,7 @@ import { connect } from "react-redux";
 import { AdminNavigation } from "./../admin";
 import { validatePlay } from "./utils";
 import { updatePlay, fetchPlayDetails } from "../../actions";
-import { renderField } from "./../../renderers";
+import { renderField, renderTextArea } from "./../../renderers";
 import { ADMIN_PLAY } from "./../paths";
 
 class UpdatePlay extends Component {
@@ -50,6 +50,8 @@ class UpdatePlay extends Component {
                     component={renderField} />
                 <Field label="Copies" type="text" name="copies"
                     component={renderField} />
+                <Field label="Summary & Comments" type="text" name="comments"
+                    component={renderTextArea}/>
                 <button type="submit" className="btn btn-primary">
                     Submit</button>
                 <Link to={ADMIN_PLAY} className="btn btn-danger">
@@ -73,6 +75,7 @@ class UpdatePlay extends Component {
             initialValues.hasSpectacle = play.hasSpectacle;
             initialValues.timePeriod = play.timePeriod;
             initialValues.copies = play.copies;
+            initialValues.comments = play.comments;
         }
     }
 }
@@ -98,7 +101,8 @@ export default reduxForm({
         timePeriod : "Loading",
         costumeCount : "Loading",
         hasSpectacle : "Loading",
-        copies : "Loading"
+        copies : "Loading",
+        comments : "Loading"
     },
     form : "UpdatePlayFrom"
 })(

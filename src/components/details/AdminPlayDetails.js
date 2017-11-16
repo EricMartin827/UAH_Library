@@ -18,7 +18,6 @@ class AdminPlayDetails extends Component {
 
     render() {
         const { play } = this.props;
-        console.log("Play is : ", play);
         if (!play) {
             return (<div>Loading Play Content...</div>);
         }

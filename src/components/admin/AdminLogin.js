@@ -21,7 +21,6 @@ class AdminLogin extends Component {
         this.props.loginUser(values,
             () => this.props.history.push(REGISTER),
             () => this.props.history.push(ADMIN_PLAY),
-            // below is new stuff
             reportError);
     }
 
