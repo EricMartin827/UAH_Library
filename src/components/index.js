@@ -1,10 +1,10 @@
 
 /* Interface post components */
 import { PostMultiplePlays, PostMultipleUsers,
-        PostUser, PostPlay } from "./posts";
+        PostUser, PostPlay, UpdatePlay } from "./posts";
 
 export { PostMultiplePlays, PostMultipleUsers,
-        PostUser, PostPlay };
+        PostUser, PostPlay, UpdatePlay };
 
 /* Interface with detail routes */
 import { UserDetails, PlayDetails } from "./details";

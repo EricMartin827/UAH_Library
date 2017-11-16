@@ -39,3 +39,6 @@ export { returnPlay };
 
 import fetchCheckedPlays from "./fetchCheckedPlays.js";
 export { fetchCheckedPlays };
+
+import updatePlay from "./updatePlay.js";
+export { updatePlay }

@@ -23,6 +23,7 @@ class PlayDetails extends Component {
             return (<div>Loading Play Content...</div>);
         }
 
+        const { id } = this.props.match.params;
         const {access} = this.props;
         const trimed_access = access.replace(/^\s+|\s+$/g,"");
         var URL = '';
@@ -38,6 +39,7 @@ class PlayDetails extends Component {
         return (
             <div className="play-div-custom-padding">
                 <Link className="btn btn-primary" to={URL}>Back To Plays</Link>
+                <Link className="btn btn-primary" to={URL2}>Update</Link>
                 <Media className="play-div-custom-padding">
                     <Media.Body>
                         <Media.Heading>{play.title}</Media.Heading>
