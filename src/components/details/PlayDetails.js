@@ -25,7 +25,15 @@ class PlayDetails extends Component {
 
         const {access} = this.props;
         const trimed_access = access.replace(/^\s+|\s+$/g,"");
-        const URL = '/'+ trimed_access + '/plays';
+        var URL = '';
+
+        if (trimed_access == 'admin') {
+            URL = '/admin/plays';
+        } else if (trimed_access == 'user') {
+            URL = '/student/plays';
+        } else {
+            URL = '/student/plays';
+        }
 
         return (
             <div className="play-div-custom-padding">
