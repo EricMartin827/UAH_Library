@@ -25,30 +25,72 @@ class AdminPlayDetails extends Component {
         const { id } = this.props.match.params;
         const {access} = this.props;
         return (
-            <div className="play-div-custom-padding">
+          <div className="play-div-custom-padding">
                 <Link className="btn btn-primary"
                     to={ADMIN_PLAY}>
                     Back To Plays</Link>
+                &nbsp;&nbsp;&nbsp;&nbsp;
                 <Link className="btn btn-primary"
                     to={`${ADMIN_UPDATE_PLAY}/${id}`}>
                     Update</Link>
-                <Media className="play-div-custom-padding">
-                    <Media.Body>
-                        <Media.Heading>{play.title}</Media.Heading>
-                            <br/>
-                            <p>Genre: {play.genre}</p>
-                            <p>Actor Count: {play.actorCount}</p>
-                            <p>Author: {play.authorLast}, {play.authorFirst}</p>
-                            <p>Time Period: {play.timePeriod}</p>
-                            <p>Costume Count: {play.costumeCount}</p>
-                            <p>Spectacle: {play.hasSpectacle + ""}</p>
-                            <p>Copies: {play.copies}</p>
-                                <Media.Body>
-                                    <Media.Heading>Summary & Comments </Media.Heading>
-                                        <p>{play.comments}</p>
-                                </Media.Body>
-                    </Media.Body>
-                </Media>
+                        <br />
+                <div className="play-details-container">
+                    <div className="play-title">
+                       <h1><center>{play.title}</center></h1>
+                    </div>
+
+                    <div className="play-details-navigation-and-information">
+                        <div className="play-details-genre">
+                            <center>
+                                <b> Genre: </b>
+                                <br /> {play.genre}
+                            </center>
+                        </div>
+                        <div className="play-details-actor-count">
+                            <center>
+                                <b> Actor Count: </b>
+                                <br /> {play.actorCount}
+                            </center>
+                        </div>
+                        <div className="play-details-author">
+                            <center>
+                                <b> Author: </b>
+                                <br /> {play.authorLast}, {play.authorFirst}
+                            </center>
+                        </div>
+                        <div className="play-details-time-period">
+                            <center>
+                                <b> Time Period: </b>
+                                <br /> {play.timePeriod}
+                            </center>
+                        </div>
+                        <div className="play-details-costume-count">
+                            <center>
+                                <b> Costume Count: </b>
+                                <br /> {play.costumeCount}
+                            </center>
+                        </div>
+                        <div className="play-details-has-spectacle">
+                            <center>
+                                <b> Has Spectacle: </b>
+                                <br /> {play.hasSpectacle + ""}
+                            </center>
+                        </div>
+                        <div className="play-details-copies">
+                            <center>
+                                <b> Number of copies: </b>
+                                <br /> {play.copies}
+                            </center>
+                        </div>
+                    </div>
+                    <div className="play-details-decription">
+                        <Media.Body>
+                            <Media.Heading>Summary & Comments </Media.Heading>
+                            <p>{play.comments}</p>
+                        </Media.Body>
+                    </div>
+                </div>
+
             </div>
         );
     }
