@@ -125,19 +125,19 @@ playAPI.post("/checkout/:id", authUser, (req, res) => {
 
 });
 
-playAPI.post("/checkout/delete/:id", authUser, (req, res) => {
-
-    var id = req.params.id;
-    CheckOut.removeCheckOut(id, req.header["x-user"]).then((checkOut) => {
-	res.send(checkOut);
+playAPI.get("/checkout/all", authAdmin, (req, res) => {
+    CheckOut.find({}).then((all_checkouts) => {
+	res.send(all_checkouts);
     }).catch((err) => {
 	res.status(400).send(err);
     });
 });
 
-playAPI.get("/checkout(s)?", authAdmin, (req, res) => {
-    CheckOut.find({}).then((all_checkouts) => {
-	res.send(all_checkouts);
+playAPI.post("/checkout/delete/:id", authUser, (req, res) => {
+
+    var id = req.params.id;
+    CheckOut.removeCheckOut(id, req.header["x-user"]).then((checkOut) => {
+	res.send(checkOut);
     }).catch((err) => {
 	res.status(400).send(err);
     });
