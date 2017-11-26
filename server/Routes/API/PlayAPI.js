@@ -125,6 +125,14 @@ playAPI.post("/checkout/:id", authUser, (req, res) => {
 
 });
 
+playAPI.get("/checkout/all", authAdmin, (req, res) => {
+    CheckOut.find({}).then((all_checkouts) => {
+	res.send(all_checkouts);
+    }).catch((err) => {
+	res.status(400).send(err);
+    });
+});
+
 playAPI.post("/checkout/delete/:id", authUser, (req, res) => {
 
     var id = req.params.id;

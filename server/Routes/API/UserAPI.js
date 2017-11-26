@@ -21,6 +21,7 @@ const {authUser}     = authenticate;
 
 const {Schemas}      = require("./../../Schemas");
 const {User}         = Schemas;
+const {CheckOut}     = Schemas;
 
 var userAPI = new express.Router();
 userAPI.use(bodyParser.json());
@@ -55,7 +56,19 @@ async function addMultipleUsers(data) {
     return data;
 }
 
+/******************************************************************************/
+/********************* Checkour Requests to User API **************************/
+/******************************************************************************/
+userAPI.get("/checkout", authUser, (req, res) => {
 
+    CheckOut.find({userID : req.header["x-user"]._id})
+	.then((checkouts) => {
+	    res.send(checkouts);
+	}).catch((err) => {
+	    res.status(400).send(err);
+	});
+    
+});
 
 /******************************************************************************/
 /********************* GET Requests to User API *******************************/
