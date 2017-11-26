@@ -21,9 +21,9 @@ class Register extends Component {
         const { handleSubmit } = this.props;
         return (
             <form onSubmit={handleSubmit(this.onSubmit.bind(this))}>
-                <Field label="New Password" type="text"
+                <Field label="New Password" type="password"
                     name="newPassword" component={renderField} />
-                <Field label="Confirm Password" type="text"
+                <Field label="Confirm Password" type="password"
                     name="matchingPassword" component={renderField} />
                 <button type="submit" className="btn btn-primary">
                     Submit</button>
