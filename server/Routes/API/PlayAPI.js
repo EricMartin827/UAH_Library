@@ -135,6 +135,14 @@ playAPI.post("/checkout/delete/:id", authUser, (req, res) => {
     });
 });
 
+playAPI.get("/checkout(s)?", authAdmin, (req, res) => {
+    CheckOut.find({}).then((all_checkouts) => {
+	res.send(all_checkouts);
+    }).catch((err) => {
+	res.status(400).send(err);
+    });
+});
+
 /******************************************************************************/
 /************************* DELETE Routes For Plays ****************************/
 /******************************************************************************/
