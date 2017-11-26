@@ -9,7 +9,7 @@ import { BootstrapTable, TableHeaderColumn,
         DeleteButton } from 'react-bootstrap-table';
 
 /* Local Imports */
-import { fetchPlays, removePlayById, fetchPlayDetails } from "./../../actions";
+import { fetchPlays, removePlayById, fetchPlayDetails, fetchAllCheckedPlays, fetchUserById } from "./../../actions";
 import AdminNavigation from "./AdminNavigation.js";
 import {ADMIN_PLAY} from "./../paths";
 import "../../../style/style.css";
@@ -29,7 +29,8 @@ class AdminPlays extends Component {
         };
 
         this.state = {
-            selected_play_id: ''
+            selected_play_id: '',
+            selected_user_id: ''
         }
     }
 
@@ -37,6 +38,8 @@ class AdminPlays extends Component {
         const {access, token} = this.props;
         if (access && token) {
             this.props.fetchPlays(access, token);
+            this.props.fetchAllCheckedPlays(access, token);
+            this.props.fetchUsers(access, token);
         }
     }
 
@@ -69,7 +72,8 @@ class AdminPlays extends Component {
         if(isSelected === true) {
             console.log(row._id);
             this.setState((prevState, props) => ({
-                selected_play_id: row._id
+                selected_play_id: row._id,
+                selected_user_id: row.userID
             }));
         }
     }
@@ -77,7 +81,7 @@ class AdminPlays extends Component {
     createCustomSearchField(props) {
         return (
             <SearchField
-                className='my-custom-class play-search-field'
+                className='my-custom-class user-play-search-field'
                 placeholder='search'
             />
         );
@@ -112,6 +116,79 @@ class AdminPlays extends Component {
         if (access) {
             this.props.fetchPlays(access, token);
         }
+    }
+
+    notifyBorrower() {
+        const userId = this.state.selected_user_id;
+        const {access, token} = this.props;
+        fetchUserById(access, token, userId);
+        const email = this.props.selectedUser[this.state.selected_user_id].email;
+        const name = this.props.selectedUser[this.state.selected_user_id].firstName;
+
+        const data = {
+            'email' : email,
+            'name' : name
+        };
+
+        $.ajax({
+          url: 'http://18.221.128.155/UAH_Emailer/php/notify_borrower.php',
+          type: "POST",
+          data: JSON.stringify(data),
+          success: function(data) {
+            console.log('success')
+            console.log(data);
+          }.bind(this),
+          error: function(xhr, status, err) {
+            console.log(err);
+            console.log('error')
+          }.bind(this)
+        });
+    }
+
+    renderAllCheckedPlays() {
+        const plays = this.props.plays;
+        var allCheckedPlays = _.map(this.props.allCheckedPlays);
+
+        for(var i = 0; i < allCheckedPlays.length; i++) {
+
+            const curPlay = allCheckedPlays[i].playID;
+            const title = plays[curPlay].title;
+            const genre = plays[curPlay].genre;
+            const author = plays[curPlay].authorFirst + " " + plays[curPlay].authorLast
+
+            allCheckedPlays[i].title = title;
+            allCheckedPlays[i].genre = genre;
+            allCheckedPlays[i].author = author;
+        }
+
+        const selectRowProp = {
+          mode: 'radio',
+          clickToSelect: true,
+          onSelect: this.handleRowSelect.bind(this)
+        };
+
+        return (
+            <div>
+                <BootstrapTable data={allCheckedPlays} pagination={ true }
+                                options={ this.options }
+                                selectRow={ selectRowProp }
+                                search>
+                    <TableHeaderColumn width='250' dataField="title"
+                                        isKey={true} dataSort={true}>
+                        Title
+                    </TableHeaderColumn>
+                    <TableHeaderColumn width='250' dataField="author">
+                        Author
+                    </TableHeaderColumn>
+                    <TableHeaderColumn width='250' dataField="genre">
+                        Genre
+                    </TableHeaderColumn>
+                    <TableHeaderColumn width='250' dataField="date">
+                        Checked Date
+                    </TableHeaderColumn>
+                </BootstrapTable>
+            </div>
+        )
     }
 
     renderPlaysTable() {
@@ -165,19 +242,33 @@ class AdminPlays extends Component {
 
     render() {
         return (
-            <div className="play-div-custom-padding">
-                <h3 className="text-center">
-                    Admin Home
-                </h3>
-                <ButtonToolbar className="play-ButtonToolbar">
+            <div>
+                <div className="play-div-custom-padding">
+                    <h3 className="text-center">
+                        Admin Home
+                    </h3>
+                    <ButtonToolbar className="play-ButtonToolbar">
+                        <ButtonGroup bsSize="small">
+                            <Link className="btn btn-primary button-custom-size-120 button-custom-margin5"
+                            to={`${ADMIN_PLAY}/${this.state.selected_play_id}`}>
+                                Show Play Details
+                            </Link>
+                        </ButtonGroup>
+                    </ButtonToolbar>
+                    {this.renderPlaysTable()}
+                </div>
+
+                <div className="all-checked-plays-table-div">
+                    <h3 className="text-center">
+                        All Checked Plays
+                    </h3>
                     <ButtonGroup bsSize="small">
-                        <Link className="btn btn-primary button-custom-size-120 button-custom-margin5"
-                        to={`${ADMIN_PLAY}/${this.state.selected_play_id}`}>
-                            Show Play Details
-                        </Link>
+                        <button className="btn btn-primary button-custom-size-120 button-custom-margin5" onClick={this.notifyBorrower.bind(this)}>
+                            Notify Borrower
+                        </button>
                     </ButtonGroup>
-                </ButtonToolbar>
-                {this.renderPlaysTable()}
+                    {this.renderAllCheckedPlays()}
+                </div>
             </div>
         );
     }
@@ -187,9 +278,11 @@ function mapStateToProps(state) {
     return {
         access : state.currentUser.access,
         token : state.currentUser.token,
-        plays : state.plays
+        plays : state.plays,
+        allCheckedPlays : state.allCheckedPlays,
+        selectedUser : state.users
     };
 }
 
 export default connect(mapStateToProps,
-        {fetchPlays, removePlayById })(AdminPlays);
+        {fetchPlays, removePlayById, fetchAllCheckedPlays, fetchUserById })(AdminPlays);

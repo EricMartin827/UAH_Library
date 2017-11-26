@@ -22,5 +22,6 @@ export const POST_PLAYS = "post_plays"
 export const CHECKOUT_PLAY = "checkout_play";
 export const RETURN_PLAY = "return_play";
 export const FETCH_CHECKED_PLAYS = "fetch_checked_plays";
+export const FETCH_ALL_CHECKED_PLAYS = "fetch_all_checked_plays";
 
 export const UPDATE_PLAY = "update_play"
