@@ -116,6 +116,13 @@ body {
     padding-bottom: 20px;
 }
 
+.all-checked-plays-table-div {
+    position: absolute;
+    margin: auto;
+    left: 230px;
+    top: 800px;
+}
+
 .play-table-div {
     display: inline;
     float: left;
