@@ -173,8 +173,11 @@ class AdminPlays extends Component {
                                 options={ this.options }
                                 selectRow={ selectRowProp }
                                 search>
-                    <TableHeaderColumn width='250' dataField="title"
+                    <TableHeaderColumn width='250' dataField="date"
                                         isKey={true} dataSort={true}>
+                        Checked Date
+                    </TableHeaderColumn>
+                    <TableHeaderColumn width='250' dataField="title">
                         Title
                     </TableHeaderColumn>
                     <TableHeaderColumn width='250' dataField="author">
@@ -182,9 +185,6 @@ class AdminPlays extends Component {
                     </TableHeaderColumn>
                     <TableHeaderColumn width='250' dataField="genre">
                         Genre
-                    </TableHeaderColumn>
-                    <TableHeaderColumn width='250' dataField="date">
-                        Checked Date
                     </TableHeaderColumn>
                 </BootstrapTable>
             </div>
