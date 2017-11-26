@@ -148,6 +148,114 @@ body {
     width: 297px !important;
 }
 
+
 .user-play-search-field {
     width: 68.5% !important;
+}
+
+.play-details-container {
+    width: 1295px;
+    border: 1px solid gray;
+    margin-top: 3px;
+}
+
+.play-details-title {
+    padding: 1em;
+    clear: left;
+    text-align: center;
+}
+
+.play-details-navigation-and-information {
+    border-bottom: 1px solid gray;
+}
+
+.play-details-genre {
+    float: left;
+    width: 182px;
+    height: 75px;
+    margin: 0;
+    padding: 1em;
+    border: 1px solid gray;
+    margin-left:-1px;
+    margin-right:-1px;
+    margin-bottom:-1px;
+}
+
+.play-details-actor-count {
+    float: left;
+    width: 143px;
+    height: 75px;
+    border-left: 1px solid gray;
+    padding: 1em;
+    overflow: hidden;
+    border: 1px solid gray;
+    margin-right:-1px;
+    margin-bottom:-1px;
+}
+
+.play-details-author {
+    float: left;
+    width:325px;
+    height: 75px;
+    border-left: 1px solid gray;
+    padding: 1em;
+    overflow: hidden;
+    border: 1px solid gray;
+    margin-right:-1px;
+    margin-bottom:-1px;
+}
+
+.play-details-time-period {
+    float: left;
+    width: 182px;
+    height: 75px;
+    border-left: 1px solid gray;
+    padding: 1em;
+    overflow: hidden;
+    border: 1px solid gray;
+    margin-right:-1px;
+    margin-bottom:-1px;
+}
+
+.play-details-costume-count {
+    float: left;
+    width: 156px;
+    height: 75px;
+    border-left: 1px solid gray;
+    padding: 1em;
+    overflow: hidden;
+    border: 1px solid gray;
+    margin-right:-1px;
+    margin-bottom:-1px;
+}
+
+.play-details-has-spectacle {
+    float: left;
+    min-width: 143px;
+    height: 75px;
+    border-left: 1px solid gray;
+    padding: 1em;
+    overflow: hidden;
+    border: 1px solid gray;
+    margin-right:-1px;
+    margin-bottom:-1px;
+}
+
+.play-details-copies {
+    float: left;
+    width:169px;
+    height: 75px;
+    border-left: 1px solid gray;
+    padding: 1em;
+    overflow: hidden;
+    border: 1px solid gray;
+    margin-right:-1px;
+    margin-bottom:-1px;
+}
+
+.play-details-decription {
+    padding: 1em;
+    overflow: hidden;
+    width: 100%;
+    border-top: 1px solid gray;
 }
