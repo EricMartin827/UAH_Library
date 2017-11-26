@@ -49,7 +49,7 @@ class AdminLogin extends Component {
                     Password
                 </Col>
                 <Col xs={6} md={10}>
-                    <Field type="text" name="password"
+                    <Field type="password" name="password"
                             component={renderField} />
                 </Col>
             </FormGroup>
