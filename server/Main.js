@@ -51,7 +51,6 @@ main.post("/register", authRegistration, (req, res) => {
 });
 
 if (process.env.NODE_ENV !== "production") {
-
     const webpackMiddleware  = require("webpack-dev-middleware");
     const webpack            = require("webpack");
     const webpackConfig      = require("./../webpack.config.js");
@@ -60,7 +59,8 @@ if (process.env.NODE_ENV !== "production") {
 } else {
     main.use(express.static("./../build"));
     app.get("*", (req, res) => {
-        res.send(path.join(__dirname, "./../build/index.html"));
+        console.log(path.join(__dirname, "./../build/index.html"));
+        res.send(path.join(__dirname, "./../build/index.html")); /**/
     });
 }
 
