@@ -47,7 +47,7 @@ Interface.seed = function(data) {
 		var seed = res.body;
 		var email = data.email;
 		var password = data.password;
-		
+
 		expect(res.clientError).toBe(false);
 		expect(res.serverError).toBe(false);
 		verify(data, seed, _schema);
@@ -77,23 +77,23 @@ Interface.login = function(data) {
 		verify(data, res.body, _schema);
 
 		if (res.header["x-admin"]) {
-		    
+
 		    _schema.findOne({email : data.email}).then((target) => {
-			
+
 			expect(hasToken(target.tokens, "admin")).toBe(true);
 			return resolve(res.header["x-admin"]);
-			
+
 		    }).catch((err) => reject(err));
-		    
+
 		} else if (res.header["x-register"]) {
-		    
+
 		    _schema.findOne({email : data.email}).then((target) => {
 
 			expect(hasToken(target.tokens, "newUser")).toBe(true);
 			return resolve(res.header["x-register"]);
-			
+
 		    }).catch((err) => reject(err));
-		    
+
 		} else {
 		    reject("Login Failed To Send Back Token");
 		}
@@ -102,7 +102,7 @@ Interface.login = function(data) {
 }
 
 Interface.logout = function(data) {
-    
+
     var _app = this.app;
     var _schema = this.schema;
     var _tok = this.authToken;
@@ -176,7 +176,7 @@ Interface.myPage = function(data) {
 		if (err) {
 		    return reject(err);
 		}
-		
+
 		expect(res.clientError).toBe(false);
 		expect(res.serverError).toBe(false);
 		verify(data, res.body, _schema);
@@ -296,12 +296,12 @@ Interface.postOne = function(data) {
 			resolve(ret);
 
 		    }).catch((err) => reject(err));
-		
+
 	    }).catch((err) => {
 		reject(err)
 	    });
     });
-    
+
 }
 
 Interface.postMany = function(data) {
