@@ -2,6 +2,5 @@
 node_modules/*
 playground/*
 out/*
-build/*
 old_files/*
 package-lock.json
