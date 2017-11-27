@@ -25,6 +25,8 @@ export default function loginUser(credentials, gotoRegister, gotoPlays, error) {
             } else {
                 gotoPlays();
             }
-        }).catch((err) => error());
+        }).catch((err) =>  {
+            error()
+        });
     }
 }

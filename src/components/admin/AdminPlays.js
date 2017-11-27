@@ -9,7 +9,8 @@ import { BootstrapTable, TableHeaderColumn,
         DeleteButton } from 'react-bootstrap-table';
 
 /* Local Imports */
-import { fetchPlays, removePlayById, fetchPlayDetails, fetchAllCheckedPlays, fetchUserById } from "./../../actions";
+import { fetchPlays, removePlayById, fetchPlayDetails,
+    fetchAllCheckedPlays, fetchUserById, fetchUsers } from "./../../actions";
 import AdminNavigation from "./AdminNavigation.js";
 import {ADMIN_PLAY} from "./../paths";
 import "../../../style/style.css";
@@ -285,4 +286,5 @@ function mapStateToProps(state) {
 }
 
 export default connect(mapStateToProps,
-        {fetchPlays, removePlayById, fetchAllCheckedPlays, fetchUserById })(AdminPlays);
+        {fetchPlays, removePlayById, fetchAllCheckedPlays, fetchUserById,
+        fetchUsers })(AdminPlays);
