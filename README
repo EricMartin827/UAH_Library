@@ -23,5 +23,36 @@ is being added. If the data is sent as an array of json objects, then multiple
 plays will be added.
 
 
+******* Updating A Play *******
+
+Command: post("url/api/play/update/:id") <--- object id of play
+	 -> json data for update
+	 -> EXAMPLE to update the comments and genre
+	    {
+		comments : "This is the best play ever!! DO IT"
+		genre : "Satire/Horror"
+	    }
+
+******* Checking a play ***************
+Command: post("url/api/play/checkout/:id") <--- object id of play
+
+	 -> can send an empty json {}
+
+
+******* Returning a play ***************
+Command: post("url/api/play/checkout/delete/:id") <--- object id of play
+
+	 -> can send an empty json {}
+
+
+/* Note if you are wondering why I am using post routes its due to CORS.
+*  Cross Region Resource Service... Its due to that fact that are development server,
+*  the thing that constantly updates the app when you make changes to code, runs into
+*  issuess using more complicated HTTP protocols such as delete, patch, etc.
+*/
+
+
+
+
 
 

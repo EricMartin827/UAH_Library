@@ -10,7 +10,9 @@ const {authRegistration} = MIDDLEWARE;
 
 const {ROUTES}           = require("./Routes");
 
+const path               = require("path");
 const cors               = require("cors");
+
 
 /* If the server is running at remote location (Heroku), use
  * the environment's port number. Otherwise, the application
@@ -25,7 +27,6 @@ main.options("*", cors());
 main.use(cors({
     exposedHeaders : ["x-admin", "x-user", "x-register"]
 }));
-
 main.use(bodyParser.json());
 
 /* Mount The Routes onto the Main Application Server */
@@ -48,6 +49,19 @@ main.post("/register", authRegistration, (req, res) => {
 	res.status(400).send(err);
     });
 });
+
+if (process.env.NODE_ENV !== "production") {
+    const webpackMiddleware  = require("webpack-dev-middleware");
+    const webpack            = require("webpack");
+    const webpackConfig      = require("./../webpack.config.js");
+    main.use(webpackMiddleware(webpack(webpackConfig)));
+
+} else {
+    main.use(express.static("./../build"));
+    main.get("*", (req, res) => {
+        res.sendFile(path.join(__dirname, "./../build/index.html"));
+    });
+}
 
 main.listen(port, () => {
     console.log(`The Server is Listening on Port ${port}`);

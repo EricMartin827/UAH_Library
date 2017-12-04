@@ -367,6 +367,29 @@ Interface.returnCheckOut = function(checkOutID, userID) {
     });
 }
 
+Interface.getCheckOuts = function() {
+    var _app = this.app;
+    var _tok = this.authToken;
+    
+    return new Promise((resolve, reject) => {
+
+	request(_app)
+	    .get(`/api/user/checkout`)
+	    .set("x-user", `${_tok}`)
+	    .expect(200)
+	    .end((err, res) => {
+
+		if (err) {
+		    reject(err);
+		}
+
+		expect(res.clientError).toBe(false);
+		expect(res.serverError).toBe(false);
+		resolve(res.body);
+	    });
+    });
+}
+
 module.exports = {
     UserTester : UserTester
 }

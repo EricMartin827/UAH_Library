@@ -30,3 +30,18 @@ export { fetchPlayDetails };
 
 import addPlays from "./addPlays.js";
 export { addPlays }
+
+import checkoutPlay from "./checkoutPlay.js";
+export { checkoutPlay };
+
+import returnPlay from "./returnPlay.js";
+export { returnPlay };
+
+import fetchCheckedPlays from "./fetchCheckedPlays.js";
+export { fetchCheckedPlays };
+
+import fetchAllCheckedPlays from "./fetchAllCheckedPlays.js";
+export { fetchAllCheckedPlays };
+
+import updatePlay from "./updatePlay.js";
+export { updatePlay }

@@ -7,25 +7,26 @@ import { connect } from "react-redux";
 /* Local Imports */
 import { AdminNavigation } from "./../admin";
 import { validatePlay } from "./utils";
-import { addPlays } from "../../actions";
+import { updatePlay, fetchPlayDetails } from "../../actions";
 import { renderField, renderTextArea } from "./../../renderers";
 import { ADMIN_PLAY } from "./../paths";
 
-class PostPlay extends Component {
+class UpdatePlay extends Component {
 
     onSubmit(values) {
         const { token } = this.props;
-        this.props.addPlays(token, values, () => {
+        const { play } = this.props;
+        this.props.updatePlay(token, values, play._id, () => {
             this.props.history.push(ADMIN_PLAY);
         });
     }
 
     render() {
-        const { handleSubmit } = this.props;
 
+        const { handleSubmit } = this.props;
         return (
             <div>
-            <h3 className="text-center"> Add A New Play </h3>
+            <h3 className="text-center"> Update A Play </h3>
             <div className="rowContent">
             <AdminNavigation />
             <form onSubmit={handleSubmit(this.onSubmit.bind(this))}
@@ -60,17 +61,50 @@ class PostPlay extends Component {
             </div>
         );
     }
-}
 
-function mapStateToProps(state) {
-    return {
-        token : state.currentUser.token
+    componentDidMount() {
+        const { play } = this.props;
+        if (play) {
+            const { initialValues } = this.props;
+            initialValues.title = play.title;
+            initialValues.authorFirst = play.authorFirst;
+            initialValues.authorLast = play.authorLast;
+            initialValues.genre = play.genre;
+            initialValues.costumeCount  = play.costumeCount;
+            initialValues.actorCount = play.actorCount;
+            initialValues.hasSpectacle = play.hasSpectacle;
+            initialValues.timePeriod = play.timePeriod;
+            initialValues.copies = play.copies;
+            initialValues.comments = play.comments;
+        }
     }
 }
 
+function mapStateToProps(state, ownProps) {
+    return {
+        access : state.currentUser.access,
+        token : state.currentUser.token,
+        play : state.plays[ownProps.match.params.id]
+    };
+}
+
 export default reduxForm({
-   validate : validatePlay,
-   form : "PostNewPlay"
+    validate : validatePlay,
+    enableReinitialize : true,
+    keepDirtyOnReinitialize : true,
+    initialValues : {
+        title : "Loading",
+        genre : "Loading",
+        authorFirst : "Loading",
+        authorLast : "Loading",
+        actorCount : "Loading",
+        timePeriod : "Loading",
+        costumeCount : "Loading",
+        hasSpectacle : "Loading",
+        copies : "Loading",
+        comments : "Loading"
+    },
+    form : "UpdatePlayFrom"
 })(
-connect(mapStateToProps, { addPlays })(PostPlay)
-);
+connect(mapStateToProps, { fetchPlayDetails, updatePlay })
+(UpdatePlay));

@@ -151,6 +151,13 @@ describe("Basic Checkout Tests", () => {
 	    }).catch((err) => done(err));
     });
 
+    it("Should Allow A Student to View Their Checkouts", (done) => {
+	_User.getCheckOuts().then((res) => {
+	    done();
+	}).catch((err) => done(err));
+    });
+    
+
     it("Should Not Allow A Diffirent Student To Checkout An Unavailable Play", (done) => {
 	_User.checkOutInvalid(plays[0]._id).then(() => done()).catch((err) => done(err));
     });
@@ -164,6 +171,6 @@ describe("Basic Checkout Tests", () => {
 		    .catch((err) => done(err));
 	    }).catch((err) => done(err));
 	}).catch((err) => done(err));
-    });
+    });    
 
 });

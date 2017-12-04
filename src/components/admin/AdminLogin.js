@@ -10,6 +10,9 @@ import { loginUser } from "./../../actions";
 import { renderField } from "./../../renderers";
 import { REGISTER, ADMIN_PLAY } from "./../paths";
 
+function reportError() {
+  alert("Please enter valid login credentials.");
+}
 
 class AdminLogin extends Component {
 
@@ -17,7 +20,8 @@ class AdminLogin extends Component {
         values.access = "admin";
         this.props.loginUser(values,
             () => this.props.history.push(REGISTER),
-            () => this.props.history.push(ADMIN_PLAY));
+            () => this.props.history.push(ADMIN_PLAY),
+            reportError);
     }
 
     render() {
@@ -45,7 +49,7 @@ class AdminLogin extends Component {
                     Password
                 </Col>
                 <Col xs={6} md={10}>
-                    <Field type="text" name="password"
+                    <Field type="password" name="password"
                             component={renderField} />
                 </Col>
             </FormGroup>
@@ -82,7 +86,6 @@ function validate(values) {
     if (!values.password) {
         errors.password = "Enter A Password";
     }
-
     return errors;
 }
 

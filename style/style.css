@@ -68,15 +68,20 @@ body {
 }
 
 .play-div-custom-padding {
-    padding-right: 15px;
-    padding-bottom: 15px;
-    padding-left: 15px;
+    padding-right: 40px;
+    padding-bottom: 40px;
+    padding-left: 40px;
 }
 
 .play-ButtonToolbar {
     position: relative;
     top: 20px;
     left: 190px;
+}
+
+.user-play-ButtonToolbar {
+    position: relative;
+    top: 20px;
 }
 
 .users-div-custom-padding {
@@ -111,6 +116,13 @@ body {
     padding-bottom: 20px;
 }
 
+.all-checked-plays-table-div {
+    position: absolute;
+    margin: auto;
+    left: 230px;
+    top: 800px;
+}
+
 .play-table-div {
     display: inline;
     float: left;
@@ -141,4 +153,116 @@ body {
 
 .play-search-field {
     width: 297px !important;
+}
+
+
+.user-play-search-field {
+    width: 68.5% !important;
+}
+
+.play-details-container {
+    width: 1295px;
+    border: 1px solid gray;
+    margin-top: 3px;
+}
+
+.play-details-title {
+    padding: 1em;
+    clear: left;
+    text-align: center;
+}
+
+.play-details-navigation-and-information {
+    border-bottom: 1px solid gray;
+}
+
+.play-details-genre {
+    float: left;
+    width: 182px;
+    height: 75px;
+    margin: 0;
+    padding: 1em;
+    border: 1px solid gray;
+    margin-left:-1px;
+    margin-right:-1px;
+    margin-bottom:-1px;
+}
+
+.play-details-actor-count {
+    float: left;
+    width: 143px;
+    height: 75px;
+    border-left: 1px solid gray;
+    padding: 1em;
+    overflow: hidden;
+    border: 1px solid gray;
+    margin-right:-1px;
+    margin-bottom:-1px;
+}
+
+.play-details-author {
+    float: left;
+    width:325px;
+    height: 75px;
+    border-left: 1px solid gray;
+    padding: 1em;
+    overflow: hidden;
+    border: 1px solid gray;
+    margin-right:-1px;
+    margin-bottom:-1px;
+}
+
+.play-details-time-period {
+    float: left;
+    width: 182px;
+    height: 75px;
+    border-left: 1px solid gray;
+    padding: 1em;
+    overflow: hidden;
+    border: 1px solid gray;
+    margin-right:-1px;
+    margin-bottom:-1px;
+}
+
+.play-details-costume-count {
+    float: left;
+    width: 156px;
+    height: 75px;
+    border-left: 1px solid gray;
+    padding: 1em;
+    overflow: hidden;
+    border: 1px solid gray;
+    margin-right:-1px;
+    margin-bottom:-1px;
+}
+
+.play-details-has-spectacle {
+    float: left;
+    min-width: 143px;
+    height: 75px;
+    border-left: 1px solid gray;
+    padding: 1em;
+    overflow: hidden;
+    border: 1px solid gray;
+    margin-right:-1px;
+    margin-bottom:-1px;
+}
+
+.play-details-copies {
+    float: left;
+    width:169px;
+    height: 75px;
+    border-left: 1px solid gray;
+    padding: 1em;
+    overflow: hidden;
+    border: 1px solid gray;
+    margin-right:-1px;
+    margin-bottom:-1px;
+}
+
+.play-details-decription {
+    padding: 1em;
+    overflow: hidden;
+    width: 100%;
+    border-top: 1px solid gray;
 }

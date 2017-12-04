@@ -1,3 +1,4 @@
-import PlayDetails from "./PlayDetails.js";
+import AdminPlayDetails from "./AdminPlayDetails.js";
+import UserPlayDetails from "./UserPlayDetails.js";
 import UserDetails from "./UserDetails.js";
-export { PlayDetails, UserDetails };
+export { AdminPlayDetails, UserPlayDetails, UserDetails };

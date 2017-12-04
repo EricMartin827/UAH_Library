@@ -11,12 +11,12 @@ import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { Intro, Register,
 
         /* User Specific */
-        UserLogin, UserPlays,
+        UserLogin, UserPlays, UserPlayDetails,
 
         /* Admin Specific */
         AdminLogin, AdminPlays, AdminUsers,
-        UserDetails, PlayDetails, AdminNavigation, PostMultiplePlays,
-        PostMultipleUsers, PostUser, PostPlay
+        UserDetails, AdminPlayDetails, AdminNavigation, PostMultiplePlays,
+        PostMultipleUsers, PostUser, PostPlay, UpdatePlay
 
         } from "./components";
 
@@ -28,6 +28,7 @@ import {
     ADMIN_LOGIN,
     ADMIN_PLAY, ADMIN_POST_PLAY, ADMIN_POST_MANY_PLAYS,
     ADMIN_USER, ADMIN_POST_USER, ADMIN_POST_MANY_USERS,
+    ADMIN_UPDATE_PLAY,
 
     USER_LOGIN,
     USER_PLAY
@@ -51,12 +52,14 @@ const Routes = () => {
                     <Route path={ADMIN_USER}
                                 component={AdminUsers} />
 
+                    <Route path={`${ADMIN_UPDATE_PLAY}/:id`}
+                                component={UpdatePlay} />
                     <Route path={ADMIN_POST_MANY_PLAYS}
                                 component={PostMultiplePlays} />
                     <Route path={ADMIN_POST_PLAY}
                                 component={PostPlay} />
                     <Route path={`${ADMIN_PLAY}/:id`}
-                                component={PlayDetails} />
+                                component={AdminPlayDetails} />
                     <Route path={ADMIN_PLAY}
                                 component={AdminPlays} />
 
@@ -64,7 +67,7 @@ const Routes = () => {
                                 component={UserLogin} />
 
                     <Route path={`${USER_PLAY}/:id`}
-                                component={UserLogin} />
+                                component={UserPlayDetails} />
                     <Route path={USER_PLAY}
                                 component={UserPlays} />
 

@@ -32,7 +32,6 @@ my $opt_man;
 GetOptions (
     "u=s"    => \$recipient_name,    # string
     "e=s"    => \$recipient_email,   # string
-    "p=s"    => \$recipient_password, # string
     'help'   => \$opt_help,
     'man'    => \$opt_man,
 ) or pod2usage( "Try '$0 --help' for more information." );
@@ -41,18 +40,15 @@ pod2usage( -verbose => 1 ) if $opt_help;
 pod2usage( -verbose => 2 ) if $opt_man;
 
 unless( defined $recipient_name and defined $recipient_email ) {
-    pod2usage( "Try perl $0 -u <recipient name> -e <recipient_email> -p <recipient_password>" );
+    pod2usage( "Try perl $0 -u <recipient name> -e <recipient_email>" );
 }
 
-my $subject = 'Welcome to UAH Library';
+my $subject = 'UAH Reminder';
 my $body = <<"TEXT";
 
 Dear $recipient_name,
 
-Your account is created. Please go to xxxxx.xxxxx.com to reset your password.
-
-Your username: $recipient_email
-Your password: $recipient_password
+Please return your play within 3 days.
 
 Best,
 
@@ -94,8 +90,6 @@ print "Email Sent Successfully\n";
 Recipient Name
 =item B<-e> or B<--email>
 Recipient Email
-=item B<-p> pr B<--password>
-Recipient Password
 =item B<--help>
 Show the brief help information.
 =item B<--man>

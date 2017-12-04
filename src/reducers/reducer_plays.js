@@ -13,6 +13,7 @@ export default function(state = {}, action) {
             const newState = {}
             Object.assign(newState, state);
             const play  = action.payload.data;
+            console.log("Payload: ", action.payload);
             newState[play._id] = play;
             return newState;
         case DELETE_PLAY_ID: /*Have to change this*/
