@@ -57,10 +57,10 @@ if (process.env.NODE_ENV !== "production") {
     main.use(webpackMiddleware(webpack(webpackConfig)));
 
 } else {
-    main.use("./../build", express.static(path.join(__dirname, "./../build")));
-    // main.get("*", (req, res) => {
-    //     res.sendFile(path.join(__dirname, "./../build/index.html"));
-    // });
+    main.use(express.static(path.join(__dirname, "./../build")));
+    main.get("*", (req, res) => {
+        res.sendFile(path.join(__dirname, "./../build/index.html"));
+    });
 }
 
 main.listen(port, () => {
