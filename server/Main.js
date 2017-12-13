@@ -58,9 +58,9 @@ if (process.env.NODE_ENV !== "production") {
 
 } else {
     main.use("./../build", express.static(path.join(__dirnmae, "./../build")));
-    // main.get("*", (req, res) => {
-    //     res.sendFile(path.join(__dirname, "./../build/index.html"));
-    // });
+    main.get("*", (req, res) => {
+        res.sendFile(path.join(__dirname, "./../build/index.html"));
+    });
 }
 
 main.listen(port, () => {
